@@ -1,0 +1,4 @@
+importScripts('engine.js');
+let seed=0,previous=null,entry=null,id=0,target=0,attempt=0,busy=false,epoch=0;
+onmessage=({data})=>{if(data.type==='init'){epoch=data.epoch;seed=data.seed;previous=null;entry=null;id=0;attempt=0;target=3;busy=false;pump(epoch)}else if(data.type==='more'){target=Math.max(target,data.target);pump(epoch)}};
+function pump(version){if(busy||id>=target||version!==epoch)return;busy=true;setTimeout(()=>{if(version!==epoch)return;try{let segment=CaveEngine.makeSegment(seed,id,previous,entry,attempt,24);if(segment){postMessage({type:'segment',epoch,segment});previous=segment;entry=segment.proof.exit;id++;attempt=0}else{attempt+=24;postMessage({type:'progress',epoch,id,attempt})}}catch(e){postMessage({type:'error',epoch,message:String(e)});target=id}busy=false;pump(version)},0)}
