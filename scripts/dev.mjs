@@ -11,7 +11,7 @@ const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=ut
 const server = http.createServer(async (request, response) => {
   try {
     const route = path.posix.normalize(decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
-    if (route !== '/' && route !== '/index.html' && route !== '/style.css' && !route.startsWith('/src/')) {
+    if (route !== '/' && route !== '/index.html' && route !== '/style.css' && !route.startsWith('/src/') && !route.startsWith('/assets/')) {
       response.writeHead(404).end('Not found'); return;
     }
     const location = path.resolve(base, '.' + (route === '/' ? '/index.html' : route));
