@@ -1,0 +1,9 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const elements=new Map();function el(k){if(!elements.has(k))elements.set(k,{style:{},textContent:'',innerHTML:'',onclick:null,getContext(){return{}},addEventListener(){},showModal(){},close(){}});return elements.get(k)}
+const context={console,Math,Uint8Array,Map,Set,localStorage:{getItem(){return 0},setItem(){}},document:{querySelector:el,querySelectorAll(){return[]}},window:{addEventListener(){}},requestAnimationFrame(){}};vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/dist/game.js','utf8'),context);function run(s){return vm.runInContext(s,context)}
+// Check multiple seeds, CA seams, guaranteed corridor and platform step limits.
+for(const seed of [1,127301,999999]){run(`window.caveDebug.setSeed(${seed})`);for(let id=0;id<40;id++){run(`generate(${id})`);for(let y=id*60;y<(id+1)*60;y++){assert(run(`!solid(route(${y}),${y})`));} }for(let l=0;l<400;l++)assert(run(`Math.abs(center(${l+1})-center(${l}))<=3`))}
+// Physics policy: safe fall, damage, water immunity, double jump, pause.
+run('reset();p.apex=0;p.hp=5;landing(150,false)');assert.equal(run('p.hp'),5);run('p.inv=0;landing(400,false)');assert(run('p.hp')<5);run('p.hp=3;p.apex=0;p.wet=false;landing(2000,true)');assert.equal(run('p.hp'),4);run("mode='playing';p.jumps=0;jump();jump();jump()");assert.equal(run('p.jumps'),2);run('pause()');assert.equal(run('mode'),'paused');
+// Autopilot follows route, intentionally passes each platform, surviving 1000m.
+run("reset();mode='playing';keys.ArrowDown=true");for(let i=0;i<65000;i++){run('p.x=route(Math.floor((p.y+p.h)/T))*T-7;update(1/120)');if(run('mode')!=='playing')throw Error('Route died: '+run('JSON.stringify({p,collapse,elapsed})'));if(run('p.y')>21000)break;}assert(run('p.y')>20000);assert(run('chunks.size')<10);console.log('PASS: 120 chunks / 3 seeds; 400 route steps; fall/water/double-jump/pause; >1000m safe descent; bounded memory.');
