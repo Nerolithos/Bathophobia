@@ -1,6 +1,6 @@
 {
   "name": "bathophobia-mineral-descent",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "private": true,
   "description": "An endless pixel mineral cave with certified descent routes, flowing water and sparse hazards.",
   "engines": { "node": ">=20" },
@@ -8,6 +8,6 @@
     "dev": "node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/dev.mjs --preview",
-    "test": "node verify.cjs && node verify-threats.cjs"
+    "test": "node verify.cjs && node verify-threats.cjs && node verify-lava.cjs"
   }
 }
