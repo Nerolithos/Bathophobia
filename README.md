@@ -1,106 +1,93 @@
-# 深绿之下 / Bathophobia 0.5.0
+# 深绿之下 · Bathophobia
 
-原生 HTML / CSS / JavaScript Canvas 游戏。源码可直接上传 GitHub，再连接 Cloudflare Pages；无运行时服务、API Key、数据库或平台 SDK 依赖。
+**带上矿物标本，向不断塌陷的地底深处前进。** 一个矿物学主题的无尽像素地牢，使用原生 JavaScript 与 Canvas 绘制。
+
+**Collect minerals. Outrun the collapse. Descend into the unknown.** An endless, mineral-themed pixel dungeon built with vanilla JavaScript and Canvas.
+
+[在线试玩 / Play](https://abyss.nero-lithos.com/) · [部署 / Deployment](DEPLOY.md)
+
+![天然岩面上的露营点 / A camp on a naturally generated ledge](docs/screenshots/camp.png)
+
+## 玩法 / How to play
+
+- **向下生存。** 左右移动、二连跳，利用水池、瀑布和荧光伞菇缓冲落差。塌陷会从上方追来；进入营地宽度内、上方三格高的庇护区可暂停塌陷。
+- **采集与加工。** 接触矿物自动拾取，背包同类无限堆叠；采到后解锁图鉴。营地里烧制矿物、升级高温熔炉，制作拾取翻倍的收藏盒、粗铁镐和能救命一次的虹膜挂坠。
+- **应对变化。** 红白蘑菇带来正负效果，最大生命在 3–7 之间。黑暗会跳跃追逐，石钟乳会坠落；约每 250 米进入一段约 100 米的玄武岩与岩浆区，留意横扫喷流的红线。
+
+- **Keep descending.** Walk, double-jump, and soften falls with pools, waterfalls and glowing bounce mushrooms. The ceiling collapses behind you; the three-tile-high shelter above a camp's ledge pauses the collapse.
+- **Collect and craft.** Touch minerals to collect them, stack your inventory, and reveal collection entries. Smelt minerals at camps, upgrade furnaces, and craft a collection box, an iron pickaxe or a one-use revival pendant.
+- **Adapt to danger.** Mushrooms grant helpful or harmful effects, with maximum health bounded to 3–7. Shadows pursue you using real jumps; stalactites fall. Roughly every 250 m, a 100 m lava biome brings basalt columns and sweeping jets with red warning lines.
+
+| 操作 / Action | 按键 / Keys |
+| --- | --- |
+| 行走 / Walk | A / D · ← / → |
+| 跳跃 / Jump | Space · W · ↑ |
+| 水池游泳 / Swim in pools | WASD / 方向键 · Arrow keys |
+| 营地工坊 / Camp workshop | E |
+| 使用砒霜 / Use arsenic | Q · 点击背包药瓶 / Click the vial |
+| 暂停、重开 / Pause, new run | P · R |
+| 显示路线、解法演示 / Route overlay, solver replay | G · V |
+
+触屏提供移动、跳跃、游泳与工坊按钮。砒霜最多持有一瓶，使用会降低一点最大生命，毒倒五格内黑暗。铁镐目前可制作、手持，硬矿挖掘留待后续。
+
+Touch controls support movement, jumping, swimming and the workshop. Carry one arsenic vial at a time; using it costs one maximum health and poisons shadows within five tiles. The pickaxe can be crafted and equipped; hard-mineral mining is planned.
+
+## 地底瞬间 / Underground moments
+
+固定种子实机试玩截图，使用与正式游戏相同的生成器、物理和渲染。追逐场景展示影子的跳跃 AI；岩浆场景来自实际求解按键的物理回放。
+
+Seeded in-engine playtest captures using the same generator, physics and rendering as the game. The chase shows the shadow's jumping AI; the lava scene is captured from a replay of solver-generated inputs.
+
+| 黑暗追逐 / The chase | 玄武岩与岩浆喷流 / Basalt and lava jets |
+| --- | --- |
+| ![跳跃躲避追赶的黑暗 / Jumping away from pursuing shadows](docs/screenshots/chase.png) | ![岩浆区域中的喷流预警 / A jet warning inside the lava biome](docs/screenshots/lava.png) |
+
+<details>
+<summary>图示合成工坊 / Visual crafting workshop</summary>
+
+材料、燃料和产物直接显示为像素图片。材料下方为“持有 / 所需”，产物下方为单次获得数量。
+
+Ingredients, fuel and results appear as pixel illustrations. Ingredient captions show owned / required counts; result captions show the output per craft.
+
+![材料图片指向产物图片的合成界面 / Icon-based ingredients and results](docs/screenshots/crafting.png)
+
+</details>
+
+## 技术与算法 / Technology and algorithms
+
+- **天然洞穴：** 48×36 格区块、确定性种子噪声与四五细胞自动机平滑；BFS 洪泛填充检查连通性。岩浆区加入按列相干的噪声和竖向平滑，形成玄武岩台柱。求解后不补平台，营地也只挑选天然 6–9 格干燥岩面。
+- **通路验证：** A* 搜索离散物理动作图，以和实机相同的 60 Hz 重力、碰撞、跳跃与游泳逐帧回放。从上一块的精确出口继续，无伤、避开岩浆的候选才会被接受。
+- **水与敌人：** 扫描线蓄水与重力溢流；瀑布超过八格后逐渐消散。影子使用局部 BFS 路点和短期动作预测，与玩家共享物理，不能穿墙。
+- **前端：** 原生 HTML / CSS / Canvas，Web Worker 在前方生成并筛选区块，回收远处旧地图；首屏预载已验证地图，资源哈希处理缓存。零运行时依赖，无后端、数据库或 API Key。
+
+- **Natural caves:** 48×36-tile chunks, deterministic seeded noise and the four–five cellular-automaton smoothing rule, followed by BFS flood-fill connectivity checks. Column-correlated noise and vertical smoothing shape basalt regions. No platforms are patched in after solving; camps use natural dry ledges of 6–9 tiles.
+- **Route validation:** A* searches a discrete physical action graph. Every accepted route retains exact inputs replayed at the same 60 Hz gravity, collision, jumping and swimming rules as live play, continuing from the previous chunk's exit state without damage or lava contact.
+- **Water and enemies:** Scanline reservoirs and gravity-driven spillways produce pools and fading waterfalls. Shadows combine local BFS waypoints with short-horizon action prediction and obey player physics.
+- **Frontend:** Vanilla HTML / CSS / Canvas with Web Worker generation ahead of the player, old-chunk disposal, certified boot maps and hashed assets. No runtime packages, backend, database or API keys.
+
+路线保证针对已接受区块和离散动作图；偏离路线、长时间停留仍可能死亡。这不是对连续操作全局最优或数学意义无限地图的证明。水流是稳态模型，不是完整流体动力学。
+
+Route validation applies to accepted chunks and the discrete action graph. Deviating or waiting can still kill you; it is not a proof of a globally optimal continuous path or a mathematically infinite map. Water uses a steady-state model rather than full fluid dynamics.
+
+## 开发与部署 / Development and deployment
+
+需要 Node.js 20+。无需安装第三方运行时依赖。 / Requires Node.js 20+. No third-party runtime dependencies.
 
 ```sh
 npm ci
 npm run dev       # http://localhost:5173
-npm run build     # 输出 dist/
-npm run preview   # http://localhost:4173
 npm test
+npm run build     # dist/
+npm run preview   # http://localhost:4173
 ```
 
-Cloudflare Pages：框架 `None`，构建命令 `npm run build`，输出目录 `dist`。详见 [DEPLOY.md](DEPLOY.md)。
+Cloudflare Pages：**Framework = None · Build = `npm run build` · Output = `dist`**。本地与生产均为标准静态前端。 / Both development and production use a standard static frontend. See [DEPLOY.md](DEPLOY.md).
 
-## 游玩
+## 后续目标 / Roadmap
 
-画面占满页面宽度与可用高度，按实际视口调整逻辑高度，保持像素比例；操作、标本和生成详情收进顶部按钮 / 弹窗。
+- 硬矿挖掘、更多矿物与加工链。 / Hard-mineral mining, more minerals and processing chains.
+- 返回地表，建造房屋与基地。 / Return to the surface and build a home or base.
+- 玻璃建筑，以及文石 → 生石灰、砂石 → 水泥块等建材链。 / Glass construction and building-material chains such as aragonite → quicklime and aggregates → cement blocks.
+- 更多地貌、危险、生物与探索内容。 / More biomes, hazards, creatures and exploration.
 
-- A / D 或方向键左右移动，空格 / W / ↑ 跳跃。
-- 普通水池内 WASD 自由游泳、无输入悬停，不能跳跃；瀑布只减缓下落。
-- G 切换路线，V 观看实际按键解法，P 暂停，R 重开。
-- 触屏提供左右、跳跃、上下游泳按钮。
-
-## 地形、流体与通路验证
-
-48×36 分块，带边缘采样的种子噪声、四五细胞自动机和 BFS 连通筛选。没有人工平台或保底竖井。A* 在有限动作图中模拟与实机相同的 60Hz 物理，保留完整的水平、跳跃与竖直游泳按键证书。下一段从上一段的精确出口状态继续验证；无解候选重新采样，前方尚未完成时暂停游戏时间。
-
-“最优”仅指离散动作图，不声称连续操作中的全局最优或有限测试能证明数学无限长度。安全路线从出生点成立，偏离路线或停留仍会死亡。地形在远处生成并回收旧区块。
-
-普通水依托天然岩面，闭合凹槽蓄水、开放边缘溢流，转角相接，撞岩随机飞溅。水流连续下落超过 8 格开始虚化、12 格消散。水池免伤回血。采用持续泉源的扫描线稳态模型，不是可破坏地形下的完整流体动力学。
-
-## 岩浆场景
-
-- 从出生岩面计深度，约 250–350、500–600、750–850 米……为岩浆区，即每 250 米开始一段、持续约 100 米。
-- 背景深红，岩石为深灰玄武岩。初始化加入按列相干的噪声，后续平滑偏向竖直方向，形成较直、落差更大的柱状地形；岩石仍是算法原始输出，不在求解后补造平台。
-- 岩浆区的水标记为岩浆，只保留少量泉源及最多两层深的浅池。接触岩浆累计每秒扣 1 点生命，不回血；离开后重新计时。
-- 求解器拒绝任何岩浆接触，只有找到完全避开岩浆的连续通路才发布这一段。
-- 岩浆区不刷新黑暗或石钟乳，进入区域时旧黑暗也消失。
-- 每个岩浆带最多四道横扫喷流：先出现红线，预警 1.2–2 秒，再从左到右或右到左扫过。每道命中最多扣 1 点，错开高度可以躲避。喷流时序同样经过逐帧证书回放。
-
-## 随深度增加的危险
-
-普通区域的敌人和石钟乳逐渐增多，超过 500 米明显增加。敌人上限从每段 1 只增至 2–4 只；石钟乳从每段 3–5 根增至 7–10 根，实际数量仍受天然岩面和安全路线避让约束。
-
-黑暗是半透明人形、两个白点眼睛。7 格内苏醒，基础速度 135px/s，与角色共享重力、碰撞、二连跳和游泳。通过局部 BFS + 动作预测绕行 / 跳跃，不能穿墙；离开画面后消失。接触扣 1 点，危险物伤害间隔为 1.1 秒。
-
-石钟乳附着真实岩顶，进入下方窄触发区后抖动 0.32 秒再坠落。命中扣 1 点、躲开无伤、撞岩碎裂，岩石能遮挡落石。危险物布局为证书路线保留避险空间，演示没有专用无敌。
-
-## 蘑菇与标本
-
-干燥岩面零散生长苔藓 / 岩浆区的褐色地衣。每隔 50–70 格深度有红白蘑菇，随机效果替换上一种并持续至下一株：速度 ±10%、三段跳、仅一次跳跃、免伤高度 +10%、敌人速度 ±25%、敌人 / 矿物刷新率 ±40%。跳跃上限始终为 1 / 2 / 3；刷新率只影响新出现区域。
-
-接触地表矿物自动拾取，一枚只计算一次。标本盒可放大查看程序像素画。
-
-| 普通岩层 | 岩浆岩层 |
-| --- | --- |
-| 白玛瑙：白色环带；约 1/20 为变彩闪光虹膜玛瑙 | 黑曜石：不规则黑色玻璃体、贝壳状断口与光泽 |
-| 紫水晶：三联尖棱柱，褐色基岩 | 雌黄：橙色晶簇与黄色斑痕 |
-| 黄铁矿：有三个明暗面的立方晶簇 | 橄榄石：灰色基岩上的橄榄绿小晶体 |
-
-## 文件
-
-- `src/engine.js`：地形、区域周期、流体、物理、A*。
-- `src/threats.js`：深度难度、敌人、石钟乳、喷流与避险选址。
-- `src/visuals.js`：矿物、加工产物与挂坠与场景像素绘制。
-- `src/game.js`：输入、回放、自适应画面与界面。
-- `src/generator.js`：独立生成线程与证书串接。
-- `scripts/`：零依赖静态构建与开发服务器。
-
-`npm test` 覆盖多种子连续下降、原始地形不变、跨区块回放、水 / 岩浆、敌人跳跃碰撞、落石、喷流、区域周期、深度难度和玄武岩纵向连续性。
-
-### 0.6 新增生态
-
-普通干燥岩面会出现一格大的荧光伞菇。仅落在伞盖上免除本次摔伤，反弹高度约为本次最高点落差的一半；路线求解使用同一弹跳物理。普通积水水柱至少三格深时，池底才可能出现贝壳上放射草绿针晶的三斜磷钙铁。标本盒支持顶部关闭、Esc 和点击外侧关闭，从游戏进入后关闭会继续游玩。岩浆背景在边界渐变并平滑跟随。
-
-### 0.6.1 标本与放射晶簇
-
-未采集的标本以黑色剪影和问号隐藏；发现记录保存在当前浏览器，重新开始后仍解锁，本次采集数量重新计算。虹膜玛瑙保留斑块变彩并周期泛光。石钟乳落地生成文石；钙铀云母为荧黄绿色多方向片晶，七格内持续刷新眩晕，离开或拾取后十秒消退。眩晕以游戏画面的横向波动表示，不改变碰撞与输入。
-
-### 0.6.2 玛瑙调整
-
-普通白玛瑙使用稀疏、宽阔且有起伏的不规则环带，避免细密同心纹缩小时的干涉纹。虹膜玛瑙保留随机刷新，并由区块携带上次生成深度；超过 300 米开始在普通干燥岩面补充，保守上限 480 米，确保不会连续 500 米没有虹膜玛瑙。虹膜玛瑙不受贫矿孢子的刷新削减影响。
-
-### 0.7.0 露营与矿物加工
-
-- 荧光伞菇回弹最高点低于一格时直接稳定站立，不触发粒子或提示；高处落到伞盖仍免除该次摔伤。
-- 新增普通洞穴矿物煤炭：黑褐、略带光泽的不规则块体。
-- 红白蘑菇新增最大生命 +1 / −1，跨蘑菇保留当前上限，范围 3–7；到达边界后从抽签池排除越界效果，反向效果仍可出现。增益同时补一颗心，减益将现有生命截到新上限。
-- 每轮重新开始使用新种子，跳过首次快速启动图；生成器也会拒绝与上一轮相同的初始地形。发现过的图鉴继续保留，背包每轮清空。
-- 大约 300 米寻找一处营地；只用天然形成的 6–9 格干燥平地、上方三格净空、普通洞穴且连通下降路径的区域。遇到岩浆区或无合适岩面时顺延。营地有三角帐篷、熔炉、木堆、矿物工作台，不铺设额外地形。
-- 靠近营地按 **E**（触屏点“工坊 E”），打开时暂停游戏和塌陷，关闭后继续。初次使用木堆获得木头 ×3。
-- 熔炉每次消耗煤炭 ×1 或硫磺 ×1：黄铁矿 ×1 → 硫磺 ×1 ＋ 粗铁块 ×1；紫水晶 ×1 → 黄水晶 ×1；雌黄 ×1 → 砒霜 ×1。
-- 工作台：虹膜玛瑙 ×2 → **Pendant of Iris / 伊丽丝的祝福** ×1。放在背包即自动生效，下次死亡消耗一枚，恢复当前最大生命、产生彩虹护环和粒子、散去追赶的黑暗、把附近七格内岩浆转化为彩虹水，并拉开塌陷距离。一次触发消耗一枚。
-- 顶部背包显示全部携带矿物、加工品、木头和挂坠及其数量，同类物品不设堆叠上限。
-- `src/systems.js` 提供库存配方原子扣料、营地范围判定和一次性复活。`verify-crafting.cjs` 验证低幅弹跳、生命边界、配方、燃料及复活转换。
-
-### 0.8.0 营地庇护与矿物进阶
-
-- 角色中心在营地天然 6–9 格宽度、地面上方三格高的矩形内时，塌陷高度冻结；不需要打开工坊，离开范围后恢复。
-- 工作台：白玛瑙、虹膜玛瑙、紫水晶、黄水晶、黑曜石各 ×1 → 石英收藏盒。每轮仅可制作一次，此后拾取白玛瑙、虹膜玛瑙、紫水晶、黑曜石时数量 ×2，加工产物不翻倍。
-- 砒霜最多携带一瓶，不能重复烧制囤积。按 **Q** 或点击背包药瓶：消耗一瓶并永久降低本轮最大生命 1 点，毒倒五格内全部黑暗，倒地后为白色 X 眼睛，不再追击或造成伤害。没有目标或最大生命已为 3 时不消耗。
-- 工作台：粗铁块 ×5 → 粗铁镐，放在背包自动手持。当前没有可挖的硬矿，未开放挖掘动作。
-- 熔炉：橄榄石 ×1 ＋ 燃料 ×1 → 耐火砖 ×1。耐火砖 ×8 ＋ 当前营地熔炉 → 高温熔炉（原地替换，不额外消耗燃料）。高炉更高、有烟囱与三个黑色竖孔，保留原有全部烧制配方。
-- 高温熔炉：紫水晶或黄水晶各 ×1 ＋ 燃料 ×1 → 玻璃 ×1。
-- 地表房屋、砂石、生石灰和水泥块属于后续基地系统，本轮不开放建造。
-- `verify-progression.cjs` 验证营地边界、收藏盒保底单次制作、拾取翻倍、毒药上限 / 扣血 / 尸体、高炉升级和玻璃配方。通过测试与构建后自动本地提交，使用用户指定的 Codex 合作者尾注。
+以上为计划，不是当前已实现功能。 / These are planned features, not current capabilities.
