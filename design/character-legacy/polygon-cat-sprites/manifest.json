@@ -1,0 +1,43 @@
+{
+  "stage": 1,
+  "animated": false,
+  "frameWidth": 32,
+  "frameHeight": 48,
+  "feetAnchor": [
+    16,
+    46
+  ],
+  "referenceCollisionBox": [
+    14,
+    28
+  ],
+  "poses": [
+    "idle_3q",
+    "side_right",
+    "side_left"
+  ],
+  "palette": {
+    "outline": "#34463f",
+    "hair": "#e9e8dd",
+    "shine": "#fff8ea",
+    "hairShade": "#b9c9be",
+    "hairDeep": "#91aaa0",
+    "eye": "#4c9c77",
+    "eyeDark": "#275b4d",
+    "skin": "#f3d0bd",
+    "skinShade": "#d6b3a2",
+    "blush": "#dba4a2",
+    "ear": "#d7a6a1",
+    "mouth": "#b68d85",
+    "dress": "#497e67",
+    "dressShade": "#315848",
+    "dressLight": "#80ad89",
+    "hem": "#b2c79e",
+    "boot": "#5a4845",
+    "bootLight": "#8d6d59",
+    "strap": "#9a7955",
+    "metal": "#d2bb86"
+  },
+  "source": "src/player-concept.js",
+  "note": "Static design review only. Not enabled in gameplay."
+}

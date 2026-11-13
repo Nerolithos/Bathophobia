@@ -1,0 +1,93 @@
+{
+  "frameWidth": 40,
+  "frameHeight": 40,
+  "feetAnchor": [
+    20,
+    36
+  ],
+  "collisionBox": [
+    14,
+    28
+  ],
+  "source": "src/hero.js",
+  "clips": {
+    "idle": {
+      "frames": 4,
+      "fps": 4,
+      "file": "idle.png",
+      "row": 0
+    },
+    "walk": {
+      "frames": 6,
+      "fps": 8,
+      "file": "walk.png",
+      "row": 1
+    },
+    "run": {
+      "frames": 6,
+      "fps": 12,
+      "file": "run.png",
+      "row": 2
+    },
+    "jump_start": {
+      "frames": 2,
+      "fps": 10,
+      "file": "jump_start.png",
+      "row": 3
+    },
+    "jump_rise": {
+      "frames": 1,
+      "fps": 1,
+      "file": "jump_rise.png",
+      "row": 4
+    },
+    "jump_apex": {
+      "frames": 1,
+      "fps": 1,
+      "file": "jump_apex.png",
+      "row": 5
+    },
+    "fall": {
+      "frames": 2,
+      "fps": 6,
+      "file": "fall.png",
+      "row": 6
+    },
+    "land": {
+      "frames": 3,
+      "fps": 12,
+      "file": "land.png",
+      "row": 7
+    },
+    "swim": {
+      "frames": 6,
+      "fps": 6,
+      "file": "swim.png",
+      "row": 8
+    },
+    "mine": {
+      "frames": 4,
+      "fps": 10,
+      "file": "mine.png",
+      "row": 9
+    },
+    "hurt": {
+      "frames": 3,
+      "fps": 12,
+      "file": "hurt.png",
+      "row": 10
+    },
+    "death": {
+      "frames": 4,
+      "fps": 8,
+      "file": "death.png",
+      "row": 11
+    },
+    "fly": {
+      "frames": 4,
+      "fps": 6,
+      "file": "fly.png",
+      "row": 12
+    }
+  }
+}

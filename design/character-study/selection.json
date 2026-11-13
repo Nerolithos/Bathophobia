@@ -1,0 +1,11 @@
+{
+  "selected": "B",
+  "hair": "ash-brown fluffy short hair",
+  "stage": "three static views for review",
+  "gameplayEnabled": false,
+  "idle": "assets/characters/idle-studies/idle-b-ash-brown.png",
+  "right": "assets/characters/idle-studies/b-side-right.png",
+  "left": "assets/characters/idle-studies/b-side-left.png",
+  "leftMethod": "exact horizontal mirror of right, as permitted by user",
+  "nativePixelCleanupPending": true
+}

@@ -145,3 +145,10 @@ Mining removes every rock type while remaining rock stays suspended. Unsupported
 Six independently painted species have their own silhouettes, palettes and eight-frame action sequences. Only movement AI is shared; no body texture is reused or recolored between species. Cached pixel frames animate wings, blinks, breathing, leaps, curled tails, grazing and waddling without extra asset downloads.
 
 ![冬季独立绵羊与企鹅 / Animated sheep and penguins](docs/screenshots/animated-winter-animals.jpg)
+
+
+### 角色造型研究 / Character art study
+
+[B 角色三姿态预览](character-preview.html)：已选定浅灰棕短发 B，补齐 3/4 Idle、右侧面与精确镜像的左侧面。使用图像生成流程制作原画，等待姿态确认后再进行原生像素规范化；本阶段不替换游玩角色、不制作完整动画，也不修改物理与碰撞。提示词保存在 [design/character-study/PROMPTS.md](design/character-study/PROMPTS.md)，先前程序绘制草稿保留于 `design/character-legacy/`。
+
+[Review the three static views of selected design B](character-preview.html). The ash-brown Idle is user-approved; a right profile and an exact mirrored left profile are ready for review before native-pixel cleanup. The original playable character and physics remain unchanged.
