@@ -16,11 +16,11 @@
 
 </div>
 
-![矿物洞穴中的探索 / Exploring the mineral caves](docs/screenshots/current-cave.jpg)
+![秋季山居 / Autumn homestead](docs/screenshots/current-surface.jpg)
 
-| 四季山居 · Seasonal homestead | 地质探索 · Geological exploration |
+| 营地休整 · Cave camp | 火山探索 · Volcanic caves |
 | :---: | :---: |
-| ![最新地表与角色 / Current surface and player](docs/screenshots/current-surface.jpg) | ![萤石与方解石晶洞 / Fluorite–calcite geode](docs/screenshots/geode-fluorite-seed-11.png) |
+| ![营地与角色 / Player at a cave camp](docs/screenshots/current-camp.jpg) | ![玄武岩与岩浆 / Basalt and lava](docs/screenshots/current-volcano.jpg) |
 
 ## 中文
 
