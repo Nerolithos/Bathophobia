@@ -1,160 +1,104 @@
-# 深绿之下 · Bathophobia
+<div align="center">
 
-**带上矿物标本，向不断塌陷的地底深处前进。** 一个矿物学主题的无尽像素地牢，使用原生 JavaScript 与 Canvas 绘制。
+# BATHOPHOBIA · 深绿之下
 
-**Collect minerals. Outrun the collapse. Descend into the unknown.** An endless, mineral-themed pixel dungeon built with vanilla JavaScript and Canvas.
+**采集矿物，逃离塌陷，回到四季山居。**<br>
+**Collect minerals. Outrun the collapse. Build a home above.**
 
-[在线试玩 / Play](https://abyss.nero-lithos.com/) · [部署 / Deployment](DEPLOY.md)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-F7DF1E?logo=javascript&logoColor=111)
+![Canvas](https://img.shields.io/badge/Canvas-2D-E34F26?logo=html5&logoColor=white)
+![Web Workers](https://img.shields.io/badge/Web_Workers-Procedural_Generation-5D8B70)
+![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white)
+![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-F38020?logo=cloudflarepages&logoColor=white)
+![Dependencies](https://img.shields.io/badge/Runtime_dependencies-0-6D9875)
 
-![天然岩面上的露营点 / A camp on a naturally generated ledge](docs/screenshots/camp.png)
+[**在线试玩 · Play now**](https://abyss.nero-lithos.com/) · [中文](#中文) · [English](#english) · [部署 · Deploy](DEPLOY.md)
 
-## 玩法 / How to play
+</div>
 
-- **向下生存。** 左右移动、二连跳，利用水池、瀑布和荧光伞菇缓冲落差。塌陷会从上方追来；进入营地宽度内、上方三格高的庇护区可暂停塌陷。
-- **采集与加工。** 接触矿物自动拾取，背包同类无限堆叠；采到后解锁图鉴。营地里烧制矿物、升级高温熔炉，制作拾取翻倍的收藏盒、粗铁镐和能救命一次的虹膜挂坠；挂坠复活后可自由飞行五秒，留下彩虹轨迹。
-- **应对变化。** 红白蘑菇带来正负效果，最大生命在 3–7 之间。黑暗会跳跃追逐，石钟乳会坠落；约每 250 米进入一段约 100 米的玄武岩与岩浆区，留意横扫喷流的红线。
+![矿物洞穴中的探索 / Exploring the mineral caves](docs/screenshots/current-cave.jpg)
 
-- **Keep descending.** Walk, double-jump, and soften falls with pools, waterfalls and glowing bounce mushrooms. The ceiling collapses behind you; the three-tile-high shelter above a camp's ledge pauses the collapse.
-- **Collect and craft.** Touch minerals to collect them, stack your inventory, and reveal collection entries. Smelt minerals at camps, upgrade furnaces, and craft a collection box, an iron pickaxe or a one-use revival pendant, which grants five seconds of free flight with a rainbow trail.
-- **Adapt to danger.** Mushrooms grant helpful or harmful effects, with maximum health bounded to 3–7. Shadows pursue you using real jumps; stalactites fall. Roughly every 250 m, a 100 m lava biome brings basalt columns and sweeping jets with red warning lines.
+| 四季山居 · Seasonal homestead | 地质探索 · Geological exploration |
+| :---: | :---: |
+| ![最新地表与角色 / Current surface and player](docs/screenshots/current-surface.jpg) | ![萤石与方解石晶洞 / Fluorite–calcite geode](docs/screenshots/geode-fluorite-seed-11.png) |
+
+## 中文
+
+矿物学主题的无尽像素平台游戏。向下探索天然洞穴，采集标本、加工材料，躲避追来的塌陷；返回地表，用带回的资源建造房屋。
+
+- **探索与生存**：二连跳、自由游泳、瀑布缓冲、弹跳蘑菇；影子追逐、坠落钟乳和岩浆喷流。
+- **矿物与制作**：玛瑙、紫水晶、黄铁矿、萤石等标本；开采晶洞、烧制矿物、升级熔炉、制作装备与建材。
+- **四季与建设**：每次下潜推进季节，地表拥有独立动画动物；按蓝图建造地基、合金框架、墙体、屋顶与玻璃窗。
+- **跨轮进度**：仓库、图鉴和建设进度保存在浏览器；仓储材料不能带入下一轮洞穴背包。
+
+## English
+
+An endless, mineral-themed pixel platformer. Descend through natural caves, collect specimens, process materials and escape the collapsing ceiling. Bring resources home to build above ground.
+
+- **Explore & survive** — Double-jump, swim, slow falls in waterfalls and bounce on mushrooms. Evade pursuing shadows, falling stalactites and lava jets.
+- **Collect & craft** — Discover agate, amethyst, pyrite, fluorite and more. Mine geodes, smelt minerals, upgrade furnaces and craft equipment and building materials.
+- **Seasons & building** — Every descent advances the season. Meet animated wildlife and complete a house blueprint, from foundation and alloy frame to glass windows.
+- **Persistent progress** — Browser-local storage preserves your warehouse, collection and home. Stored materials stay out of your next expedition inventory.
+
+## 操作 · Controls
 
 | 操作 / Action | 按键 / Keys |
 | --- | --- |
-| 行走 / Walk | A / D · ← / → |
-| 跳跃 / Jump | Space · W · ↑ |
-| 水池游泳 / Swim in pools | WASD / 方向键 · Arrow keys |
-| 营地工坊 / Camp workshop | E |
-| 开采 / Mine | F · F+W/S 朝上/下 / aim up/down · 点击近处岩石 / click nearby rock |
-| 使用砒霜 / Use arsenic | Q · 点击背包药瓶 / Click the vial |
-| 暂停、重开 / Pause, new run | P · R |
-| 显示路线、解法演示 / Route overlay, solver replay | G · V |
+| 移动 / Move | A D / ← → |
+| 跳跃 / Jump | Space / W / ↑ |
+| 游泳 / Swim | WASD / Arrow keys |
+| 交互、工坊 / Interact, workshop | E |
+| 地表仓库与建设 / Surface storage & building | B |
+| 开采 / Mine | F / 点击岩石 · Click rock；F + W/S 朝上/下 · aim up/down |
+| 使用砒霜 / Use arsenic | Q |
+| 暂停、重新下潜 / Pause, restart | P / R |
+| 路线、解法回放 / Route, solver replay | G / V |
 
-触屏提供移动、跳跃、游泳与工坊按钮。砒霜最多持有一瓶，使用会降低一点最大生命，毒倒五格内黑暗。制作粗铁镐后，按 F 或点击近处岩石开采；嵌入矿石需要开采，外露晶体可直接拾取。
+支持触屏按钮。采集剩余材料可在暂停或死亡后返回地表入仓。<br>
+Touch controls included. Return home from pause or death to bank remaining materials.
 
-Touch controls support movement, jumping, swimming and the workshop. Carry one arsenic vial at a time; using it costs one maximum health and poisons shadows within five tiles. Craft a crude iron pickaxe, then hold F or click nearby rock to mine. Embedded deposits require mining; exposed crystals can be collected by contact.
+## 技术与算法 · Under the hood
 
-## 晶洞与远景 / Geodes and depth
-
-普通洞穴中的厚实岩体里藏有稀有的圆形 / 椭圆晶洞：围岩内包裹石英衬层和向心紫水晶，或灰白、局部浅黄的方解石衬层与青绿 / 蓝紫萤石。中央保留空气；封闭晶洞可被发现并用铁镐挖开。
-
-Rare circular / elliptical geodes form in thick ordinary-cave rock: host rock encloses quartz and inward-growing amethyst, or pale calcite with teal / violet fluorite cubes. The center remains air. Sealed geodes can be discovered and opened with a pickaxe.
-
-热液矿脉采用真正的不透明石英岩石 Tile，只替换既有固体岩石的材质；主体宽 1–2 格，局部至 3 格，连续噪声控制弯曲、变宽、方向和分叉。富矿段包含可开采的嵌入黄铁矿与可拾取的外露晶簇。
-
-Hydrothermal lodes use opaque quartz rock tiles only inside existing solid rock. Their 1–2-tile cores swell locally to 3 tiles; continuous noise controls curvature, width, orientation and forks. Rich sections contain mineable embedded pyrite and collectible exposed crystals.
-
-远景模糊洞穴轮廓以 **0.15×** 相机速度移动；中景岩柱、远处晶簇以 **0.4×** 移动；真实可碰撞前景为 **1×**。背景保持低对比度，无碰撞，不遮挡危险提示。
-
-Distant blurred cave silhouettes move at **0.15×** camera speed; midground pillars and distant crystals at **0.4×**; solid foreground terrain at **1×**. Background layers remain subdued, non-colliding and behind all hazards.
-
-### 晶洞与实体矿脉 · 三种种子 / Geodes and solid lodes · three seeds
-
-| Seed 1 · 紫水晶 / Amethyst | Seed 11 · 萤石—方解石 / Fluorite–calcite | Seed 127301 · 石英矿脉 / Quartz lode |
-| --- | --- | --- |
-| ![紫水晶晶洞](docs/screenshots/geode-amethyst-seed-1.png) | ![萤石方解石晶洞](docs/screenshots/geode-fluorite-seed-11.png) | ![实体石英矿脉](docs/screenshots/geode-hydro-seed-127301.png) |
-
-[生成器、数据结构、开采与验证 / Generator, data structures, mining and verification](docs/GEODES.md)
-
-## 地底瞬间 / Underground moments
-
-固定种子实机试玩截图，使用与正式游戏相同的生成器、物理和渲染。追逐场景展示影子的跳跃 AI；岩浆场景来自实际求解按键的物理回放。
-
-Seeded in-engine playtest captures using the same generator, physics and rendering as the game. The chase shows the shadow's jumping AI; the lava scene is captured from a replay of solver-generated inputs.
-
-| 黑暗追逐 / The chase | 玄武岩与岩浆喷流 / Basalt and lava jets |
+| 系统 / System | 实现 / Implementation |
 | --- | --- |
-| ![跳跃躲避追赶的黑暗 / Jumping away from pursuing shadows](docs/screenshots/chase.png) | ![岩浆区域中的喷流预警 / A jet warning inside the lava biome](docs/screenshots/lava.png) |
+| 前端 / Frontend | Vanilla JavaScript · HTML/CSS · Canvas 2D · Web Audio |
+| 洞穴 / Caves | 确定性种子噪声、四五细胞自动机、BFS 洪泛填充 / Seeded noise, four–five cellular automata, BFS flood fill |
+| 地质 / Geology | 椭圆距离场晶洞、相关噪声裂隙矿脉 / Elliptic geode fields, correlated-noise fracture veins |
+| 路线 / Routes | A* 物理动作图、60 Hz 逐帧验证 / A* action graph, 60 Hz physics replay |
+| 水体 / Water | 扫描线蓄水、重力溢流与瀑布 / Scanline pools, gravity spillways and waterfalls |
+| 渲染 / Rendering | 像素图集、非均匀帧时长、视差背景 / Pixel atlases, nonuniform frame timing, parallax |
+| 性能 / Performance | Web Worker 分块生成、旧区块回收、哈希资源 / Worker generation, chunk disposal, hashed assets |
+| 存档 / Persistence | localStorage；无需后端 / No backend required |
 
-<details>
-<summary>图示合成工坊 / Visual crafting workshop</summary>
+路线验证针对生成时的地形；自由开采会使原路线失效并触发重新验证。<br>
+Routes are validated against generated terrain; mining invalidates the original certificate and requests revalidation.
 
-材料、燃料和产物直接显示为像素图片。材料下方为“持有 / 所需”，产物下方为单次获得数量。
+[地质生成文档 · Geology](docs/GEODES.md) · [山居系统 · Homestead](docs/HOMESTEAD.md)
 
-Ingredients, fuel and results appear as pixel illustrations. Ingredient captions show owned / required counts; result captions show the output per craft.
+## 本地运行 · Quick start
 
-![材料图片指向产物图片的合成界面 / Icon-based ingredients and results](docs/screenshots/crafting.png)
-
-</details>
-
-## 技术与算法 / Technology and algorithms
-
-- **天然洞穴：** 48×36 格区块、确定性种子噪声与四五细胞自动机平滑；BFS 洪泛填充检查连通性。岩浆区加入按列相干的噪声和竖向平滑，形成玄武岩台柱。晶洞通过岩岛连通分量和内接椭圆筛选，在通路求解前生成；石英矿脉只沿既有岩石生长。求解后不补平台，营地也只挑选天然 6–9 格干燥岩面。
-- **通路验证：** A* 搜索离散物理动作图，以和实机相同的 60 Hz 重力、碰撞、跳跃与游泳逐帧回放。从上一块的精确出口继续，无伤、避开岩浆的候选才会被接受。
-- **水与敌人：** 扫描线蓄水与重力溢流；瀑布超过八格后逐渐消散。影子使用局部 BFS 路点和短期动作预测，与玩家共享物理，不能穿墙。
-- **前端：** 原生 HTML / CSS / Canvas，Web Worker 在前方生成并筛选区块，回收远处旧地图；首屏预载已验证地图，资源哈希处理缓存。零运行时依赖，无后端、数据库或 API Key。
-
-- **Natural caves:** 48×36-tile chunks, deterministic seeded noise and the four–five cellular-automaton smoothing rule, followed by BFS flood-fill connectivity checks. Column-correlated noise and vertical smoothing shape basalt regions. Rock-component checks and inscribed ellipses place geodes before route solving; quartz veins follow existing rock. No platforms are patched in after solving; camps use natural dry ledges of 6–9 tiles.
-- **Route validation:** A* searches a discrete physical action graph. Every accepted route retains exact inputs replayed at the same 60 Hz gravity, collision, jumping and swimming rules as live play, continuing from the previous chunk's exit state without damage or lava contact.
-- **Water and enemies:** Scanline reservoirs and gravity-driven spillways produce pools and fading waterfalls. Shadows combine local BFS waypoints with short-horizon action prediction and obey player physics.
-- **Frontend:** Vanilla HTML / CSS / Canvas with Web Worker generation ahead of the player, old-chunk disposal, certified boot maps and hashed assets. No runtime packages, backend, database or API keys.
-
-路线保证针对已接受区块和离散动作图；偏离路线、长时间停留仍可能死亡。这不是对连续操作全局最优或数学意义无限地图的证明。水流是稳态模型，不是完整流体动力学。
-
-Route validation applies to accepted chunks and the discrete action graph. Deviating or waiting can still kill you; it is not a proof of a globally optimal continuous path or a mathematically infinite map. Water uses a steady-state model rather than full fluid dynamics.
-
-## 开发与部署 / Development and deployment
-
-需要 Node.js 20+。无需安装第三方运行时依赖。 / Requires Node.js 20+. No third-party runtime dependencies.
+Node.js **20+**，无第三方运行时依赖。 / No third-party runtime dependencies.
 
 ```sh
+git clone https://github.com/Nerolithos/Bathophobia.git
+cd Bathophobia
 npm ci
 npm run dev       # http://localhost:5173
-npm test
-npm run build     # dist/
+```
+
+```sh
+npm test          # Physics, generation, routes, crafting, persistence, wildlife
+npm run build     # Static output: dist/
 npm run preview   # http://localhost:4173
 ```
 
-Cloudflare Pages：**Framework = None · Build = `npm run build` · Output = `dist`**。本地与生产均为标准静态前端。 / Both development and production use a standard static frontend. See [DEPLOY.md](DEPLOY.md).
+**Cloudflare Pages:** Framework `None` · Build `npm run build` · Output `dist`。详见 / See [DEPLOY.md](DEPLOY.md).
 
-## 后续目标 / Roadmap
+## 后续计划 · Roadmap
 
-- 更多硬矿、开采工具与加工链。 / More hard minerals, mining tools and processing chains.
-- 返回地表，建造房屋与基地。 / Return to the surface and build a home or base.
-- 玻璃建筑，以及文石 → 生石灰、砂石 → 水泥块等建材链。 / Glass construction and building-material chains such as aragonite → quicklime and aggregates → cement blocks.
-- 更多地貌、危险、生物与探索内容。 / More biomes, hazards, creatures and exploration.
+- [ ] 更自由的房屋布局、室内与家具 / Flexible house layouts, interiors and furniture
+- [ ] 更多矿物、硬度与工具进阶 / More minerals, hardness and tool progression
+- [ ] 更多洞穴生态与地貌 / More cave ecosystems and biomes
 
-以上为计划，不是当前已实现功能。 / These are planned features, not current capabilities.
-
-
-## 山居与四季 / Seasonal homestead (v0.11)
-
-地面现为可游玩的山泉营地。A/D 漫步、空格跳跃，E 收集木堆或打开附近工坊，B 查看仓库和建房；走入右侧洞口开始下潜。每次下潜推进一个季节：春兔与燕、夏蛙与蝉鸣（打开声音）、秋枫与松鼠、冬雪与绵羊/企鹅。
-
-暂停可以继续本轮，或返回地面结束本轮；死亡后可以重新下潜或返回地面。剩余背包材料自动入仓，仓库和蓝图进度保存在当前浏览器。**地面仓库不会补入下一轮洞穴背包**。中途刷新页面会把已保存的本轮剩余材料结算回地面，不能恢复该矿洞。
-
-房屋按水泥地基 → 合金框架 → 墙体 → 木屋顶 → 玻璃窗建设，空中虚线提示位置。加工链：菱锰矿烧成粗锰，粗铁＋粗锰在高温炉中合金化；文石/方解石煅烧成生石灰，与开采所得砂石制水泥；紫/黄水晶在高温炉中熔制玻璃。所有配方是简化的游戏设计。地面熔炉升级独立持久化，烧制需煤炭或硫磺，每次下潜后地面木堆可收集一次。
-
-粗铁镐可开采所有岩石，包括曾保护路线及水池的支撑块。剩余岩石不受重力；失去支撑的矿物、红白蘑菇和弹跳蘑菇会落到下一处岩面，跨分块转移。开采会使原无伤路线证书失效，后台会尝试重新验证本段；**自由开采后不再保证原路线安全**。
-
-The playable surface features a mountain spring, a fixed dashed house blueprint, seasonal wildlife and a persistent warehouse. Walk with A/D, jump with Space, interact with E, and open construction/storage with B. Enter the right-hand cave mouth to start a fresh expedition; every descent advances the season. Enable sound to hear summer cicadas.
-
-Pause to resume or finish the expedition and return home. Death allows a fresh run or a surface return. Remaining inventory is banked exactly once; **stored resources are never available during the next cave run**. Browser-local storage preserves the warehouse, furnace upgrade and building stages. Reloading settles the saved expedition inventory to the surface rather than restoring that cave.
-
-Build foundation, alloy frame, walls, timber roof and glass windows in sequence. Smelt rhodochrosite into manganese, combine manganese and crude iron in the high furnace for structural alloy; calcine aragonite/calcite for quicklime and combine with mined aggregate for cement. Amethyst/citrine become glass in the high furnace. These are deliberately simplified game recipes.
-
-Mining removes every rock type while remaining rock stays suspended. Unsupported collectible minerals and mushrooms fall with gravity and transfer across loaded chunks. Original A* certificates become invalid after excavation; a worker attempts local revalidation without blocking play. The surface animal controller shares seasonal wander/hop/fly behavior. Future work: editable floor plans, interiors, furniture and a richer surface ecology.
-
-![秋季山居：枫树、山泉、松鼠与虚线房屋蓝图 / Autumn homestead](docs/screenshots/homestead-autumn.jpg)
-![跨轮仓库与分步建造 / Persistent warehouse and staged construction](docs/screenshots/homestead-workshop.jpg)
-
-
-### 动物动画 / Animated wildlife (v0.11.1)
-
-兔子、燕子、青蛙、松鼠、绵羊和企鹅分别拥有独立像素造型、配色与八帧动作序列；参考 `raw_asset/` 中的轮廓风格重绘。动物只共享漫游、停留、边界转向及跳跃重力 AI，不共用身体贴图。动作包括振翅、眨眼、呼吸、跳跃、摆尾捧食、低头吃草及摆鳍摇摆。帧在内存缓存，运行时无需下载额外贴图。
-
-Six independently painted species have their own silhouettes, palettes and eight-frame action sequences. Only movement AI is shared; no body texture is reused or recolored between species. Cached pixel frames animate wings, blinks, breathing, leaps, curled tails, grazing and waddling without extra asset downloads.
-
-![冬季独立绵羊与企鹅 / Animated sheep and penguins](docs/screenshots/animated-winter-animals.jpg)
-
-
-### 角色造型研究 / Character art study
-
-[B 角色三姿态预览](character-preview.html)：已选定浅灰棕短发 B，补齐 3/4 Idle、右侧面与精确镜像的左侧面。使用图像生成流程制作原画，等待姿态确认后再进行原生像素规范化；本阶段不替换游玩角色、不制作完整动画，也不修改物理与碰撞。提示词保存在 [design/character-study/PROMPTS.md](design/character-study/PROMPTS.md)，先前程序绘制草稿保留于 `design/character-legacy/`。
-
-[Review the three static views of selected design B](character-preview.html). The ash-brown Idle is user-approved; a right profile and an exact mirrored left profile are ready for review before native-pixel cleanup. The original playable character and physics remain unchanged.
-
-### B 角色已集成 / Animated player B
-
-默认使用 40 px 原生像素图集，地表和洞穴共用基于实际位移、接地和动作事件的独立视觉状态机。包含待机、转身、行走、奔跑、跳跃、落地、游泳、开采、受伤、死亡和飞行；快速跳跃、下落及受伤最多三个短残影。保留 `legacyHero` 回退绘制，物理与碰撞盒不变。图集和 GIF 在 `assets/characters/player-b/`；准备脚本只用于离线制作，构建和运行不执行 Python。
-
-Player B now uses the native 40 px atlas in both scenes. Animation follows actual movement and physical events without changing collision or solver behavior. Original rendering remains available as `legacyHero`. Native 32/40/48 atlases and GIF previews are preserved with the source key poses.
+通过 Issues 提交问题或玩法建议；欢迎提交聚焦的小型 PR。<br>
+Report bugs or ideas through Issues. Focused pull requests are welcome.
