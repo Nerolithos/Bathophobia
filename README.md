@@ -136,3 +136,12 @@ Mining removes every rock type while remaining rock stays suspended. Unsupported
 
 ![秋季山居：枫树、山泉、松鼠与虚线房屋蓝图 / Autumn homestead](docs/screenshots/homestead-autumn.jpg)
 ![跨轮仓库与分步建造 / Persistent warehouse and staged construction](docs/screenshots/homestead-workshop.jpg)
+
+
+### 动物动画 / Animated wildlife (v0.11.1)
+
+兔子、燕子、青蛙、松鼠、绵羊和企鹅分别拥有独立像素造型、配色与八帧动作序列；参考 `raw_asset/` 中的轮廓风格重绘。动物只共享漫游、停留、边界转向及跳跃重力 AI，不共用身体贴图。动作包括振翅、眨眼、呼吸、跳跃、摆尾捧食、低头吃草及摆鳍摇摆。帧在内存缓存，运行时无需下载额外贴图。
+
+Six independently painted species have their own silhouettes, palettes and eight-frame action sequences. Only movement AI is shared; no body texture is reused or recolored between species. Cached pixel frames animate wings, blinks, breathing, leaps, curled tails, grazing and waddling without extra asset downloads.
+
+![冬季独立绵羊与企鹅 / Animated sheep and penguins](docs/screenshots/animated-winter-animals.jpg)
