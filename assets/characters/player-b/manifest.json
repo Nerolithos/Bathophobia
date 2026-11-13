@@ -1,0 +1,663 @@
+{
+  "selected": "B",
+  "defaultDisplayHeight": 40,
+  "sourcePixelHeights": [
+    32,
+    40,
+    48
+  ],
+  "palette": [
+    "#34463f",
+    "#655950",
+    "#837269",
+    "#a18e7e",
+    "#b7a28f",
+    "#d6c3ac",
+    "#d7a6a1",
+    "#eec8b0",
+    "#f5d7c0",
+    "#c29e88",
+    "#d29c91",
+    "#275b4d",
+    "#4c9c77",
+    "#90b596",
+    "#f2eedc",
+    "#284638",
+    "#355b47",
+    "#4e7d60",
+    "#7f9c7b",
+    "#493b36",
+    "#6b5041",
+    "#96765a",
+    "#b29672",
+    "#c9b486",
+    "#77877f",
+    "#b5c2b7"
+  ],
+  "collisionBox": [
+    14,
+    28
+  ],
+  "clips": {
+    "idle": [
+      "idle-0",
+      "idle-1",
+      "idle-2",
+      "idle-0"
+    ],
+    "walk": [
+      "walk-0",
+      "walk-1",
+      "walk-2",
+      "walk-3",
+      "walk-4",
+      "walk-5"
+    ],
+    "run": [
+      "run-0",
+      "run-1",
+      "run-2",
+      "run-3",
+      "run-4",
+      "run-5"
+    ],
+    "jump": [
+      "jump-0",
+      "jump-1",
+      "jump-2",
+      "jump-3",
+      "jump-4"
+    ],
+    "land": [
+      "jump-5",
+      "jump-0",
+      "stop-0"
+    ],
+    "swim": [
+      "swim-0",
+      "swim-1",
+      "swim-2",
+      "swim-3",
+      "swim-4",
+      "swim-5"
+    ],
+    "mine": [
+      "mine-0",
+      "mine-1",
+      "mine-2",
+      "mine-3",
+      "mine-4",
+      "mine-5"
+    ],
+    "hurt": [
+      "hurt-0",
+      "hurt-1"
+    ],
+    "death": [
+      "death-0",
+      "death-1",
+      "death-2"
+    ],
+    "fly": [
+      "fly-0"
+    ],
+    "turn": [
+      "stop-0",
+      "turn-0",
+      "idle-0"
+    ],
+    "blink": [
+      "blink-0"
+    ]
+  },
+  "frameMetadata": {
+    "walk-0": {
+      "bounds": [
+        15,
+        10,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "walk-1": {
+      "bounds": [
+        15,
+        12,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "walk-2": {
+      "bounds": [
+        15,
+        11,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "walk-3": {
+      "bounds": [
+        15,
+        10,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "walk-4": {
+      "bounds": [
+        15,
+        12,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "walk-5": {
+      "bounds": [
+        15,
+        11,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-0": {
+      "bounds": [
+        12,
+        12,
+        37,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-1": {
+      "bounds": [
+        11,
+        12,
+        35,
+        46
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-2": {
+      "bounds": [
+        13,
+        13,
+        35,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-3": {
+      "bounds": [
+        14,
+        15,
+        36,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-4": {
+      "bounds": [
+        13,
+        14,
+        35,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "run-5": {
+      "bounds": [
+        11,
+        12,
+        35,
+        46
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "motion"
+    },
+    "jump-0": {
+      "bounds": [
+        13,
+        18,
+        38,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "jump-1": {
+      "bounds": [
+        14,
+        10,
+        35,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "jump-2": {
+      "bounds": [
+        15,
+        6,
+        36,
+        41
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "jump-3": {
+      "bounds": [
+        14,
+        3,
+        34,
+        44
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "jump-4": {
+      "bounds": [
+        15,
+        5,
+        34,
+        47
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "jump-5": {
+      "bounds": [
+        14,
+        15,
+        36,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-0": {
+      "bounds": [
+        11,
+        11,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-1": {
+      "bounds": [
+        8,
+        9,
+        34,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-2": {
+      "bounds": [
+        13,
+        11,
+        43,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-3": {
+      "bounds": [
+        12,
+        15,
+        47,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-4": {
+      "bounds": [
+        14,
+        14,
+        43,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "mine-5": {
+      "bounds": [
+        11,
+        11,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "action"
+    },
+    "idle-0": {
+      "bounds": [
+        14,
+        11,
+        32,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "idle-1": {
+      "bounds": [
+        14,
+        11,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "blink-0": {
+      "bounds": [
+        15,
+        12,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "idle-2": {
+      "bounds": [
+        14,
+        11,
+        32,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "stop-0": {
+      "bounds": [
+        15,
+        10,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "turn-0": {
+      "bounds": [
+        15,
+        10,
+        33,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-0": {
+      "bounds": [
+        10,
+        26,
+        43,
+        48
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-1": {
+      "bounds": [
+        10,
+        26,
+        42,
+        49
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-2": {
+      "bounds": [
+        13,
+        26,
+        40,
+        53
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-3": {
+      "bounds": [
+        12,
+        26,
+        40,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-4": {
+      "bounds": [
+        10,
+        26,
+        42,
+        52
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "swim-5": {
+      "bounds": [
+        9,
+        26,
+        42,
+        48
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "hurt-0": {
+      "bounds": [
+        12,
+        16,
+        35,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "hurt-1": {
+      "bounds": [
+        15,
+        16,
+        36,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "death-0": {
+      "bounds": [
+        14,
+        19,
+        39,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "death-1": {
+      "bounds": [
+        9,
+        24,
+        40,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "death-2": {
+      "bounds": [
+        6,
+        38,
+        43,
+        50
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    },
+    "fly-0": {
+      "bounds": [
+        11,
+        13,
+        37,
+        45
+      ],
+      "feetAnchor": [
+        24,
+        50
+      ],
+      "sourceSheet": "special"
+    }
+  },
+  "frameCount": 42,
+  "source": "image_gen authored key poses, offline native-pixel cleanup; no skeleton transforms"
+}

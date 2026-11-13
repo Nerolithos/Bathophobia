@@ -3,7 +3,7 @@
 const Animals=typeof module!=='undefined'?require('./animals'):root.CaveAnimals;
 const species=[['rabbit','swallow'],['frog','frog'],['squirrel','squirrel'],['sheep','penguin']];
 function create(season=2){return {season,time:0,x:310,y:0,vy:0,face:1,ground:true,jump:false,animals:Array.from({length:5},(_,i)=>({kind:species[season][i%2],x:100+i*120,homeX:100+i*120,y:0,dir:i%2?1:-1,phase:i*1.7}))}}
-function update(s,dt,keys,height){s.time+=dt;let floor=Math.floor(height*.73/20)*20,dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);s.x=Math.max(20,Math.min(930,s.x+dir*150*dt));if(dir)s.face=dir;if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=0){s.y=0;s.vy=0;s.ground=true}for(let a of s.animals)Animals.update(a,dt,s.time);return s.x>866&&s.ground}
+function update(s,dt,keys,height){let oldX=s.x;s.didJump=false;s.time+=dt;let floor=Math.floor(height*.73/20)*20,dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);s.x=Math.max(20,Math.min(930,s.x+dir*150*dt));if(dir)s.face=dir;if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=0){s.y=0;s.vy=0;s.ground=true}for(let a of s.animals)Animals.update(a,dt,s.time);s.hero??={x:oldX,y:s.y,ground:true};Object.assign(s.hero,{x:s.x,y:s.y,ground:s.ground,vy:s.vy,face:s.face,didJump:s.didJump,time:s.time});let animator=typeof module!=='undefined'?require('./player-animation'):root.CavePlayerAnimation;animator.update(s.hero,dt);return s.x>866&&s.ground}
 function draw(c,s,height,home,hero){let g=Math.floor(height*.73/20)*20,t=s.time,season=s.season,autumn=season===2,winter=season===3;
 const rect=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h)},poly=(points,color)=>{c.fillStyle=color;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill()};
 let sky=c.createLinearGradient(0,0,0,g);sky.addColorStop(0,winter?'#354d5c':autumn?'#36575d':'#244e4c');sky.addColorStop(1,winter?'#a2b9b6':autumn?'#9ea890':'#7eaa8e');c.fillStyle=sky;c.fillRect(0,0,960,height);rect(730,g*.18,24,24,'#e7d8a5');for(let i=0;i<4;i++){let xx=(i*287+t*1.5)%1100-90,yy=g*.23+(i%2)*27;rect(xx,yy,78,3,'#b8c4ad33');rect(xx+21,yy-3,39,3,'#c4ccb633')}
@@ -23,7 +23,7 @@ if(p>=1)rect(x-8,g-9,w+16,9,'#7c8c7c');if(p>=2){for(let xx of [x,x+w/2,x+w-6])re
 if(p<5){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+w/2,y-67);c.lineTo(x+w+18,y);c.stroke();c.restore()}else if(winter)rect(x-8,y,220,4,'#d7e0d3');
 for(let a of s.animals)Animals.draw(c,a,g,t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
-hero(c,{x:s.x,y:g-28+s.y,vx:0,face:s.face,ground:s.ground,time:t},0,t,[]);
+s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[]);c.restore();
 c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('E 木堆',268,g+44);c.fillText('B 仓库 / 建设',518,g+44);c.fillText('矿洞 ↓',858,g+24);
 }
 const api={species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;

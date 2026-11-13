@@ -152,3 +152,9 @@ Six independently painted species have their own silhouettes, palettes and eight
 [B 角色三姿态预览](character-preview.html)：已选定浅灰棕短发 B，补齐 3/4 Idle、右侧面与精确镜像的左侧面。使用图像生成流程制作原画，等待姿态确认后再进行原生像素规范化；本阶段不替换游玩角色、不制作完整动画，也不修改物理与碰撞。提示词保存在 [design/character-study/PROMPTS.md](design/character-study/PROMPTS.md)，先前程序绘制草稿保留于 `design/character-legacy/`。
 
 [Review the three static views of selected design B](character-preview.html). The ash-brown Idle is user-approved; a right profile and an exact mirrored left profile are ready for review before native-pixel cleanup. The original playable character and physics remain unchanged.
+
+### B 角色已集成 / Animated player B
+
+默认使用 40 px 原生像素图集，地表和洞穴共用基于实际位移、接地和动作事件的独立视觉状态机。包含待机、转身、行走、奔跑、跳跃、落地、游泳、开采、受伤、死亡和飞行；快速跳跃、下落及受伤最多三个短残影。保留 `legacyHero` 回退绘制，物理与碰撞盒不变。图集和 GIF 在 `assets/characters/player-b/`；准备脚本只用于离线制作，构建和运行不执行 Python。
+
+Player B now uses the native 40 px atlas in both scenes. Animation follows actual movement and physical events without changing collision or solver behavior. Original rendering remains available as `legacyHero`. Native 32/40/48 atlases and GIF previews are preserved with the source key poses.
