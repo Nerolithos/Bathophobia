@@ -1,6 +1,6 @@
 /* Inventory, camp recipes and one-shot revival; shared with regression tests. */
 (function(root){'use strict';const E=typeof module!=='undefined'?require('./engine'):root.CaveEngine;
-const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,FLUORITE_TEAL:22,FLUORITE_VIOLET:23,COUNT:24};
+const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,FLUORITE_TEAL:22,FLUORITE_VIOLET:23,CALCITE:24,QUARTZ:25,COUNT:26};
 const recipes=[
 {id:'pyrite',station:'furnace',name:'烧制黄铁矿',input:{2:1},output:{11:1,12:1},note:'黄铁矿 ×1 → 硫磺 ×1 ＋ 粗铁块 ×1'},
 {id:'citrine',station:'furnace',name:'烧制紫水晶',input:{1:1},output:{13:1},note:'紫水晶 ×1 → 黄水晶 ×1'},

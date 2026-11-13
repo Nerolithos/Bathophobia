@@ -24,31 +24,36 @@
 | 跳跃 / Jump | Space · W · ↑ |
 | 水池游泳 / Swim in pools | WASD / 方向键 · Arrow keys |
 | 营地工坊 / Camp workshop | E |
+| 开采 / Mine | F · F+W/S 朝上/下 / aim up/down · 点击近处岩石 / click nearby rock |
 | 使用砒霜 / Use arsenic | Q · 点击背包药瓶 / Click the vial |
 | 暂停、重开 / Pause, new run | P · R |
 | 显示路线、解法演示 / Route overlay, solver replay | G · V |
 
-触屏提供移动、跳跃、游泳与工坊按钮。砒霜最多持有一瓶，使用会降低一点最大生命，毒倒五格内黑暗。铁镐目前可制作、手持，硬矿挖掘留待后续。
+触屏提供移动、跳跃、游泳与工坊按钮。砒霜最多持有一瓶，使用会降低一点最大生命，毒倒五格内黑暗。制作粗铁镐后，按 F 或点击近处岩石开采；嵌入矿石需要开采，外露晶体可直接拾取。
 
-Touch controls support movement, jumping, swimming and the workshop. Carry one arsenic vial at a time; using it costs one maximum health and poisons shadows within five tiles. The pickaxe can be crafted and equipped; hard-mineral mining is planned.
+Touch controls support movement, jumping, swimming and the workshop. Carry one arsenic vial at a time; using it costs one maximum health and poisons shadows within five tiles. Craft a crude iron pickaxe, then hold F or click nearby rock to mine. Embedded deposits require mining; exposed crystals can be collected by contact.
 
 ## 晶洞与远景 / Geodes and depth
 
-普通洞穴的厚岩岛中可能藏着圆形或椭圆晶洞：石英环带内生长紫水晶，或灰白、微黄的方解石环带内生长青绿 / 蓝紫萤石。部分晶洞保留入口，可进入采集。热液石英—硫化物矿脉沿连续裂隙穿过岩体：主体 1–2 格，局部膨大、少量分叉，在空腔中自然断开。1–3 格蚀变围岩连接深绿岩石与低亮度石英，富矿段以嵌入矿斑为主，完整晶簇集中在稀有晶洞。
+普通洞穴中的厚实岩体里藏有稀有的圆形 / 椭圆晶洞：围岩内包裹石英衬层和向心紫水晶，或灰白、局部浅黄的方解石衬层与青绿 / 蓝紫萤石。中央保留空气；封闭晶洞可被发现并用铁镐挖开。
 
-Thick rock islands in ordinary caves may contain circular or elliptical geodes: amethyst inside a quartz lining, or teal / violet fluorite inside pale, sometimes yellowish calcite. Some retain an entrance for collecting crystals. Hydrothermal quartz–sulphide veins follow continuous fractures: mostly 1–2 tiles wide, with local swelling and occasional forks, interrupted only by natural air gaps. A 1–3-tile alteration halo blends the dark host rock into subdued quartz. Rich sections favor embedded grains; full crystal clusters concentrate in rare pockets.
+Rare circular / elliptical geodes form in thick ordinary-cave rock: host rock encloses quartz and inward-growing amethyst, or pale calcite with teal / violet fluorite cubes. The center remains air. Sealed geodes can be discovered and opened with a pickaxe.
+
+热液矿脉采用真正的不透明石英岩石 Tile，只替换既有固体岩石的材质；主体宽 1–2 格，局部至 3 格，连续噪声控制弯曲、变宽、方向和分叉。富矿段包含可开采的嵌入黄铁矿与可拾取的外露晶簇。
+
+Hydrothermal lodes use opaque quartz rock tiles only inside existing solid rock. Their 1–2-tile cores swell locally to 3 tiles; continuous noise controls curvature, width, orientation and forks. Rich sections contain mineable embedded pyrite and collectible exposed crystals.
 
 远景模糊洞穴轮廓以 **0.15×** 相机速度移动；中景岩柱、远处晶簇以 **0.4×** 移动；真实可碰撞前景为 **1×**。背景保持低对比度，无碰撞，不遮挡危险提示。
 
 Distant blurred cave silhouettes move at **0.15×** camera speed; midground pillars and distant crystals at **0.4×**; solid foreground terrain at **1×**. Background layers remain subdued, non-colliding and behind all hazards.
 
-### 热液矿脉 · 三种种子 / Hydrothermal veins · three seeds
+### 晶洞与实体矿脉 · 三种种子 / Geodes and solid lodes · three seeds
 
-| Seed 1 · 179 m | Seed 11 · 466 m | Seed 127301 · 617 m |
+| Seed 1 · 紫水晶 / Amethyst | Seed 11 · 萤石—方解石 / Fluorite–calcite | Seed 127301 · 石英矿脉 / Quartz lode |
 | --- | --- | --- |
-| ![种子 1 的细脉与围岩 / Seed 1 fracture and host rock](docs/screenshots/hydro-seed-1.png) | ![种子 11 的跨空腔延续 / Seed 11 continuation across air gaps](docs/screenshots/hydro-seed-11.png) | ![种子 127301 的变宽脉体与矿斑 / Seed 127301 variable-width lode and inclusions](docs/screenshots/hydro-seed-127301.png) |
+| ![紫水晶晶洞](docs/screenshots/geode-amethyst-seed-1.png) | ![萤石方解石晶洞](docs/screenshots/geode-fluorite-seed-11.png) | ![实体石英矿脉](docs/screenshots/geode-hydro-seed-127301.png) |
 
-[算法、修改文件与验证说明 / Algorithms, changed files and verification](docs/HYDROTHERMAL.md)
+[生成器、数据结构、开采与验证 / Generator, data structures, mining and verification](docs/GEODES.md)
 
 ## 地底瞬间 / Underground moments
 
@@ -103,7 +108,7 @@ Cloudflare Pages：**Framework = None · Build = `npm run build` · Output = `di
 
 ## 后续目标 / Roadmap
 
-- 硬矿挖掘、更多矿物与加工链。 / Hard-mineral mining, more minerals and processing chains.
+- 更多硬矿、开采工具与加工链。 / More hard minerals, mining tools and processing chains.
 - 返回地表，建造房屋与基地。 / Return to the surface and build a home or base.
 - 玻璃建筑，以及文石 → 生石灰、砂石 → 水泥块等建材链。 / Glass construction and building-material chains such as aragonite → quicklime and aggregates → cement blocks.
 - 更多地貌、危险、生物与探索内容。 / More biomes, hazards, creatures and exploration.
