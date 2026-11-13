@@ -1,12 +1,12 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),{Worker}=require('node:worker_threads'),{execFileSync}=require('node:child_process');
-const E=require('./src/engine');
+const E=require('./src/engine'),Systems=require('./src/systems');
 // Reproduce the removed-sidebar layout: neither optional gallery node exists.
 // Booting, resetting and retrying must still create a generation worker.
 const nodes=new Map(),workers=[];
 function node(selector){if(selector==='#count'||selector==='#specimens')return null;if(!nodes.has(selector))nodes.set(selector,{style:{},dataset:{},open:false,disabled:false,textContent:'',innerHTML:'',querySelectorAll(){return[]},getContext(){return{}},getBoundingClientRect(){return{width:960,height:640}},showModal(){this.open=true},close(){this.open=false}});return nodes.get(selector)}
 class FakeWorker{constructor(url){this.url=String(url);this.messages=[];workers.push(this)}postMessage(data){this.messages.push(data)}terminate(){}}
-const context={CaveEngine:E,CaveArt:{catalog:Array.from({length:6},(_,i)=>({name:String(i)})),sprites:[]},CaveThreats:{},URL,performance,Worker:FakeWorker,ResizeObserver:class{observe(){}},requestAnimationFrame(){},localStorage:{getItem(){return null}},document:{currentScript:{src:'https://example.test/assets/release/game.js'},body:{dataset:{}},querySelector:node,querySelectorAll(){return[]}},window:{addEventListener(){}},console};
+const context={CaveEngine:E,CaveSystems:Systems,CaveArt:{catalog:Array.from({length:6},(_,i)=>({name:String(i)})),sprites:[]},CaveThreats:{},URL,performance,Worker:FakeWorker,ResizeObserver:class{observe(){}},requestAnimationFrame(){},localStorage:{getItem(){return null}},document:{currentScript:{src:'https://example.test/assets/release/game.js'},body:{dataset:{}},querySelector:node,querySelectorAll(){return[]}},window:{addEventListener(){}},console};
 vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'src/game.js'),'utf8'),context);assert.equal(workers.length,1);assert.equal(workers[0].url,'https://example.test/assets/release/generator.js');vm.runInContext('renderIndex();renderSpecimens();',context);workers[0].onerror();assert.equal(node('#start').disabled,false);vm.runInContext('begin()',context);assert.equal(workers.length,2,'retry starts a fresh worker');
 // Locked cards expose no identity or color; collecting unlocks that card.
 const paint=[];
@@ -14,6 +14,8 @@ const gallery={innerHTML:'',querySelectorAll(){return context.CaveArt.catalog.ma
 const originalQuery=context.document.querySelector;context.document.querySelector=s=>s==='#specimens'?gallery:originalQuery(s);
 vm.runInContext('specimensDirty=true;renderSpecimens()',context);assert(!gallery.innerHTML.includes('<h3>0</h3>'));assert.equal(paint.filter(p=>p[0]==='silhouette').length,6);
 vm.runInContext('found.add(0);specimensDirty=true;renderSpecimens()',context);assert(gallery.innerHTML.includes('<h3>0</h3>'));context.document.querySelector=originalQuery;
+// Each subsequent round bypasses the cached starter and uses a fresh seed.
+let roundSeed=vm.runInContext('seed',context);vm.runInContext('reset()',context);assert.notEqual(vm.runInContext('seed',context),roundSeed);assert.equal(workers.at(-1).messages[0].bootstrap,null);
 // Check the exact production artifact, including the worker's dependency paths.
 execFileSync(process.execPath,['scripts/build.mjs'],{cwd:__dirname,stdio:'pipe'});
 const html=fs.readFileSync(path.join(__dirname,'dist/index.html'),'utf8'),id=html.match(/name="app-build" content="([a-f0-9]+)"/)?.[1];assert(id);const assets=[...html.matchAll(/(?:src|href)="\.\/assets\/([^\"]+)"/g)].map(m=>m[1]);assert.equal(assets.length,2);for(let file of assets){assert(file.startsWith(id+'/'));assert(fs.existsSync(path.join(__dirname,'dist/assets',file)))}for(let name of ['generator.js','engine.js','threats.js'])assert(fs.existsSync(path.join(__dirname,'dist/assets',id,name)));assert(!html.includes('src="./src/'));let headers=fs.readFileSync(path.join(__dirname,'dist/_headers'),'utf8');assert(headers.includes('Cache-Control: no-cache'));assert(headers.includes('immutable'));
