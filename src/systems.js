@@ -1,12 +1,12 @@
 /* Inventory, camp recipes and one-shot revival; shared with regression tests. */
 (function(root){'use strict';const E=typeof module!=='undefined'?require('./engine'):root.CaveEngine;
-const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,COUNT:22};
+const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,FLUORITE_TEAL:22,FLUORITE_VIOLET:23,COUNT:24};
 const recipes=[
 {id:'pyrite',station:'furnace',name:'烧制黄铁矿',input:{2:1},output:{11:1,12:1},note:'黄铁矿 ×1 → 硫磺 ×1 ＋ 粗铁块 ×1'},
 {id:'citrine',station:'furnace',name:'烧制紫水晶',input:{1:1},output:{13:1},note:'紫水晶 ×1 → 黄水晶 ×1'},
 {id:'arsenic',station:'furnace',name:'烧制雌黄',input:{4:1},output:{14:1},note:'雌黄 ×1 → 砒霜 ×1 · 最多持有一瓶'},
 {id:'firebrick',station:'furnace',name:'烧制橄榄石',input:{5:1},output:{19:1},note:'橄榄石 ×1 → 耐火砖 ×1'},
-{id:'iris',station:'bench',name:'伊丽丝的祝福',input:{6:2},output:{15:1},note:'虹膜玛瑙 ×2 → Pendant of Iris ×1'},
+{id:'iris',station:'bench',name:'伊丽丝的祝福',input:{6:2},output:{15:1},note:'虹膜玛瑙 ×2 → Pendant of Iris ×1 · 复活后自由飞行 5 秒'},
 {id:'quartz-box',station:'bench',name:'石英收藏盒',input:{0:1,6:1,1:1,13:1,3:1},output:{17:1},once:true,note:'白玛瑙、虹膜玛瑙、紫水晶、黄水晶、黑曜石各 ×1；本轮仅一次，后续玛瑙 / 紫水晶 / 黑曜石拾取翻倍'},
 {id:'pickaxe',station:'bench',name:'粗铁镐',input:{12:5},output:{18:1},note:'粗铁块 ×5 → 粗铁镐 ×1 · 自动手持'},
 {id:'high-furnace',station:'upgrade',name:'升级高温熔炉',input:{19:8},output:{},discovery:[20],note:'耐火砖 ×8 ＋ 本营地熔炉 → 高温熔炉（替换原熔炉）'},
@@ -16,6 +16,6 @@ function canCraft(bag,id,fuel=10,context={}){let r=recipes.find(r=>r.id===id);if
 function craft(bag,id,fuel=10,context={}){let check=canCraft(bag,id,fuel,context);if(!check.ok)return check;let {r,cost}=check;for(let [i,n]of Object.entries(cost))bag[i]-=n;for(let [i,n]of Object.entries(r.output))bag[i]=(bag[i]||0)+n;if(r.once&&context.run){context.run.quartzBoxCrafted=true;context.run.quartzBonus=true}if(r.station==='upgrade')context.camp.furnaceTier=2;return {ok:true,output:r.output,discovery:r.discovery||[],message:r.name+'完成'};}
 function pickupAmount(p,type){return p.quartzBonus&&[0,6,1,3].includes(type)?2:1}
 function poison(p,bag,segments){if(!(bag[14]>0))return {ok:false,message:'没有砒霜'};if((p.maxHp??5)<=3)return {ok:false,message:'最大生命已为 3，无法再降低'};let targets=segments.flatMap(s=>s.threats?.shadows||[]).filter(e=>!['gone','poisoned'].includes(e.phase)&&Math.hypot(e.x+(e.w||18)/2-(p.x+E.PW/2),e.y+(e.h||34)/2-(p.y+E.PH/2))<=5*E.T);if(!targets.length)return {ok:false,message:'五格内没有影子敌人'};bag[14]--;p.maxHp=(p.maxHp??5)-1;p.hp=Math.min(p.hp,p.maxHp);for(let e of targets){e.phase='poisoned';e.y+=26;e.w=34;e.h=8;e.corpseVelocity=0}return {ok:true,count:targets.length,message:'砒霜 · 毒倒 '+targets.length+' 个黑暗，最大生命 −1'};}
-function revive(p,bag,segments){if(!p.dead||!(bag[15]>0))return null;bag[15]--;p.hp=p.maxHp??5;p.dead=false;p.vy=0;p.apex=p.y;p.damage=0;p.inv=2;p.hazardCooldown=3;p.lavaExposure=0;p.dizzy=0;p.ceiling=Math.min(p.ceiling,p.y-300);p.rainbowUntil=p.time+3;let vanished=[];for(let s of segments){for(let e of s.threats?.shadows||[])if(e.phase==='chasing'||Math.hypot(e.x-p.x,e.y-p.y)<220){if(e.phase!=='gone')vanished.push({x:e.x+9,y:e.y+15});e.phase='gone'}for(let y=0;y<E.H;y++)for(let x=2;x<E.W-2;x++){let w=s.water?.[y]?.[x];if(w?.lava&&Math.hypot(x*E.T-p.x,(s.id*E.H+y)*E.T-p.y)<=7*E.T){w.lava=false;w.rainbow=true}}}return {vanished};}
+function revive(p,bag,segments){if(!p.dead||!(bag[15]>0))return null;bag[15]--;p.hp=p.maxHp??5;p.dead=false;p.vy=0;p.apex=p.y;p.damage=0;p.inv=2;p.hazardCooldown=3;p.lavaExposure=0;p.dizzy=0;p.ceiling=Math.min(p.ceiling,p.y-300);p.rainbowUntil=p.time+5;p.flightUntil=p.time+5;let vanished=[];for(let s of segments){for(let e of s.threats?.shadows||[])if(e.phase==='chasing'||Math.hypot(e.x-p.x,e.y-p.y)<220){if(e.phase!=='gone')vanished.push({x:e.x+9,y:e.y+15});e.phase='gone'}for(let y=0;y<E.H;y++)for(let x=2;x<E.W-2;x++){let w=s.water?.[y]?.[x];if(w?.lava&&Math.hypot(x*E.T-p.x,(s.id*E.H+y)*E.T-p.y)<=7*E.T){w.lava=false;w.rainbow=true}}}return {vanished};}
 function nearCamp(p,c){return p.x+E.PW>=c.x-30&&p.x<=c.x+c.width+30&&Math.abs(p.y+E.PH-c.y)<65}
 const api={IDs,recipes,canCraft,craft,pickupAmount,poison,revive,nearCamp};if(typeof module!=='undefined')module.exports=api;root.CaveSystems=api;})(typeof self!=='undefined'?self:globalThis);
