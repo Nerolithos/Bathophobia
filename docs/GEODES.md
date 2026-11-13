@@ -4,14 +4,14 @@
 
 | 文件 / File | 主要内容 / Change |
 | --- | --- |
-| [engine.js](../src/engine.js) | 可复用晶洞生成器、椭圆距离场、实体矿化、矿物附着、路线保护、铁镐开采 |
+| [engine.js](../src/engine.js) | 可复用晶洞生成器、椭圆距离场、实体矿化、矿物附着、路线验证、铁镐开采 |
 | [game.js](../src/game.js) | F / 鼠标 / 触屏开采、发现提示、真实背包与图鉴产出、开采裂纹 |
 | [visuals.js](../src/visuals.js) | 不透明石英和方解石 Tile、变大小向心晶体、矿物资料、方解石与石英标本 |
 | [systems.js](../src/systems.js) | 在旧物品 ID 后追加方解石、石英，扩充背包容量 |
 | [threats.js](../src/threats.js) | 晶洞范围避让影子和石钟乳 |
 | [index.html](../index.html)、[style.css](../style.css) | 操作说明、开采按钮及图鉴资料样式 |
 | [verify-geology.cjs](../verify-geology.cjs)、[verify-geodes-mining.cjs](../verify-geodes-mining.cjs) | 地形、晶洞、边界、开采、证书、背包和持久化回归 |
-| README、本文、screenshots/、package.json / package-lock.json | 双语说明、三种种子截图、版本 0.10.0 与测试命令 |
+| README、本文、screenshots/、package.json / package-lock.json | 双语说明、三种种子截图、版本 0.11.0 与测试命令 |
 
 ## 数据结构 / Data structures
 
@@ -70,22 +70,20 @@ Correlated fracture fields vary orientation, curvature, width and grade. Quartz 
 
 ## 开采与封闭晶洞 / Mining and sealed geodes
 
-- 营地制作粗铁镐后，按 **F** 开采前方，**F+W/S** 朝上 / 下，或点击三格内岩石；触屏也有开采按钮。
-- 岩石需要 2–3 次敲击。先检查距离和视线，不能隔墙采矿。普通干岩可挖开；石英、方解石分别产出自己的矿物，嵌入黄铁矿产出真实物品。
-- 开采支撑晶体的岩石时，一并收取所支撑的晶体，避免悬浮残留；同一矿石不会重复掉落。
-- 封闭晶洞在近处给出发现提示，可从干燥岩壁开出入口。完整晶体仍可接触拾取，进入既有背包和图鉴。
-- 为保留当前 A* 证书，记录逐帧路线相邻的支撑岩石和接缝保护带。此类岩石以及紧邻水体的支撑岩石可以采出矿物，但暂不挖空。已采资源会耗尽，不可无限刷取。
-- 发现记录与最高深度沿用原 localStorage 格式；开采后的世界修改和背包数量维持本轮状态，未新增整局世界存档。
+- 营地制作粗铁镐后，F / F+W/S / 鼠标开采所有岩石。所有剩余石块保持悬空，不受重力影响。
+- 移除支撑后，外露矿物、蘑菇和完全失去支撑的营地物件落向下层岩面；嵌入矿物直接掉入背包，不重复产出。
+- 水场随碰撞更新。原路线保护标记不再阻止开采；修改后的路线证书失效，Worker 尝试重新求解，不能沿用开采前的安全承诺。
+- 背包在死亡、返地面、刷新时结算到地面独立仓库，下一轮背包清空；图鉴与建筑进度持久化。
 
-Craft the pickaxe, then mine reachable rock with F or mouse / touch. Buried deposits and linings yield inventory items; exposed crystals remain contact pickups. Route-critical and water-support rock can be depleted without removing its collision, preserving certificates and the current steady-state water model. Whole-world save files are not added in this update.
+Mining now removes any rock, including route and water support. Rock does not fall; unsupported collectibles and camp props do. Editing invalidates the original certificate and requests worker-side revalidation. Remaining inventory is banked to isolated surface storage and never restored into the next expedition.
 
 ## 验证结果 / Verification
 
 - 同种子、尝试号和区块输入的晶洞、矿脉及附着结果一致。
 - 检查实体变化只位于晶洞中央腔体，矿脉不填空气；跨区块裂隙保持连续，晶洞不跨拥有者边界。
 - 108 块连续地形逐帧零伤害回放、组合世界回放、敌人 / 水流 / 营地 / 合成 / 快速启动回归通过。
-- 合成测试网格实际挖开封闭晶洞，验证开采距离、遮挡、产出、防重复和支撑保留。
-- 在真实生成区块上开采允许移除的岩石后，原 A* 按键逐帧回放的坐标、生命和塌陷高度仍一致。
+- 合成测试网格实际挖开封闭晶洞，验证开采距离、遮挡、产出、防重复和支撑移除。
+- 在不接触原路线支撑的测试点开采，原证书仍可回放；任意开采后必须重新求解，不能假设旧证书有效。
 - 实际 `gainItem` / localStorage 入口验证两色萤石、方解石与石英进入背包和图鉴，并在重新加载后保持发现记录。
 - 实机鼠标开采验证三次敲击获得黄铁矿和石英等物品。
 

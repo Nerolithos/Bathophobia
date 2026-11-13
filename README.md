@@ -114,3 +114,25 @@ Cloudflare Pages：**Framework = None · Build = `npm run build` · Output = `di
 - 更多地貌、危险、生物与探索内容。 / More biomes, hazards, creatures and exploration.
 
 以上为计划，不是当前已实现功能。 / These are planned features, not current capabilities.
+
+
+## 山居与四季 / Seasonal homestead (v0.11)
+
+地面现为可游玩的山泉营地。A/D 漫步、空格跳跃，E 收集木堆或打开附近工坊，B 查看仓库和建房；走入右侧洞口开始下潜。每次下潜推进一个季节：春兔与燕、夏蛙与蝉鸣（打开声音）、秋枫与松鼠、冬雪与绵羊/企鹅。
+
+暂停可以继续本轮，或返回地面结束本轮；死亡后可以重新下潜或返回地面。剩余背包材料自动入仓，仓库和蓝图进度保存在当前浏览器。**地面仓库不会补入下一轮洞穴背包**。中途刷新页面会把已保存的本轮剩余材料结算回地面，不能恢复该矿洞。
+
+房屋按水泥地基 → 合金框架 → 墙体 → 木屋顶 → 玻璃窗建设，空中虚线提示位置。加工链：菱锰矿烧成粗锰，粗铁＋粗锰在高温炉中合金化；文石/方解石煅烧成生石灰，与开采所得砂石制水泥；紫/黄水晶在高温炉中熔制玻璃。所有配方是简化的游戏设计。地面熔炉升级独立持久化，烧制需煤炭或硫磺，每次下潜后地面木堆可收集一次。
+
+粗铁镐可开采所有岩石，包括曾保护路线及水池的支撑块。剩余岩石不受重力；失去支撑的矿物、红白蘑菇和弹跳蘑菇会落到下一处岩面，跨分块转移。开采会使原无伤路线证书失效，后台会尝试重新验证本段；**自由开采后不再保证原路线安全**。
+
+The playable surface features a mountain spring, a fixed dashed house blueprint, seasonal wildlife and a persistent warehouse. Walk with A/D, jump with Space, interact with E, and open construction/storage with B. Enter the right-hand cave mouth to start a fresh expedition; every descent advances the season. Enable sound to hear summer cicadas.
+
+Pause to resume or finish the expedition and return home. Death allows a fresh run or a surface return. Remaining inventory is banked exactly once; **stored resources are never available during the next cave run**. Browser-local storage preserves the warehouse, furnace upgrade and building stages. Reloading settles the saved expedition inventory to the surface rather than restoring that cave.
+
+Build foundation, alloy frame, walls, timber roof and glass windows in sequence. Smelt rhodochrosite into manganese, combine manganese and crude iron in the high furnace for structural alloy; calcine aragonite/calcite for quicklime and combine with mined aggregate for cement. Amethyst/citrine become glass in the high furnace. These are deliberately simplified game recipes.
+
+Mining removes every rock type while remaining rock stays suspended. Unsupported collectible minerals and mushrooms fall with gravity and transfer across loaded chunks. Original A* certificates become invalid after excavation; a worker attempts local revalidation without blocking play. The surface animal controller shares seasonal wander/hop/fly behavior. Future work: editable floor plans, interiors, furniture and a richer surface ecology.
+
+![秋季山居：枫树、山泉、松鼠与虚线房屋蓝图 / Autumn homestead](docs/screenshots/homestead-autumn.jpg)
+![跨轮仓库与分步建造 / Persistent warehouse and staged construction](docs/screenshots/homestead-workshop.jpg)

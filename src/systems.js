@@ -1,6 +1,6 @@
 /* Inventory, camp recipes and one-shot revival; shared with regression tests. */
 (function(root){'use strict';const E=typeof module!=='undefined'?require('./engine'):root.CaveEngine;
-const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,FLUORITE_TEAL:22,FLUORITE_VIOLET:23,CALCITE:24,QUARTZ:25,COUNT:26};
+const IDs={COAL:10,SULFUR:11,IRON:12,CITRINE:13,ARSENIC:14,PENDANT:15,WOOD:16,QUARTZ_BOX:17,PICKAXE:18,FIREBRICK:19,HIGH_FURNACE:20,GLASS:21,FLUORITE_TEAL:22,FLUORITE_VIOLET:23,CALCITE:24,QUARTZ:25,RHODOCHROSITE:26,MANGANESE:27,ALLOY:28,QUICKLIME:29,AGGREGATE:30,CEMENT:31,COUNT:32};
 const recipes=[
 {id:'pyrite',station:'furnace',name:'烧制黄铁矿',input:{2:1},output:{11:1,12:1},note:'黄铁矿 ×1 → 硫磺 ×1 ＋ 粗铁块 ×1'},
 {id:'citrine',station:'furnace',name:'烧制紫水晶',input:{1:1},output:{13:1},note:'紫水晶 ×1 → 黄水晶 ×1'},
@@ -11,6 +11,11 @@ const recipes=[
 {id:'pickaxe',station:'bench',name:'粗铁镐',input:{12:5},output:{18:1},note:'粗铁块 ×5 → 粗铁镐 ×1 · 自动手持'},
 {id:'high-furnace',station:'upgrade',name:'升级高温熔炉',input:{19:8},output:{},discovery:[20],note:'耐火砖 ×8 ＋ 本营地熔炉 → 高温熔炉（替换原熔炉）'},
 {id:'glass-amethyst',station:'high',name:'熔制玻璃 · 紫水晶',input:{1:1},output:{21:1},note:'高温熔炉：紫水晶 ×1 → 玻璃 ×1'},
+{id:'rough-manganese',station:'furnace',name:'烧制菱锰矿',input:{26:1},output:{27:1},note:'菱锰矿 ×1 → 粗锰 ×1'},
+{id:'alloy',station:'high',name:'冶炼合金框架材料',input:{12:1,27:1},output:{28:1},note:'粗铁块 ×1 ＋ 粗锰 ×1 → 合金 ×1'},
+{id:'lime-aragonite',station:'furnace',name:'煅烧文石',input:{8:1},output:{29:1},note:'文石 ×1 → 生石灰 ×1'},
+{id:'lime-calcite',station:'furnace',name:'煅烧方解石',input:{24:1},output:{29:1},note:'方解石 ×1 → 生石灰 ×1'},
+{id:'cement',station:'bench',name:'配制水泥块',input:{29:1,30:2},output:{31:2},note:'生石灰 ×1 ＋ 砂石 ×2 → 水泥块 ×2'},
 {id:'glass-citrine',station:'high',name:'熔制玻璃 · 黄水晶',input:{13:1},output:{21:1},note:'高温熔炉：黄水晶 ×1 → 玻璃 ×1'}];
 function canCraft(bag,id,fuel=10,context={}){let r=recipes.find(r=>r.id===id);if(!r)return {ok:false,message:'未知配方'};if(r.once&&(context.run?.quartzBoxCrafted||bag[17]>0))return {ok:false,message:'石英收藏盒本轮只能合成一次'};if(r.output[14]&&(bag[14]||0)>=1)return {ok:false,message:'砒霜最多持有一瓶'};if(r.station==='upgrade'&&(!context.camp||(context.camp.furnaceTier||1)>=2))return {ok:false,message:context.camp?'本营地已经是高温熔炉':'需要本营地的熔炉'};if(r.station==='high'&&(context.camp?.furnaceTier||1)<2)return {ok:false,message:'需要先升级本营地高温熔炉'};let heated=['furnace','high'].includes(r.station);if(heated&&![10,11].includes(Number(fuel)))return {ok:false,message:'请选择煤炭或硫磺作为燃料'};let cost={...r.input};if(heated)cost[fuel]=(cost[fuel]||0)+1;for(let [i,n]of Object.entries(cost))if((bag[i]||0)<n)return {ok:false,message:'材料或燃料不足'};return {ok:true,r,cost};}
 function craft(bag,id,fuel=10,context={}){let check=canCraft(bag,id,fuel,context);if(!check.ok)return check;let {r,cost}=check;for(let [i,n]of Object.entries(cost))bag[i]-=n;for(let [i,n]of Object.entries(r.output))bag[i]=(bag[i]||0)+n;if(r.once&&context.run){context.run.quartzBoxCrafted=true;context.run.quartzBonus=true}if(r.station==='upgrade')context.camp.furnaceTier=2;return {ok:true,output:r.output,discovery:r.discovery||[],message:r.name+'完成'};}
