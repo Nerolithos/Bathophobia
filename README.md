@@ -34,13 +34,21 @@ Touch controls support movement, jumping, swimming and the workshop. Carry one a
 
 ## 晶洞与远景 / Geodes and depth
 
-普通洞穴的厚岩岛中可能藏着圆形或椭圆晶洞：石英环带内生长紫水晶，或灰白、微黄的方解石环带内生长青绿 / 蓝紫萤石。部分晶洞保留入口，可进入采集。热液石英矿脉以多根平行条带穿过岩石，附近黄铁矿更密集；白色矿石边缘使用额外一格原有岩石渐变过渡。
+普通洞穴的厚岩岛中可能藏着圆形或椭圆晶洞：石英环带内生长紫水晶，或灰白、微黄的方解石环带内生长青绿 / 蓝紫萤石。部分晶洞保留入口，可进入采集。热液石英—硫化物矿脉沿连续裂隙穿过岩体：主体 1–2 格，局部膨大、少量分叉，在空腔中自然断开。1–3 格蚀变围岩连接深绿岩石与低亮度石英，富矿段以嵌入矿斑为主，完整晶簇集中在稀有晶洞。
 
-Thick rock islands in ordinary caves may contain circular or elliptical geodes: amethyst inside a quartz lining, or teal / violet fluorite inside pale, sometimes yellowish calcite. Some retain an entrance for collecting crystals. Hydrothermal quartz veins form parallel bands with denser pyrite deposits; a one-tile transition in the surrounding host rock softens every white-rock boundary.
+Thick rock islands in ordinary caves may contain circular or elliptical geodes: amethyst inside a quartz lining, or teal / violet fluorite inside pale, sometimes yellowish calcite. Some retain an entrance for collecting crystals. Hydrothermal quartz–sulphide veins follow continuous fractures: mostly 1–2 tiles wide, with local swelling and occasional forks, interrupted only by natural air gaps. A 1–3-tile alteration halo blends the dark host rock into subdued quartz. Rich sections favor embedded grains; full crystal clusters concentrate in rare pockets.
 
 远景模糊洞穴轮廓以 **0.15×** 相机速度移动；中景岩柱、远处晶簇以 **0.4×** 移动；真实可碰撞前景为 **1×**。背景保持低对比度，无碰撞，不遮挡危险提示。
 
 Distant blurred cave silhouettes move at **0.15×** camera speed; midground pillars and distant crystals at **0.4×**; solid foreground terrain at **1×**. Background layers remain subdued, non-colliding and behind all hazards.
+
+### 热液矿脉 · 三种种子 / Hydrothermal veins · three seeds
+
+| Seed 1 · 179 m | Seed 11 · 466 m | Seed 127301 · 617 m |
+| --- | --- | --- |
+| ![种子 1 的细脉与围岩 / Seed 1 fracture and host rock](docs/screenshots/hydro-seed-1.png) | ![种子 11 的跨空腔延续 / Seed 11 continuation across air gaps](docs/screenshots/hydro-seed-11.png) | ![种子 127301 的变宽脉体与矿斑 / Seed 127301 variable-width lode and inclusions](docs/screenshots/hydro-seed-127301.png) |
+
+[算法、修改文件与验证说明 / Algorithms, changed files and verification](docs/HYDROTHERMAL.md)
 
 ## 地底瞬间 / Underground moments
 
