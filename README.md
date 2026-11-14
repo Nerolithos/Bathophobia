@@ -30,8 +30,8 @@
 
 - **探索与生存**：二连跳、自由游泳、瀑布缓冲、弹跳蘑菇；影子追逐、坠落钟乳和岩浆喷流。
 - **矿物与制作**：玛瑙、紫水晶、黄铁矿、萤石等标本；开采晶洞、烧制矿物、升级熔炉、制作装备与建材。
-- **四季与建设**：每次下潜推进季节，地表拥有独立动画动物；按蓝图建造地基、合金框架、墙体、屋顶与玻璃窗。
-- **跨轮进度**：仓库、图鉴和建设进度保存在浏览器；仓储材料不能带入下一轮洞穴背包。
+- **四季与建设**：每次下潜推进季节，地表拥有独立动画动物；按蓝图建造地基、合金框架、墙体、石膏墙板、屋顶与玻璃窗。
+- **跨轮进度**：仓库、图鉴和建设进度保存在浏览器；下潜前可从仓库选择两件功能道具，同种每件各占一格。
 
 ## English
 
@@ -39,8 +39,8 @@ An endless, mineral-themed pixel platformer. Descend through natural caves, coll
 
 - **Explore & survive** — Double-jump, swim, slow falls in waterfalls and bounce on mushrooms. Evade pursuing shadows, falling stalactites and lava jets.
 - **Collect & craft** — Discover agate, amethyst, pyrite, fluorite and more. Mine geodes, smelt minerals, upgrade furnaces and craft equipment and building materials.
-- **Seasons & building** — Every descent advances the season. Meet animated wildlife and complete a house blueprint, from foundation and alloy frame to glass windows.
-- **Persistent progress** — Browser-local storage preserves your warehouse, collection and home. Stored materials stay out of your next expedition inventory.
+- **Seasons & building** — Every descent advances the season. Meet animated wildlife and complete a house blueprint, from foundation and alloy frame to gypsum wallboard and glass windows.
+- **Persistent progress** — Browser-local storage preserves your warehouse, collection and home. Choose up to two functional items before each descent; each individual item occupies one slot.
 
 ## 操作 · Controls
 
@@ -53,6 +53,7 @@ An endless, mineral-themed pixel platformer. Descend through natural caves, coll
 | 地表仓库与建设 / Surface storage & building | B |
 | 开采 / Mine | F / 点击岩石 · Click rock；F + W/S 朝上/下 · aim up/down |
 | 使用砒霜 / Use arsenic | Q |
+| 氢氟酸选点腐蚀 / Target acid corrosion | H / 点击背包试剂 · Click inventory vial |
 | 暂停、重新下潜 / Pause, restart | P / R |
 | 路线、解法回放 / Route, solver replay | G / V |
 

@@ -48,7 +48,7 @@ if(a.dead){e.phase='gone';events.push({type:'vanish',x:e.x+9,y:e.y+16});continue
 if(e.phase==='chasing'&&p.x+PW>a.x&&p.x<a.x+PW&&p.y+PH>a.y&&p.y<a.y+PH)hurt(p,'黑暗',events);
 }
 for(let s of threats.stones||[]){if(s.phase==='gone')continue;if(s.phase==='hanging'){if(underStone(p,s)){s.phase='warning';s.timer=.32;events.push({type:'rattle',x:s.x,y:s.y+s.length})}continue}if(s.phase==='warning'){s.timer-=dt;if(s.timer<=0)s.phase='falling';continue}
-if(s.phase==='falling'){s.vy=Math.min(650,s.vy+1100*dt);let dy=s.vy*dt,parts=Math.max(1,Math.ceil(dy/3));for(let i=0;i<parts;i++){s.y+=dy/parts;let tip=s.y+s.length;if(world.solid(Math.floor(s.x/T),Math.floor(tip/T))){s.phase='gone';events.push({type:'shatter',x:s.x,y:tip,drop:{id:s.id+':aragonite',x:s.x,y:Math.floor(tip/T)*T,type:8,spawnRoll:0,enabled:true}});break}if(p.x+PW>s.x-6&&p.x<s.x+6&&p.y+PH>s.y&&p.y<tip){if(!s.hit){hurt(p,'石钟乳',events);s.hit=true}}}}}
+if(s.phase==='falling'){s.vy=Math.min(650,s.vy+1100*dt);let dy=s.vy*dt,parts=Math.max(1,Math.ceil(dy/3));for(let i=0;i<parts;i++){s.y+=dy/parts;let tip=s.y+s.length;if(world.solid(Math.floor(s.x/T),Math.floor(tip/T))){s.phase='gone';events.push({type:'shatter',x:s.x,y:tip,drop:{id:s.id+':aragonite',x:s.x,y:Math.floor(tip/T)*T,type:E.hash(Math.floor(s.x),Math.floor(tip),711)>.5?35:8,spawnRoll:0,enabled:true}});break}if(p.x+PW>s.x-6&&p.x<s.x+6&&p.y+PH>s.y&&p.y<tip){if(!s.hit){hurt(p,'石钟乳',events);s.hit=true}}}}}
 updateJets(threats.jets,p,dt,events);p.dead=p.hp<=0||p.y<p.ceiling+12;return events;
 }
 const api={updateDizziness,populate,reveal,update,difficulty,updateJets,underStone,clearBox,waypoint,planEnemy};if(typeof module!=='undefined')module.exports=api;root.CaveThreats=api;
