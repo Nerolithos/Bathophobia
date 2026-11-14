@@ -30,7 +30,7 @@
 
 - **探索与生存**：二连跳、自由游泳、瀑布缓冲、弹跳蘑菇；影子追逐、坠落钟乳和岩浆喷流。
 - **矿物与制作**：玛瑙、紫水晶、黄铁矿、萤石等标本；开采晶洞、烧制矿物、升级熔炉、制作装备与建材。
-- **四季与建设**：每次下潜推进季节，地表拥有独立动画动物；按蓝图建造地基、合金框架、墙体、石膏墙板、屋顶与玻璃窗。
+- **四季与建设**：每次下潜推进季节，地表拥有独立动画动物；按蓝图建造地基、合金框架、墙体、内侧石膏墙板、染色屋顶与玻璃窗；将可游泳的山泉池升级为秋冬炉火温泉。
 - **跨轮进度**：仓库、图鉴和建设进度保存在浏览器；下潜前可从仓库选择两件功能道具，同种每件各占一格。
 
 ## English
@@ -39,7 +39,7 @@ An endless, mineral-themed pixel platformer. Descend through natural caves, coll
 
 - **Explore & survive** — Double-jump, swim, slow falls in waterfalls and bounce on mushrooms. Evade pursuing shadows, falling stalactites and lava jets.
 - **Collect & craft** — Discover agate, amethyst, pyrite, fluorite and more. Mine geodes, smelt minerals, upgrade furnaces and craft equipment and building materials.
-- **Seasons & building** — Every descent advances the season. Meet animated wildlife and complete a house blueprint, from foundation and alloy frame to gypsum wallboard and glass windows.
+- **Seasons & building** — Every descent advances the season. Meet animated wildlife and complete a house blueprint, from foundation and alloy frame to interior wallboard, a dyed roof and glass windows. Swim in the recessed spring pool and upgrade it into a steaming onsen with autumn/winter firelight.
 - **Persistent progress** — Browser-local storage preserves your warehouse, collection and home. Choose up to two functional items before each descent; each individual item occupies one slot.
 
 ## 操作 · Controls
@@ -105,3 +105,7 @@ npm run preview   # http://localhost:4173
 
 通过 Issues 提交问题或玩法建议；欢迎提交聚焦的小型 PR。<br>
 Report bugs or ideas through Issues. Focused pull requests are welcome.
+
+![秋季温泉与山居 · Autumn onsen and cottage](docs/screenshots/onsen-autumn.png)
+
+温泉 / Onsen: 10 硫磺 / sulfur + 10 煤炭 / coal + 20 木板 / planks + 10 砂石 / aggregate. 木头 ×1 → 木板 ×2 / wood ×1 → planks ×2.
