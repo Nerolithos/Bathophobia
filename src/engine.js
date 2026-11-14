@@ -118,6 +118,29 @@ function staticPoolBanks(segment,previous){
  }
  return [...result.values()];
 }
+// A hypothetical fill identifies dry bowls without adding any water or changing rock.
+// Only downward-contained pockets with an open rim and standing room can crystallize.
+function dryBasinSites(segment,previous){
+ const world=worldFor(segment,previous),top=segment.id*H,result=new Map();
+ for(let lip=2;lip<H-3;lip++){
+  if(isLavaRow(top+lip,segment.originRow||0))continue;let seen=new Uint8Array(W*H);
+  for(let x=3;x<W-3;){
+   if(world.solid(x,top+lip)){x++;continue}let left=x;while(x<W-2&&!world.solid(x,top+lip))x++;let right=x-1;
+   if(left<3||right>=W-3||right-left+1>18||!world.solid(left-1,top+lip)||!world.solid(right+1,top+lip))continue;
+   if(!Array.from({length:right-left+1},(_,i)=>left+i).some(xx=>!world.solid(xx,top+lip-1)))continue;
+   let start=lip*W+left;if(seen[start])continue;let queue=[start],head=0,floors=[],okay=true,deepest=lip;seen[start]=1;
+   while(head<queue.length&&queue.length<=180){let key=queue[head++],xx=key%W,y=Math.floor(key/W),gy=top+y;deepest=Math.max(deepest,y);
+    if(world.water(xx,gy)||isLavaRow(gy,segment.originRow||0))okay=false;
+    if(world.solid(xx,gy+1)&&!world.solid(xx,gy-1)&&!world.water(xx,gy-1)&&!(segment.geodes||[]).some(g=>Math.abs(xx-g.cx)<=g.rx+1&&Math.abs(gy-g.cy)<=g.ry+1))floors.push({tx:xx,ty:gy+1,x:xx*T+10,y:(gy+1)*T,source:'dry-basin'});
+    for(let[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){let nx=xx+dx,ny=y+dy;if(ny<lip||world.solid(nx,top+ny))continue;if(nx<2||nx>=W-2||ny>=H-1){okay=false;continue}let next=ny*W+nx;if(!seen[next]){seen[next]=1;queue.push(next)}}
+   }
+   if(!okay||queue.length>180||queue.length<4)continue;
+   for(let floor of floors.filter(f=>f.ty===deepest+top+1))result.set(floor.tx+','+floor.ty,floor);
+  }
+ }
+ return [...result.values()];
+}
+function natronSites(segment,previous){let unique=new Map();for(let site of[...staticPoolBanks(segment,previous),...dryBasinSites(segment,previous)])unique.set(site.tx+','+site.ty,site);return[...unique.values()]}
 function populate(segment,previous,seed){
 let world=worldFor(segment,previous),surfaces=[],moss=[];const top=segment.id*H;
 for(let y=3;y<H-2;y++)for(let x=3;x<W-3;x++){
@@ -149,7 +172,7 @@ if(top+H-1>lastIris+480)return false;
 let witnessed=previous?.lastIrisY??(segment.originRow||0);for(let o of segment.ores.filter(o=>o.type===6).sort((a,b)=>a.ty-b.ty)){if(o.ty-witnessed>480)return false;witnessed=Math.max(witnessed,o.ty)}
 segment.lastIrisY=lastIris;
 let deep=[];for(let y=3;y<H-2;y++)for(let x=3;x<W-3;x++){let gy=top+y;if(segment.tiles[y][x]&&!world.solid(x,gy-1)&&poolDepth(world,x,gy-1)>=3&&hash(x,gy,seed+1531)<.25)deep.push({tx:x,ty:gy,x:x*T+10,y:gy*T,type:7,id:segment.id+':water:'+x+':'+y,spawnRoll:0});}segment.ores.push(...deep.slice(0,3));
-for(let bank of staticPoolBanks(segment,previous).filter(v=>!segment.ores.some(o=>o.tx===v.tx&&o.ty===v.ty)&&!mushrooms.has(v.tx+','+v.ty)).sort((a,b)=>hash(a.tx,a.ty,seed+7901)-hash(b.tx,b.ty,seed+7901)).slice(0,2))segment.ores.push({...bank,type:39,id:segment.id+':natron:'+bank.tx+':'+bank.ty,spawnRoll:0});
+for(let bank of natronSites(segment,previous).filter(v=>!segment.ores.some(o=>o.tx===v.tx&&o.ty===v.ty)&&!mushrooms.has(v.tx+','+v.ty)).sort((a,b)=>hash(a.tx,a.ty,seed+7901)-hash(b.tx,b.ty,seed+7901)).slice(0,2))segment.ores.push({...bank,type:39,id:segment.id+':natron:'+bank.tx+':'+bank.ty,spawnRoll:0});
 segment.camps=[];let campLabels=null,lastCamp=previous?.lastCampY??(segment.originRow||0),candidates=[];
 // Scan maximal, unmodified six-to-nine-tile dry ledges with standing room.
 for(let y=3;y<H-2;y++){let gy=top+y;if(isLavaRow(gy,segment.originRow||0)||gy-lastCamp<240)continue;for(let x=3;x<W-3;){let first=x;while(x<W-3&&segment.tiles[y][x]&&[1,2,3].every(d=>!world.solid(x,gy-d)&&!world.water(x,gy-d)))x++;let length=x-first;if(length>=6&&length<=9&&!(segment.geodes||[]).some(g=>Math.abs(gy-g.cy)<g.ry+3&&first<g.cx+g.rx+2&&x>g.cx-g.rx-2)){campLabels??=components(segment.tiles);let label=campLabels.seen[(y-1)*W+first];if(label>=0&&campLabels.groups[label].some(k=>k>=W*(H-1)))candidates.push({id:'camp:'+segment.id,x:first*T,y:gy*T,tx:first,ty:gy,length,width:length*T,woodTaken:false})}x=Math.max(x,first+1)}}
@@ -173,5 +196,5 @@ return true;}
 // Include the prior eight rows because legal actions may jump back over a seam.
 function entryCanExit(segment,previous,entry){let world=worldFor(segment,previous),top=Math.max(0,world.top-8),rows=world.bottom-top,x=Math.floor((entry.x+PW/2)/T),y=Math.floor((entry.y+PH/2)/T);if(y<top||y>=world.bottom||world.solid(x,y))return false;let seen=new Uint8Array(rows*W),queue=new Int32Array(rows*W),head=0,tail=0,start=(y-top)*W+x;queue[tail++]=start;seen[start]=1;while(head<tail){let k=queue[head++],cx=k%W,cy=Math.floor(k/W)+top;if(cy===world.bottom-1)return true;for(let d=0;d<4;d++){let nx=cx+(d===0?1:d===1?-1:0),ny=cy+(d===2?1:d===3?-1:0);if(nx<2||nx>=W-2||ny<top||ny>=world.bottom)continue;let kk=(ny-top)*W+nx;if(!seen[kk]&&!world.solid(nx,ny)){seen[kk]=1;queue[tail++]=kk}}}return false;}
 function makeSegment(seed,id,previous,entry,startAttempt=0,attemptCount=80,options={}){for(let attempt=startAttempt;attempt<startAttempt+attemptCount;attempt++){let origin=previous?.originRow||0,seg={id,attempt,originRow:origin,...geologicTerrain(seed,id,attempt,origin)};let bfs=components(seg.tiles);if(!bfs.groups.some(g=>g.some(k=>k<W)&&g.some(k=>k>=W*(H-1))))continue;if(entry&&!entryCanExit(seg,previous,entry))continue;waterField(seg,previous,seed);if(!populate(seg,previous,seed))continue;let starts=entry?[entry]:findStarts(seg,bfs).slice(0,4);for(let s of starts){if(!entry&&!entryCanExit(seg,previous,s))continue;let proof=solve(seg,previous,s,options.maxNodes??360,options.maxMs??Infinity);if(proof){if(seg.camps.length){let c=seg.camps[0],cy=Math.min(H-1,Math.floor((proof.exit.y+PH/2)/T)-id*H),cx=Math.floor((proof.exit.x+PW/2)/T);if(bfs.seen[(c.ty-id*H-1)*W+c.tx]!==bfs.seen[cy*W+cx])continue}if(id===0){seg.lastMushroomY=Math.round((s.y+PH)/T);seg.originRow=seg.lastMushroomY;seg.lastIrisY=Math.max(seg.lastIrisY,seg.originRow);}seg.entry={...s};seg.proof=proof;seg.bfsComponents=bfs.groups.length;protectCertificate(seg,previous);return seg}}}return null}
-const api={staticPoolBanks,T,W,H,DT,SAFE,PW,PH,EFFECTS,inCamp,eligibleEffects,isLavaRow,biomeHeat,poolDepth,traits,collectMushrooms,populate,hash,smoothNoise,fracturePaths,hydrothermalField,generateGeodes,protectCertificate,miningTarget,mineTile,updateInteractables,oreTouches,cellularTerrain,geologicTerrain,terrain,components,worldFor,collides,waterAt,waterField,spawn,step,transition,solve,makeSegment,entryCanExit,ACTIONS};if(typeof module!=='undefined')module.exports=api;root.CaveEngine=api;
+const api={dryBasinSites,natronSites,staticPoolBanks,T,W,H,DT,SAFE,PW,PH,EFFECTS,inCamp,eligibleEffects,isLavaRow,biomeHeat,poolDepth,traits,collectMushrooms,populate,hash,smoothNoise,fracturePaths,hydrothermalField,generateGeodes,protectCertificate,miningTarget,mineTile,updateInteractables,oreTouches,cellularTerrain,geologicTerrain,terrain,components,worldFor,collides,waterAt,waterField,spawn,step,transition,solve,makeSegment,entryCanExit,ACTIONS};if(typeof module!=='undefined')module.exports=api;root.CaveEngine=api;
 })(typeof self!=='undefined'?self:globalThis);

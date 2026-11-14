@@ -122,8 +122,8 @@ Open `/2Afin-admin` for the fully built homestead, seasonal controls and five sp
 
 After finishing the house, press **E** at the door to reveal the two-storey interior and unlock furnishings. Build a ladder with 4 planks and climb with **W/S**, or a glass cabinet with 4 glass + 8 planks. Autumn/winter bring fireplace light; winter has heavier chimney smoke and onsen steam.
 
-墙体／屋顶分别需要防腐木板 ×20／×30（木板 ×1＋砒霜 ×1）。高温炉玻璃：紫水晶或黄水晶 ×1＋天然碱 ×1＋方解石或文石 ×1，另需燃料。天然碱只出现在任意深度的封闭水池干燥岸边，允许水流流入。
+墙体／屋顶分别需要防腐木板 ×20／×30（木板 ×1＋砒霜 ×1）。高温炉玻璃：紫水晶或黄水晶 ×1＋天然碱 ×1＋方解石或文石 ×1，另需燃料。天然碱可在任意深度的封闭水池干岸（允许流入），或无水的干涸湖盆状凹地中结晶。
 
-Walls/roof require 20/30 treated planks (1 plank + 1 arsenic vial each). High-furnace glass needs 1 amethyst or citrine + 1 natron + 1 calcite or aragonite, plus fuel. Natron occurs beside closed pools of any depth on dry banks; flowing inlets are allowed.
+Walls/roof require 20/30 treated planks (1 plank + 1 arsenic vial each). High-furnace glass needs 1 amethyst or citrine + 1 natron + 1 calcite or aragonite, plus fuel. Natron occurs on dry banks of closed pools of any depth (inlets allowed), and in dry bowl-shaped depressions resembling evaporated lake beds.
 
 ![冬季山居室内 · Winter interior](docs/screenshots/winter-interior.png)
