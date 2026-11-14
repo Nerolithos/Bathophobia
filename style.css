@@ -15,3 +15,7 @@
 #homeContent .recipe{gap:18px}#homeContent .recipe>div{min-width:0}#homeContent .recipe button{max-width:170px}#homeContent .recipe-figure{width:82px;flex-shrink:0}#homeContent .recipe-figure small{display:block}#homestead .collection-head{position:sticky;top:-1px;background:#13271e;z-index:2;padding:8px 0}
 
 body[data-scene="surface"] #acidButton{display:none}#loadoutItems button{margin:6px}#loadout{max-width:640px}
+
+.loadout-slots,.loadout-options{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.loadout-slots{margin:20px 0 24px}.loadout-options{border-top:1px solid var(--edge);padding:20px 0}.loadout-tile{width:96px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px}.loadout-tile canvas{width:64px;height:56px;image-rendering:pixelated}.loadout-tile span{font-size:11px}.loadout-tile small{font:11px monospace;color:#a3b79f}.loadout-selected{border-color:#9ec6a7;background:#20392a}.loadout-empty{border:1px dashed #617866;font:24px monospace}.loadout-options .loadout-tile:disabled{opacity:.7;cursor:default}@media(max-width:600px){.loadout-tile{width:82px}}
+
+#loadoutItems .loadout-tile{margin:0}
