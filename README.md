@@ -115,3 +115,15 @@ Report bugs or ideas through Issues. Focused pull requests are welcome.
 打开 `/2Afin-admin`：直接进入所有建筑完工的地面，切换四季或温泉的天然／四个建设阶段。使用独立内存存档，不改动正常游戏进度。后续建筑在 `CaveHomestead.structures` 注册完工状态后，预览页会自动纳入。
 
 Open `/2Afin-admin` for the fully built homestead, seasonal controls and five spring construction views. Preview progress stays in memory and never changes your normal save. New buildings join the preview through `CaveHomestead.structures`.
+
+### 山居室内 · Home interior
+
+房屋竣工后，在门口按 **E** 进出；进入后前墙透视，解锁内饰。梯子需木板 ×4，靠近后 **W/S** 上下楼；玻璃橱需玻璃 ×4＋木板 ×8。秋冬壁炉燃烧，冬季烟雾与温泉蒸汽更明显。
+
+After finishing the house, press **E** at the door to reveal the two-storey interior and unlock furnishings. Build a ladder with 4 planks and climb with **W/S**, or a glass cabinet with 4 glass + 8 planks. Autumn/winter bring fireplace light; winter has heavier chimney smoke and onsen steam.
+
+墙体／屋顶分别需要防腐木板 ×20／×30（木板 ×1＋砒霜 ×1）。高温炉玻璃：紫水晶或黄水晶 ×1＋天然碱 ×1＋方解石或文石 ×1，另需燃料。天然碱只出现在一格深、无流入流出的静水池岸。
+
+Walls/roof require 20/30 treated planks (1 plank + 1 arsenic vial each). High-furnace glass needs 1 amethyst or citrine + 1 natron + 1 calcite or aragonite, plus fuel. Natron occurs beside closed one-tile-deep still pools without flowing inlets/outlets.
+
+![冬季山居室内 · Winter interior](docs/screenshots/winter-interior.png)
