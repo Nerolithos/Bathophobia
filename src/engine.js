@@ -102,8 +102,22 @@ function transition(state,action,world){let s={...state},air=!s.ground,frames=0;
 // No damage edge is allowed, and collapse deadlines are checked at every tick.
 function solve(segment,previous,entry,maxNodes=360,maxMs=Infinity){const deadline=performance.now()+maxMs;let world=worldFor(segment,previous);if(collides(entry,entry.x,entry.y,world))return null;let heap=new Heap(),dist=new Map(),start={s:{...entry},cost:0,priority:Math.max(0,world.bottom*T-entry.y-PH)/610,parent:null,commands:[]};heap.push(start);dist.set(nodeKey(entry),0);let expanded=0;while(heap.length&&expanded++<maxNodes){if(performance.now()>deadline)return null;let n=heap.pop();if(n.exit){let chain=[],points=[];for(let v=n;v?.parent;v=v.parent){chain.push(v.commands);points.push({x:v.s.x+PW/2,y:v.s.y+PH,ground:v.s.ground})}return {commands:chain.reverse().flat(),points:points.reverse(),exit:n.s,seconds:n.cost,nodes:expanded}}let key=nodeKey(n.s);if(n.cost>dist.get(key)+1e-6)continue;let inPool=waterAt(n.s,world).pool;for(let a of ACTIONS){if(performance.now()>deadline)return null;if(!!a.swimAction!==inPool)continue;let maxJumps=Math.max(traits(n.s).jumps,world.maxJumps);if(a.third!==undefined&&maxJumps<3)continue;if(a.second>=0&&maxJumps<2)continue;if(a.walk&&!n.s.ground)continue;if(n.s.ground&&!a.dir&&!a.jump&&!a.walk&&!a.swimAction)continue;let tr=transition(n.s,a,world);if(!tr)continue;let cost=n.cost+tr.commands.length*DT,next={s:tr.s,cost,priority:cost+Math.max(0,world.bottom*T-tr.s.y-PH)/610,parent:n,commands:tr.commands,exit:tr.exit};if(tr.exit){heap.push(next);continue}let k=nodeKey(tr.s);if(cost<(dist.get(k)??Infinity)-1e-6){dist.set(k,cost);heap.push(next)}}}return null}
 function findStarts(segment,labels){let c=labels||components(segment.tiles),world=worldFor(segment,null),list=[];for(let y=3;y<12;y++)for(let x=4;x<W-4;x++){let s=spawn(x*T+3,y*T-PH);if(segment.tiles[y][x]&&!collides(s,s.x,s.y,world)&&c.groups[c.seen[(y-1)*W+x]]?.length>120&&c.groups[c.seen[(y-1)*W+x]].some(k=>k>=W*(H-1)))list.push(s)}return list.sort((a,b)=>Math.abs(a.x-W*T/2)-Math.abs(b.x-W*T/2))}
-// Only single-row, bottom-supported, closed pools with no adjacent flowing water qualify.
-function staticPoolBanks(segment,previous){let world=worldFor(segment,previous),top=segment.id*H,result=[];for(let y=2;y<H-2;y++)for(let x=3;x<W-3;){let w=segment.water[y]?.[x];if(!w?.pool||w.lava){x++;continue}let left=x;while(x<W-2&&segment.water[y]?.[x]?.pool&&!segment.water[y][x].lava)x++;let right=x-1,gy=top+y;if(!world.solid(left-1,gy)||!world.solid(right+1,gy))continue;let okay=true;for(let xx=left;xx<=right;xx++){if(!world.solid(xx,gy+1)||world.water(xx,gy-1)?.pool)okay=false;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){let q=world.water(xx+dx,gy+dy);if(q&&!q.pool&&q.strength>0)okay=false}}if(okay)for(let xx of[left-1,right+1])if(!world.solid(xx,gy-1)&&!world.water(xx,gy-1))result.push({tx:xx,ty:gy,x:xx*T+10,y:gy*T})}return result}
+// Flood each standing-water component at any depth. Flowing inlets are allowed;
+// open side/bottom outlets are not. Specimens only attach to dry, exposed bank rock.
+function staticPoolBanks(segment,previous){
+ const world=worldFor(segment,previous),top=segment.id*H,seen=new Uint8Array(W*H),result=new Map();
+ for(let sy=1;sy<H-1;sy++)for(let sx=2;sx<W-2;sx++){
+  let start=sy*W+sx;if(seen[start]||!segment.water[sy]?.[sx]?.pool)continue;
+  let queue=[start],head=0,banks=[],okay=true;seen[start]=1;
+  while(head<queue.length){let key=queue[head++],x=key%W,y=Math.floor(key/W),gy=top+y,w=segment.water[y][x];if(w.lava)okay=false;
+   for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){let q=world.water(x+dx,gy+dy);if(q?.lava)okay=false}
+   for(let [dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){let nx=x+dx,ny=y+dy,q=world.water(nx,top+ny);if(q?.pool){if(ny<0||ny>=H||nx<1||nx>=W-1){okay=false;continue}let next=ny*W+nx;if(!seen[next]){seen[next]=1;queue.push(next)}}else if((dx||dy===1)&&!world.solid(nx,top+ny))okay=false}
+   for(let xx of[x-1,x+1])if(world.solid(xx,gy)&&!world.solid(xx,gy-1)&&!world.water(xx,gy-1))banks.push({tx:xx,ty:gy,x:xx*T+10,y:gy*T});
+  }
+  if(okay)for(let bank of banks)result.set(bank.tx+','+bank.ty,bank);
+ }
+ return [...result.values()];
+}
 function populate(segment,previous,seed){
 let world=worldFor(segment,previous),surfaces=[],moss=[];const top=segment.id*H;
 for(let y=3;y<H-2;y++)for(let x=3;x<W-3;x++){
