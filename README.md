@@ -2,8 +2,8 @@
 
 # BATHOPHOBIA · 深绿之下
 
-**采集矿物，逃离塌陷，回到四季山居。**<br>
-**Collect minerals. Outrun the collapse. Build a home above.**
+
+**Collect minerals while trying to outrun collapsing cave and dwelling shadows ... to build a home.**
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-F7DF1E?logo=javascript&logoColor=111)
 ![Canvas](https://img.shields.io/badge/Canvas-2D-E34F26?logo=html5&logoColor=white)
@@ -21,6 +21,8 @@
 | 营地休整 · Cave camp | 火山探索 · Volcanic caves |
 | :---: | :---: |
 | ![营地与角色 / Player at a cave camp](docs/screenshots/current-camp.jpg) | ![玄武岩与岩浆 / Basalt and lava](docs/screenshots/current-volcano.jpg) |
+
+![](docs/screenshots/minerals.png)
 
 ## 中文
 
