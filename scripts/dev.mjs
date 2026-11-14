@@ -11,14 +11,14 @@ const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=ut
 const server = http.createServer(async (request, response) => {
   try {
     const route = path.posix.normalize(decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
-    if (route !== '/' && route !== '/index.html' && route !== '/character-preview.html' && route !== '/style.css' && !route.startsWith('/src/') && !route.startsWith('/assets/')) {
+    if (!['/2Afin-admin','/2Afin-admin/','/2Afin-admin.html'].includes(route) && route !== '/' && route !== '/index.html' && route !== '/character-preview.html' && route !== '/style.css' && !route.startsWith('/src/') && !route.startsWith('/assets/')) {
       response.writeHead(404).end('Not found'); return;
     }
-    const location = path.resolve(base, '.' + (route === '/' ? '/index.html' : route));
+    const location = path.resolve(base, '.' + (route === '/' || route.startsWith('/2Afin-admin') ? '/index.html' : route));
     if (!location.startsWith(base + path.sep)) { response.writeHead(403).end(); return; }
     if (!(await stat(location)).isFile()) { response.writeHead(404).end(); return; }
     response.writeHead(200, { 'Content-Type': types[path.extname(location)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
-    response.end(await readFile(location));
+    let content=await readFile(location);if(route.startsWith('/2Afin-admin'))content=content.toString().replace('<head>','<head><base href="/">');response.end(content);
   } catch {
     response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     response.end(preview ? 'Not found. Run npm run build before npm run preview.' : 'Not found');

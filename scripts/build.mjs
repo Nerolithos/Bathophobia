@@ -26,18 +26,20 @@ await mkdir(assets, { recursive: true });
 await cp(artFolder,path.join(assets,'characters/idle-studies'),{recursive:true});
 await Promise.all(files.map(([name, content]) => writeFile(path.join(assets, name), content)));
 await writeFile(path.join(assets, 'style.css'), css);
-const appNames=['engine.js','player-art.js','player-animation.js','visuals.js','threats.js','systems.js','homestead.js','animals.js','surface.js','game.js'];
+const appNames=['engine.js','player-art.js','player-animation.js','visuals.js','threats.js','systems.js','homestead.js','animals.js','spring.js','surface.js','game.js'];
 await writeFile(path.join(assets,'app.js'),appNames.map(name=>files.find(([n])=>n===name)[1].toString()).join('\n;\n'));
 const workerBundle=['engine.js','threats.js','generator.js'].map(name=>{let source=files.find(([n])=>n===name)[1].toString();return name==='generator.js'?source.replace(/^importScripts\([^;]+\);\s*/,''):source}).join('\n;\n');
 await writeFile(path.join(assets,'generator.js'),workerBundle);
 const html = originalHTML
-  .replace(/<script src="\.\/src\/(?:engine|player-art|player-animation|visuals|threats|systems|homestead|animals|surface|game)\.js"><\/script>/g,'')
+  .replace(/<script src="\.\/src\/(?:engine|player-art|player-animation|visuals|threats|systems|homestead|animals|spring|surface|game)\.js"><\/script>/g,'')
   .replace(/href="(?:\.\/)?style\.css"/,`href="${prefix}style.css"`)
   .replace('</body>',`<script type="application/json" id="boot-maps">${bootJSON}</script><script src="${prefix}app.js"></script></body>`)
   .replace('</head>', `<meta name="app-build" content="${buildId}"></head>`);
 for (const [, asset] of html.matchAll(/(?:src|href)="(\.\/assets\/[^"?]+)"/g)) await readFile(path.join(output, asset));
 await writeFile(path.join(output, 'index.html'), html);
+await writeFile(path.join(output,'2Afin-admin.html'),html.replace('<head>','<head><base href="/">'));
+await writeFile(path.join(output,'_redirects'),'/2Afin-admin /2Afin-admin.html 200\n/2Afin-admin/ /2Afin-admin.html 200\n');
 await writeFile(path.join(output,'character-preview.html'),previewHTML.replaceAll('./assets/characters/idle-studies/',prefix+'characters/idle-studies/'));
 await writeFile(path.join(output, '_headers'),
-  '/\n  Cache-Control: no-cache\n/index.html\n  Cache-Control: no-cache\n/character-preview.html\n  Cache-Control: no-cache\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n');
+  '/2Afin-admin\n  Cache-Control: no-cache\n/2Afin-admin.html\n  Cache-Control: no-cache\n/\n  Cache-Control: no-cache\n/index.html\n  Cache-Control: no-cache\n/character-preview.html\n  Cache-Control: no-cache\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n');
 console.log(`Built static website → dist/ (build ${buildId}; scripts, CSS and worker share one version).`);

@@ -109,3 +109,9 @@ Report bugs or ideas through Issues. Focused pull requests are welcome.
 ![秋季温泉与山居 · Autumn onsen and cottage](docs/screenshots/onsen-autumn.png)
 
 温泉 / Onsen: 10 硫磺 / sulfur + 10 煤炭 / coal + 20 木板 / planks + 10 砂石 / aggregate. 木头 ×1 → 木板 ×2 / wood ×1 → planks ×2.
+
+### 场景预览 · Scene preview
+
+打开 `/2Afin-admin`：直接进入所有建筑完工的地面，切换四季或温泉的天然／四个建设阶段。使用独立内存存档，不改动正常游戏进度。后续建筑在 `CaveHomestead.structures` 注册完工状态后，预览页会自动纳入。
+
+Open `/2Afin-admin` for the fully built homestead, seasonal controls and five spring construction views. Preview progress stays in memory and never changes your normal save. New buildings join the preview through `CaveHomestead.structures`.

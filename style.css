@@ -19,3 +19,5 @@ body[data-scene="surface"] #acidButton{display:none}#loadoutItems button{margin:
 .loadout-slots,.loadout-options{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.loadout-slots{margin:20px 0 24px}.loadout-options{border-top:1px solid var(--edge);padding:20px 0}.loadout-tile{width:96px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px}.loadout-tile canvas{width:64px;height:56px;image-rendering:pixelated}.loadout-tile span{font-size:11px}.loadout-tile small{font:11px monospace;color:#a3b79f}.loadout-selected{border-color:#9ec6a7;background:#20392a}.loadout-empty{border:1px dashed #617866;font:24px monospace}.loadout-options .loadout-tile:disabled{opacity:.7;cursor:default}@media(max-width:600px){.loadout-tile{width:82px}}
 
 #loadoutItems .loadout-tile{margin:0}
+
+.surface-review{display:flex;gap:18px;align-items:center;padding:6px 14px;background:#233b32;color:#c6d8b1;font:12px monospace}.surface-review select{background:#142920;color:#d5e0c9;border:1px solid #617663;padding:3px}
