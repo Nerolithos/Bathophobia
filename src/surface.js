@@ -5,9 +5,10 @@ const Spring=typeof module!=='undefined'?require('./spring'):root.CaveSpring;
 const {POOL,RESERVED}=Spring,poolFloor=Spring.floor;
 const species=[['rabbit','swallow'],['frog','frog'],['squirrel','squirrel'],['sheep','penguin']];
 function create(season=2){return {season,time:0,x:310,y:0,vy:0,face:1,ground:true,jump:false,animals:Array.from({length:5},(_,i)=>({kind:species[season][i%2],x:310+i*110,homeX:310+i*110,y:0,dir:i%2?1:-1,phase:i*1.7}))}}
-function update(s,dt,keys,height){let oldX=s.x;s.didJump=false;s.time+=dt;let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vertical=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0),wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
-s.x=Math.max(20,Math.min(930,s.x+dir*(wet?105:150)*dt));if(dir)s.face=dir;let floor=Math.min(poolFloor(s.x-6),poolFloor(s.x+6));if(wet){s.vy=vertical*95;if(!vertical)s.vy=-12;s.y+=s.vy*dt;s.y=Math.min(floor,Math.max(vertical?-8:POOL.waterline+2,s.y));s.ground=false}else{if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}else s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
-for(let a of s.animals){Animals.update(a,dt,s.time);if(a.kind!=='swallow'&&a.x<RESERVED.right+20){a.x=RESERVED.right+20;a.dir=1;a.homeX=Math.max(a.homeX||0,RESERVED.right+60)}}s.hero??={x:oldX,y:s.y,ground:true};Object.assign(s.hero,{x:s.x,y:s.y,ground:s.ground,vy:s.vy,face:s.face,didJump:s.didJump,time:s.time,wet:s.wet});let animator=typeof module!=='undefined'?require('./player-animation'):root.CavePlayerAnimation;animator.update(s.hero,dt);return s.x>866&&s.ground}
+function update(s,dt,keys,height,home={}){let oldX=s.x,wasWet=!!s.wet;s.didJump=false;s.time+=dt;let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vertical=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0),wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
+s.x=Math.max(20,Math.min(930,s.x+dir*(wet?105:150)*dt));if(dir)s.face=dir;let floor=Math.min(poolFloor(s.x-6),poolFloor(s.x+6));if(wet){s.vy=vertical*95;if(!vertical)s.vy=Math.max(-28,Math.min(28,(POOL.waterline+30-s.y)*4));s.y+=s.vy*dt;s.y=Math.min(floor,Math.max(-8,s.y));s.ground=false}else{if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}else s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
+s.splashes=(s.splashes||[]).filter(q=>(q.life-=dt)>0);for(let q of s.splashes){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=170*dt}if(s.wet&&!wasWet&&s.time-(s.lastSplash||-1)>.45){s.lastSplash=s.time;for(let i=0;i<12;i++)s.splashes.push({x:s.x+(i%3-1)*3,y:POOL.waterline,vx:(i-5.5)*10,vy:-35-(i*17%55),life:.45+(i%3)*.08})}
+for(let a of s.animals){Animals.update(a,dt,s.time);if(a.kind!=='swallow'&&a.x<RESERVED.right+20){a.x=RESERVED.right+20;a.dir=1;a.homeX=Math.max(a.homeX||0,RESERVED.right+60)}}s.hero??={x:oldX,y:s.y,ground:true};Object.assign(s.hero,{x:s.x,y:s.y,ground:s.ground,vy:s.vy,face:s.face,didJump:s.didJump,time:s.time,wet:s.wet,swimsuit:!!(home.onsen&&s.wet),detailArt:s.detailArt!==false});let animator=typeof module!=='undefined'?require('./player-animation'):root.CavePlayerAnimation;animator.update(s.hero,dt);return s.x>866&&s.ground}
 
 function draw(c,s,height,home,hero){let g=Math.floor(height*.73/20)*20,t=s.time,season=s.season,autumn=season===2,winter=season===3;
 const rect=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h)},poly=(points,color)=>{c.fillStyle=color;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill()};
@@ -24,6 +25,8 @@ poly([[850,g],[850,g-43],[862,g-59],[899,g-59],[913,g-41],[913,g]],'#0a1c1b');re
 for(let i=0;i<5;i++){rect(275+i%3*9,g-8-Math.floor(i/3)*7,17,7,'#806446');rect(275+i%3*9,g-8-Math.floor(i/3)*7,3,7,'#b39869')}
 // Stone furnace, iron door and stepped chimney.
 for(let row=0;row<3;row++)for(let col=0;col<3;col++)rect(402+col*11+(row%2),g-32+row*10,10,9,row%2?'#6a7869':'#7c8672');rect(408,g-22,23,22,'#263b31');rect(414,g-17,11,15,'#a46d3f');rect(417,g-12,5,10,'#e4ae57');if(home.station.furnaceTier===2){rect(419,g-59,13,28,'#6d786b');rect(416,g-62,19,4,'#9b9e83');for(let i=0;i<3;i++)rect(409+i*7,g-24,3,22,'#142820')}
+// Slightly larger cottage: door clearance now exceeds the 64px surface heroine.
+c.save();c.translate(582,g);c.scale(1.18,1.18);c.translate(-582,-g);
 let x=480,y=g-116,w=204,p=home.progress;
 if(p>=1){rect(x-9,g-10,w+18,10,'#7f8a78');for(let xx=x-5;xx<x+w;xx+=23)rect(xx,g-8,21,6,'#a5ab93')}
 if(p>=2){for(let xx of [x+3,x+w/2,x+w-7]){rect(xx,y,5,106,'#8d9b91');rect(xx+1,y,1,106,'#bec5b3')}rect(x+3,y,w-7,5,'#a8b3a1')}
@@ -32,10 +35,11 @@ if(p>=3){rect(x+7,y+5,w-14,101,'#a8b09a');for(let yy=y+60;yy<g-10;yy+=9)for(let 
 if(p>=5){poly([[x-19,y+7],[x+w/2,y-68],[x+w+19,y+7]],'#563e38');poly([[x-14,y+3],[x+w/2,y-61],[x+w+12,y+3]],'#8b5344');for(let row=0;row<7;row++){let yy=y-55+row*9,half=(row+1)*15;for(let xx=x+w/2-half;xx<x+w/2+half;xx+=13){rect(xx,yy,12,7,(row+Math.floor(xx/13))%2?'#a3694f':'#915640');rect(xx,yy,10,1,'#bb8160')}}rect(x-17,y+4,w+34,5,'#b09065');rect(x+34,y-50,17,37,'#6e7568');rect(x+31,y-54,23,5,'#989c82')}
 if(p>=6)for(let xx of [x+25,x+140]){rect(xx-3,y+23,38,43,'#65533e');rect(xx,y+26,32,36,'#6d9995');rect(xx+2,y+28,12,14,'#a1c4b8');rect(xx+15,y+26,2,36,'#d2c9a3');rect(xx,y+43,32,2,'#d2c9a3');rect(xx-4,y+64,40,4,'#b4a17c')}
 if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+w/2,y-67);c.lineTo(x+w+18,y);c.stroke();c.restore()}else if(winter)rect(x-8,y,220,4,'#d7e0d3');
+c.restore();
 for(let a of s.animals)Animals.draw(c,a,g,t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
-s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[],48);c.restore();Spring.foreground(c,g,t,s);
-c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('E 木堆',268,g+44);c.fillText('B 仓库 / 建设',518,g+44);c.fillText('矿洞 ↓',858,g+24);
+s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
+c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);
 }
 const api={POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
 })(globalThis);

@@ -1,12 +1,12 @@
 # Water animation studies v2
 
-Generated with the built-in image generation model, using the approved B idle and side-right drawings as identity/proportion references. These are original keyframe studies, **not runtime-ready atlases**. The game remains on the pre-1e64f58 character implementation.
+Generated with the built-in image generation model, using the approved B idle and side-right drawings as identity/proportion references. These are original model-generated keyframes. Their packed runtime derivatives now live in `../player-detail/` and `src/player-detail.js`; the original sheets remain unchanged.
 
 - `treading-outfit-variants.png`: two rows of four frames; original explorer outfit above, matching one-piece swimsuit below.
 - `swimsuit-swim-keyframes.png`: six side-view swimming keyframes, read left-to-right, top-to-bottom.
 - `review.html`: inspect individual cells beside the approved reference. Cropping in this page is CSS-only and does not alter the model's source images.
 
-The opaque muted backdrop avoids the colored fringe seen in the discarded transparent drafts. Before integration: extract clean alpha, reduce to the existing pixel palette/scale, align anatomy and anchors frame-by-frame, check loop timing at native 40/48 display height, then test depth sorting and wardrobe transitions. No collision or physics changes are included with these studies.
+The opaque muted backdrop avoids the colored fringe seen in the discarded transparent drafts. Runtime preparation uses `scripts/prepare-player-detail.py` for alpha extraction, fixed-scale pose placement, palette mapping and small water-frame derivatives. Surface rendering can switch between detail and small modes; caves retain small rendering.
 
 Future integration must retain the approved head/body/limb dimensions. Do not replace the torso with procedural rectangles or lengthen/shorten limbs to fit a cell.
 
