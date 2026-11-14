@@ -1,0 +1,25 @@
+# Water animation studies v2
+
+Generated with the built-in image generation model, using the approved B idle and side-right drawings as identity/proportion references. These are original keyframe studies, **not runtime-ready atlases**. The game remains on the pre-1e64f58 character implementation.
+
+- `treading-outfit-variants.png`: two rows of four frames; original explorer outfit above, matching one-piece swimsuit below.
+- `swimsuit-swim-keyframes.png`: six side-view swimming keyframes, read left-to-right, top-to-bottom.
+- `review.html`: inspect individual cells beside the approved reference. Cropping in this page is CSS-only and does not alter the model's source images.
+
+The opaque muted backdrop avoids the colored fringe seen in the discarded transparent drafts. Before integration: extract clean alpha, reduce to the existing pixel palette/scale, align anatomy and anchors frame-by-frame, check loop timing at native 40/48 display height, then test depth sorting and wardrobe transitions. No collision or physics changes are included with these studies.
+
+Future integration must retain the approved head/body/limb dimensions. Do not replace the torso with procedural rectangles or lengthen/shorten limbs to fit a cell.
+
+## Final prompt set
+
+### Treading outfit variants
+
+Create a NEW Bathophobia animation reference sheet using these exact original character references for identity and anatomy. Single absolutely uniform flat background #34463F, entirely opaque; no transparency, no vignette, no glow, no colored outlines or colored edge speckles. Eight clean pixel-art full-body poses, 2 rows x 4 columns equal sized cells, generous padding. Top row 4 consecutive upright treading-water frames wearing EXACT original green explorer dress, belt, pouch and boots. Bottom row corresponding 4 frames wearing modest high-neck dark jade one-piece athletic swimsuit with broad cream-trim straps, bare arms and bare feet. Keep same exact head-to-body ratio as references, normal limb thickness, shoulder width, waist, torso length, leg length and hand size; no chibi exaggeration beyond original, no skinny stick torso or oversized head. Ash brown bob, cat ears, green eyes, subtle blush, same face from reference1 3/4 view slightly right. Character head around one third of total height, precisely the reference proportions. Each row is a four-frame loop: elbows relaxed and hands near waist; hands sweep outward; hands push down; hands gather inward. Gentle alternating bent knees paddling, upright torso. Small motion only, same face and head dimensions, same chest and hip widths, same scale and foot anchor in every cell. Fully show bodies so original proportions can be compared, no water, no scenery, no props, no text. Hand-authored crisp pixel character style matching reference, limited muted palette and clearly grouped source pixels; no high resolution illustration, no antialiasing, no blurry contours. Keep same adult fantasy explorer design; ONLY change pose and outfit as described.
+
+References: `../idle-studies/idle-b-ash-brown.png`, `../idle-studies/b-side-right.png`.
+
+### Swimming keyframes
+
+Create a NEW six-frame swimming animation reference sheet for Bathophobia. Reference1 locks the ORIGINAL character's face/profile, hair, cat ears, tail, head/body proportions and limb thickness. Reference2 bottom row locks the exact dark jade modest one-piece swimsuit with cream broad straps, no boots/pouch/belt. Reference3 provides movement direction and horizontal swimming silhouettes only. Six sequential full-body keyframes in exactly 2 rows x 3 columns, read left to right then next row, all same character scale and head size. Opaque uniform flat background #34463F, no transparency, no glow, no colored halos, no antialiasing. Pixel art in original game's muted style with crisp consistent pixel clusters. Side view facing right, gently horizontal breaststroke/frog kick swimming loop, NOT an upright walking loop. 1 arms reach forward, knees softly tucked; 2 hands open outward, legs extend; 3 arms sweep outward and back, knees bend; 4 elbows draw in under shoulders, heels approach hips; 5 hands gather and extend forward while legs kick; 6 full-body short glide returning into frame1. Keep anatomically coherent shoulder/elbow/wrist and hip/knee/ankle joints, same torso/leg lengths and shoulder width in EVERY frame; hands/feet same small size as the original. Head is around one third of full extended body length, matching original model, do not enlarge it. Ash brown fluffy short hair, same green eye, small muzzle/nose/chin, same ears and tail from the original. Hair/tail trail naturally with very small differences. Show entire swimmer in each cell, sufficient empty padding so limbs cannot overlap cells. No water drawn over her, no scenery, no text, no numbering, no extra accessories. This is a faithful outfit-and-pose difference of the SAME original character, not a redesigned heroine. Keep single near arm/leg and partially occluded far limbs readable; do not draw duplicate limbs.
+
+References: `../idle-studies/b-side-right.png`, `treading-outfit-variants.png`, `../player-b/swim.png`.
