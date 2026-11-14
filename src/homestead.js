@@ -15,8 +15,9 @@ function gather(h){if(h.lastGather===h.descents)return false;h.lastGather=h.desc
 const onsenCost={11:10,10:10,37:20,30:10};
 const onsenStages=[{name:'整理泉边',cost:{30:10}},{name:'修建池边',cost:{37:12}},{name:'安装设施',cost:{37:8,10:10}},{name:'温泉启用',cost:{11:10}}];
 function upgradeOnsen(h){let stage=h.onsen?4:h.onsenStage||0,p=onsenStages[stage];if(!p)return {ok:false,message:'温泉已建成'};if(Object.entries(p.cost).some(([i,n])=>(h.vault[i]||0)<n))return {ok:false,message:'温泉材料不足'};for(let [i,n]of Object.entries(p.cost))h.vault[i]-=n;h.onsenStage=stage+1;h.onsen=h.onsenStage===4;return {ok:true,message:p.name+'完成'}}
+const constructionProjects=[{id:'house',name:'山居小屋',stages:plans,progress:h=>h.progress,build},{id:'onsen',name:'山泉温泉',stages:onsenStages,progress:h=>h.onsen?onsenStages.length:h.onsenStage||0,build:upgradeOnsen}];
 // Register future surface structures here: the review route always completes this same registry.
 const structures={house:h=>h.progress=plans.length,furnace:h=>h.station.furnaceTier=2,onsen:h=>{h.onsen=true;h.onsenStage=onsenStages.length}};
 function completeAll(h=fresh()){Object.values(structures).forEach(complete=>complete(h));return h}
-const api={structures,completeAll,onsenStages,onsenCost,upgradeOnsen,KEY,seasons,plans,fresh,load,save,settle,begin,sync,build,gather};if(typeof module!=='undefined')module.exports=api;root.CaveHomestead=api;
+const api={constructionProjects,structures,completeAll,onsenStages,onsenCost,upgradeOnsen,KEY,seasons,plans,fresh,load,save,settle,begin,sync,build,gather};if(typeof module!=='undefined')module.exports=api;root.CaveHomestead=api;
 })(globalThis);
