@@ -10,6 +10,6 @@
     "dev": "node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/dev.mjs --preview",
-    "test": "node verify.cjs && node verify-threats.cjs && node verify-lava.cjs && node verify-startup.cjs && node verify-nature.cjs && node verify-crafting.cjs && node verify-progression.cjs && node verify-geology.cjs && node verify-geodes-mining.cjs && node verify-homestead.cjs && node verify-animals.cjs && node verify-chemistry.cjs && node verify-onsen.cjs && node verify-player-detail.cjs && node verify-interior.cjs"
+    "test": "node verify.cjs && node verify-threats.cjs && node verify-lava.cjs && node verify-startup.cjs && node verify-nature.cjs && node verify-crafting.cjs && node verify-progression.cjs && node verify-geology.cjs && node verify-geodes-mining.cjs && node verify-homestead.cjs && node verify-animals.cjs && node verify-chemistry.cjs && node verify-onsen.cjs && node verify-player-detail.cjs && node verify-interior.cjs && node verify-rare-minerals.cjs"
   }
 }

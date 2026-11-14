@@ -16,7 +16,7 @@
 
 </div>
 
-![秋季山居 / Autumn homestead](docs/screenshots/current-surface.jpg)
+![秋季山居 / Autumn homestead](docs/screenshots/base.png)
 
 | 营地休整 · Cave camp | 火山探索 · Volcanic caves |
 | :---: | :---: |
@@ -127,3 +127,10 @@ After finishing the house, press **E** at the door to reveal the two-storey inte
 Walls/roof require 20/30 treated planks (1 plank + 1 arsenic vial each). High-furnace glass needs 1 amethyst or citrine + 1 natron + 1 calcite or aragonite, plus fuel. Natron occurs on dry banks of closed pools of any depth (inlets allowed), and in dry bowl-shaped depressions resembling evaporated lake beds.
 
 ![冬季山居室内 · Winter interior](docs/screenshots/winter-interior.png)
+
+### 稀有标本 · Rare specimens
+
+- **摩根石**：极低概率藏于含菱锰矿的石英脉内部，独占一个四周封闭的单格晶腔；开采围岩后采集。
+- **翠榴石**：约以 1/50 概率替换橄榄石，浓绿多面晶体配白色基岩。两者都有动态反光，进入图鉴和跨轮仓库。
+
+**Morganite** occupies a rare, completely enclosed one-tile pocket inside rhodochrosite-bearing quartz veins; excavate the surrounding rock to collect it. **Demantoid** replaces roughly 1 in 50 peridot specimens. Both have animated highlights and persist in the collection and warehouse.

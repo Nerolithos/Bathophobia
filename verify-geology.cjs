@@ -12,7 +12,7 @@ for(let seed of [1,11,127301])for(let id=0;id<36;id++){
 assert(totals.cores>0&&totals.rich>0&&totals.poor>0);assert(totals.silica>0&&totals.strong>0&&totals.weak>0);assert(totals.wide/totals.widthSamples<.2,'wide quartz segments must be exceptional');assert(totals.inclusions<totals.cores*.3,'ordinary lodes overpopulated');assert(totals.geodes<28,'dense geodes must be rare');
 // Attached minerals have real support, point into air, are spaced apart, and
 // can be touched from the open side using the unchanged inventory item IDs.
-let presentations={embedded:0,wall:0,cluster:0},colors=new Set(),directions=new Set();
+let presentations={embedded:0,wall:0,cluster:0,sealed:0},colors=new Set(),directions=new Set();
 for(let seed of [1,11,127301]){let prev=null,entry=null;for(let id=0;id<36;id++){let s=E.makeSegment(seed,id,prev,entry,0,600);assert(s);let w=E.worldFor(s,prev),attached=s.ores.filter(o=>o.presentation);for(let [i,o]of attached.entries()){presentations[o.presentation]++;if(o.type>=22)colors.add(o.type);if(!o.mineOnly)directions.add(o.nx+','+o.ny);assert(w.solid(o.tx,o.ty));assert(!w.solid(o.tx+o.nx,o.ty+o.ny));if(o.mineOnly){assert(!E.oreTouches(E.spawn(o.x,o.y),o));continue}assert(o.pickBounds);let actor=E.spawn(o.pickBounds.x,o.pickBounds.y);assert(E.oreTouches(actor,o),'contact collection failed');let distant=E.spawn(o.x+200,o.y+200);assert(!E.oreTouches(distant,o));for(let q of attached.slice(0,i).filter(q=>!q.mineOnly))assert(Math.hypot(q.x-o.x,q.y-o.y)>=14,'crystals overlap')}prev=s;entry=s.proof.exit}}
 assert(presentations.embedded>0&&presentations.wall>0&&presentations.cluster>0);assert(colors.size>0);assert(directions.size>=3);
 // Geological item metadata survives the same JSON serialization used at boot.
