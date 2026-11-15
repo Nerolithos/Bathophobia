@@ -6,19 +6,32 @@ function floor(x){if(x<=94||x>=270)return 0;for(let i=1;i<bed.length;i++)if(x<=b
 const stoneShapes=[['  xxxx  ',' xhhhxx ','xhhmmmxx','xmmmmddx',' xxdddxx','  xxxx  '],['   xxxx   ',' xxhhhxxx ','xhhhmmmmxx','xmmmmmmddx',' xxdddddxx','   xxxxx  '],['  xxx  ',' xhhxx ','xhhmmxx','xmmmddx',' xxddx ','  xxx  ']];
 function tools(c,g){const r=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),g+Math.round(y),w,h)};return{r,stone(x,y,type=0,scale=2,moss=false){let rows=stoneShapes[type%3],pal={x:'#4d6258',h:'#a1aa8b',m:'#7e8f79',d:'#627560'};rows.forEach((row,j)=>[...row].forEach((p,i)=>{if(p!==' ')r(x+i*scale,y+j*scale,scale,scale,pal[p])}));if(moss){r(x+scale*2,y+scale,scale*3,scale,'#78905c');r(x+scale,y+scale*2,scale*2,scale,'#637b51')}}}}
 function stage(home){return home.onsen?4:home.onsenStage||0}
-// Distant bathhouse and bamboo are painted before ground, spring rocks and actors.
-// Reduced scale, desaturated colors and atmospheric opacity separate this layer.
-function backdrop(c,g,t,home,season){if(stage(home)<3)return;const {r}=tools(c,g),winter=season===3;c.save();c.globalAlpha=.64;
-// Two irregular groves: leaning stems, staggered heights, segmented joints and leaf fans.
-for(let i=0;i<18;i++){const base=63+i*15+(i%3)*4,height=70+(i*29%65),lean=[-.22,.13,-.08,.26,-.17,.05][i%6],step=5,xAt=y=>base+(height+y)*lean+Math.sin(y*.045+i)*2;for(let y=-height;y<-24;y+=step){const x=xAt(y);r(x,y,3,step+1,i%3?'#497363':'#547f6b');r(x+1,y,1,step,'#6f9580');if((y+height)%20===0){r(x-1,y,5,2,'#90aa8b');for(let side of[-1,1]){for(let k=0;k<4;k++){const xx=x+side*(4+k*3),yy=y-3-k%2*3;r(xx,yy,5,2,'#567e68');r(xx+side*2,yy-2,3,2,'#6e9479')}}}}}
-// Compact frontal Japanese bathhouse, intentionally well behind the pool bank.
-r(153,-96,101,54,'#617367');r(156,-94,95,49,'#b4b49a');r(151,-47,105,4,'#6b7564');r(160,-43,88,3,'#82917a');
-for(let x of[156,186,218,248])r(x,-96,3,50,'#6a705c');r(156,-75,95,3,'#747760');r(194,-75,23,29,'#4d6d62');r(197,-72,17,26,'#7e9c85');r(205,-72,2,26,'#596f5d');
-for(let x of[162,224]){r(x,-71,20,21,'#77998a');for(let dx=3;dx<20;dx+=5)r(x+dx,-71,1,21,'#b0b59a');for(let y=-67;y<-50;y+=5)r(x,y,20,1,'#b0b59a')}
-// Stepped gable and extended teal tiled eaves; no smooth vector outlines.
-for(let row=0;row<12;row++){const half=5+row*5;r(204-half,-130+row*3,half*2,4,'#556e62');if(row<10)r(204-half+3,-128+row*3,half*2-6,2,'#b7b49a')}
-for(let row=0;row<5;row++){const left=155-row*4,width=98+row*8;r(left,-108+row*3,width,4,'#416f65');for(let x=left+2;x<left+width-2;x+=8){r(x,-108+row*3,5,1,winter?'#afc0b0':'#739689');r(x+5,-107+row*3,1,2,'#365e58')}}r(138,-94,133,3,'#6b7d68');r(201,-131,7,2,'#819984');r(201,-120,5,15,'#777c65');r(196,-108,16,2,'#85866d');
-if(winter){r(170,-116,27,2,'#b6c3b2');r(217,-110,28,2,'#b6c3b2')}
+// Independent scenic terrace. Background-only geometry never changes swimming or navigation.
+const bambooStems=[{x:278,h:112,lean:-.08},{x:290,h:139,lean:.045},{x:433,h:130,lean:-.035},{x:448,h:151,lean:.09},{x:463,h:111,lean:-.07},{x:473,h:138,lean:.035}];
+function backdrop(c,g,t,home,season){if(stage(home)<3)return;const {r}=tools(c,g),winter=season===3;c.save();
+// Six culms in two asymmetric groups, with only a few drooping sprays at selected nodes.
+for(let i=0;i<bambooStems.length;i++){let {x,h,lean}=bambooStems[i];for(let y=-h;y<-4;y+=4){const xx=x+(y+4)*lean;r(xx,y,3,4,i%2?'#527b59':'#668c54');r(xx+1,y,1,4,'#8ca563');if((y+h)%24===0)r(xx-1,y,5,2,'#9bab72')}
+ for(let k=0;k<2;k++){const y=-h+25+k*39,xx=x+(y+4)*lean,side=i<2?-1:1;for(let j=0;j<4;j++){const bx=xx+side*(4+j*4),by=y+j*2;r(bx,by,5,1,'#496f4d');r(bx+side*2,by-3,2,6,'#6d955c');r(bx+side*4,by,2,5,'#86a769')}}}
+// A raised, grounded terrace: contact shadow, irregular masonry, wooden sill and connected steps.
+r(295,-3,135,3,'#293f35');r(302,-19,120,16,'#646d60');for(let row=0;row<2;row++)for(let col=0;col<6;col++){const x=303+col*20+(row%2?3:0);r(x,-18+row*7,17,6,row%2?'#92938a':'#85897c');r(x+1,-18+row*7,14,1,'#afb09a')}
+r(298,-25,128,6,'#514333');r(298,-25,128,2,'#ae8758');for(let x of[303,344,379,418]){r(x,-32,4,29,'#654a36');r(x+1,-31,1,27,'#9e7950')}
+for(let [x,y,w]of [[350,-19,28],[347,-13,34],[344,-7,40]]){r(x,y,w,5,'#777d6e');r(x,y,w,1,'#b2ae92')}for(let i=0;i<4;i++)r(386+i*12,-3,9,2,i%2?'#8a917e':'#9da28b');
+// Warm plaster framed with walnut timber; recessed shoji bays and central sliding entrance.
+r(305,-95,114,68,'#bba889');r(307,-93,109,63,'#e5d6b8');r(309,-92,107,4,'#cfbd9a');r(305,-69,114,4,'#78543d');r(305,-34,114,4,'#78543d');
+for(let x of[304,338,383,415]){r(x,-97,5,73,'#604633');r(x+1,-96,2,71,'#956d48')}
+for(let [x,w] of [[312,23],[388,24]]){r(x-1,-64,w+2,29,'#624c37');r(x,-63,w,26,'#e5c789');r(x+2,-61,w-4,22,'#eddaa8');for(let j=5;j<w;j+=6)r(x+j,-63,1,26,'#9a8058');for(let y=-57;y<-37;y+=6)r(x,y,w,1,'#aa9165');r(x,-37,w,2,'#75543d')}
+r(346,-65,33,37,'#3e4436');r(349,-62,27,33,'#bcac83');r(362,-62,2,33,'#796141');r(350,-61,11,30,'#d8cb9f');r(365,-61,10,30,'#c3bb96');r(355,-46,2,2,'#85694a');r(369,-46,2,2,'#85694a');
+// Indigo noren hangs in separate panels; small warm sign above the entry.
+r(345,-63,35,2,'#8a6744');for(let x of[347,358,369]){r(x,-61,9,11,'#476e6c');r(x+1,-60,1,9,'#74918a')}r(360,-57,4,3,'#c6c6a1');r(350,-83,25,9,'#78543d');r(353,-81,19,5,'#b8955f');r(357,-80,2,3,'#e3cf98');r(365,-80,3,3,'#e3cf98');
+// Triangular gable with staggered timber courses and a substantial layered tiled roof.
+for(let row=0;row<12;row++){const half=4+row*5;r(362-half,-130+row*3,half*2,4,'#78543d');if(row>0)r(365-half,-129+row*3,half*2-6,2,'#d5c29e')}
+for(let side of[-1,1])for(let k=0;k<12;k++){r(361+side*k*5,-130+k*3,7,3,'#354d50');r(361+side*k*5,-130+k*3,6,1,'#6f8b86')}
+for(let row=0;row<5;row++){let left=309-row*5,width=107+row*10;r(left,-108+row*3,width,4,'#425d61');for(let x=left+2;x<left+width-1;x+=8){r(x,-108+row*3,5,1,'#78928c');r(x+5,-107+row*3,2,2,'#2e484e')}}r(285,-94,155,4,'#3b4c48');r(287,-90,151,3,'#78543d');r(288,-90,148,1,'#b18a59');r(356,-132,13,3,'#405e61');r(357,-133,11,1,'#829a8f');
+// Two sheltered lanterns. Discrete translucent pixel halos, not blurred gradients.
+for(let x of[327,395]){r(x,-89,1,7,'#5f4b35');c.save();c.globalAlpha=.12;r(x-7,-82,17,19,'#f4c978');c.restore();r(x-3,-82,8,3,'#78543d');r(x-3,-79,8,9,'#d6a75e');r(x-2,-78,6,7,'#f4c978');r(x,-78,1,7,'#ffe3a0');r(x-2,-70,6,2,'#78543d')}
+// Short fence at the side leaves the entrance and windows clear.
+for(let x of[431,440,449])r(x,-19,2,16,'#7c8e5a');r(431,-15,20,2,'#9a9f69');r(431,-7,20,2,'#7d8b5b');
+if(winter){r(317,-110,23,2,'#cbd4bf');r(389,-102,30,2,'#cbd4bf')}
 c.restore()}
 function draw(c,g,t,home,season){let {r,stone}=tools(c,g),p=stage(home),cold=season===2||season===3;
 // Interlocking outcrop silhouette: deliberately unequal ledges, deep clefts and leaning strata.
@@ -58,5 +71,5 @@ if(p===4&&cold){let f=Math.floor(t*8)%4;r(41,-11,10,9,'#b65f36');r(43,-15-(f%2)*
 if(p===4){for(let i=0;i<(season===3?10:cold?7:4);i++){let a=(t*.115+i*.153)%1,alpha=Math.sin(a*Math.PI)*(season===3?.4:cold?.3:.16),x=123+i*19+Math.sin(a*4+i)*8,y=3-a*(season===3?68:52),spread=Math.floor(a*5)*2;c.save();c.globalAlpha=alpha;for(let [dx,dy,w,h]of [[-7,2,18,4],[-3,-2,16,4],[2,-5,8,3]])r(x+dx-spread/2,y+dy,w+spread,h,'#c7d5bf');c.restore()}}
 }
 function foreground(c,g,t,s){if(!s.wet)return;let {r}=tools(c,g),left=Math.max(POOL.left,Math.floor(s.x-11)),right=Math.min(POOL.right,Math.ceil(s.x+12));c.save();c.globalAlpha=.28;for(let x=left;x<right;x+=2){let bottom=Math.min(s.y,floor(x));if(bottom>6)r(x,6,2,bottom-6,'#649e92')}c.restore();r(s.x-10,7,7,1,'#c1d9bd');r(s.x+5,8,8,1,'#a2c4b0')}
-const api={backdrop,POOL,RESERVED,bed,floor,draw,foreground,stage};if(typeof module!=='undefined')module.exports=api;root.CaveSpring=api;
+const api={bambooStems,backdrop,POOL,RESERVED,bed,floor,draw,foreground,stage};if(typeof module!=='undefined')module.exports=api;root.CaveSpring=api;
 })(globalThis);
