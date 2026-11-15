@@ -12,7 +12,7 @@ for(let i=0;i<count;i++){
 let depth=random(i,13),speed=12+depth*34+random(i,29)*12,phase=random(i,47)*Math.PI*2;
 let x=Math.round(wrap(random(i,61)*1040+t*(2+random(i,83)*13)+Math.sin(t*(.22+random(i,107)*.65)+phase)*(5+depth*15)+Math.sin(t*.16+phase*2)*9,1040)-40);
 let y=Math.round(wrap(random(i,139)*(height+48)+t*speed,height+48)-24);
-if(s.inside&&x>474&&x<696&&y>g-150&&y<g)continue;
+let interior=s.snowInterior||(s.inside?{left:474,right:696,top:g-150,bottom:g}:null);if(interior&&x>interior.left&&x<interior.right&&y>interior.top&&y<interior.bottom)continue;
 c.globalAlpha=.32+depth*.58;c.fillStyle=s.night?(depth>.65?'#e0e9ef':'#b4c8dd'):(depth>.65?'#f0f2e7':'#cbdcd9');
 if(depth<.36)c.fillRect(x,y,1,1);else if(depth<.78)c.fillRect(x,y,2,2);else{let arm=depth>.93?2:1;c.fillRect(x-arm,y,arm*2+1,1);c.fillRect(x,y-arm,1,arm*2+1);if(depth>.93){c.globalAlpha*=.65;c.fillRect(x-1,y-1,3,3)}}
 }c.globalAlpha=1;
