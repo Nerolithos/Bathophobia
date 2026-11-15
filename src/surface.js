@@ -62,18 +62,23 @@ for(let row=0;row<6;row++){let yy=y-38+row*8,left=x+86-(row+1)*18,right=x+86+(ro
 rect(x-27,y+8,w+61,6,'#5f4834');rect(x-26,y+8,w+58,2,'#b08c5d');rect(x-22,y+14,w+51,2,'#8b6c46');
 rect(x+34,y-39,17,34,'#6e7568');rect(x+31,y-43,23,5,'#989c82');rect(x+36,y-35,2,26,'#a0a18b');if(winter){rect(x-17,y+4,55,3,'#d7e0d3');rect(x+141,y+4,72,3,'#d7e0d3')}}
 if(p>=6&&!s.inside){
-// One large panorama window and a smaller offset side window replace the symmetric pair.
-for(let [xx,ww,yy,hh]of [[x+21,51,y+24,43],[x+145,26,y+29,32]]){rect(xx-3,yy-3,ww+6,hh+6,'#69513a');rect(xx,yy,ww,hh,'#6f9690');rect(xx+2,yy+2,ww-5,12,'#a7c1ac');rect(xx+Math.floor(ww*.4),yy,2,hh,'#c8b88e');rect(xx,yy+Math.floor(hh*.6),ww,2,'#c8b88e');rect(xx-4,yy+hh+2,ww+8,4,'#ab8c5e');rect(xx-3,yy-4,ww+6,1,'#ceb48a')}
+// Matching timber sliding windows: left opening is 18% narrower, with a horizontal aspect.
+// Glass stays distinct from the ryokan's paper shoji, with warm interior notes behind fine lattice.
+for(let [xx,ww,yy,hh]of [[x+25,42,y+36,30],[x+145,24,y+38,26]]){
+rect(xx-3,yy-3,ww+6,hh+6,'#523f30');rect(xx-2,yy-2,ww+4,hh+4,'#78543d');rect(xx,yy,ww,hh,'#aebbae');rect(xx+1,yy+1,ww-2,hh-2,'#bdc5b2');rect(xx+1,yy+1,ww-2,4,'#d8d5ba');rect(xx+2,yy+hh-8,ww-4,6,'#cbbc91');
+let mid=Math.floor(ww/2);for(let panel=0;panel<2;panel++){let left=xx+panel*mid;rect(left+2,yy+2,Math.max(3,mid-5),1,'#e0dbc1');rect(left+3,yy+hh-7,Math.max(3,mid-7),4,'#d5bf8b');for(let dx=6;dx<mid-1;dx+=6)rect(left+dx,yy+1,1,hh-2,'#8c7450');for(let dy=7;dy<hh-2;dy+=7)rect(left+1,yy+dy,mid-1,1,'#9b835b')}
+rect(xx+mid-1,yy,2,hh,'#654a35');rect(xx+mid,yy+1,1,hh-2,'#a3865c');rect(xx-2,yy-2,ww+4,1,'#b3976b');rect(xx-2,yy+hh+1,ww+4,2,'#654b33');rect(xx-4,yy+hh+3,ww+8,3,'#ad8b5b');rect(xx-3,yy+hh+3,ww+6,1,'#cfb486');rect(xx+mid-3,yy+hh/2,1,3,'#5c4934')}
 rect(x+24,y+72,39,5,'#79573b');for(let i=0;i<3;i++){rect(x+27+i*12,y+68,7,5,'#a17450');rect(x+28+i*12,y+65,5,4,autumn?'#b68b51':'#7d9e66')}}
 
 if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+86,y-46);c.lineTo(x+w+33,y+10);c.stroke();c.restore()}
 c.restore();
 if(p>=6&&(autumn||winter))Interior.smoke(c,512,g-184,t,winter);Interior.draw(c,g,s,home);
 // Side veranda is rendered in world coordinates so its deck matches porchFloor exactly.
-if(p>=3){rect(701,g-3,65,3,'#283c2d');rect(702,g-6,62,4,'#7c5b3c');for(let xx=704;xx<762;xx+=6){rect(xx,g-6,5,3,'#bb9663');rect(xx,g-6,4,1,'#dbc08a')}for(let xx of[706,735,759])rect(xx,g-2,3,3,'#6d553a');rect(696,g-3,8,3,'#a78c60');rect(764,g-3,6,3,'#a78c60')}
+if(p>=3){rect(701,g-3,65,3,'#283c2d');rect(702,g-6,62,4,'#7c5b3c');rect(702,g-2,62,2,'#60462f');rect(703,g-2,60,1,'#a27a4d');for(let xx=704;xx<762;xx+=6){rect(xx,g-6,5,3,'#bb9663');rect(xx,g-6,4,1,'#dbc08a')}for(let xx of[706,735,759])rect(xx,g-2,3,3,'#6d553a');rect(696,g-3,8,3,'#a78c60');rect(764,g-3,6,3,'#a78c60')}
 if(p>=5){poly([[699,g-94],[749,g-84],[769,g-72],[701,g-75]],'#5b4033');for(let row=0;row<3;row++)for(let col=0;col<8;col++){rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),7,4,row%2?'#956046':'#aa7853');rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),6,1,'#c2946b')}rect(701,g-75,68,4,'#775738');rect(758,g-72,4,66,'#795838');rect(759,g-71,1,64,'#b18b59')}
 if(p>=6){
-// Restrained living details: a hanging lamp, low tea tray and one seasonal pot.
+// Existing tea tray and lamp, plus one small woven cushion on the unchanged deck.
+rect(716,g-9,9,3,'#4f685a');rect(717,g-10,7,3,'#8fa28a');rect(718,g-10,5,1,'#b9bea0');rect(717,g-8,7,1,'#677d68');
 rect(745,g-72,1,8,'#66513a');rect(742,g-64,7,2,'#80603e');rect(742,g-62,7,9,autumn||winter?'#e6b764':'#c9b37e');rect(744,g-61,2,7,autumn||winter?'#f9d68e':'#e3cf9e');rect(727,g-13,15,3,'#674c34');rect(729,g-10,2,4,'#8c6a43');rect(738,g-10,2,4,'#8c6a43');rect(731,g-16,4,3,'#9aa594');rect(737,g-16,3,2,'#c9c5a0');rect(708,g-14,9,8,'#a17c51');rect(710,g-19,5,6,winter?'#a5bda0':autumn?'#b48a4e':'#7f9e63');rect(706,g-18,5,3,winter?'#b7c8ab':'#8aab6c')}
 for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
