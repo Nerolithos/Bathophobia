@@ -2,10 +2,12 @@
 (function(root){'use strict';
 const HOUSE={left:476,right:694,door:580,lower:-10,upper:-84,ladder:674};
 function interact(s,h){if(h.progress<6||!s.ground)return false;if(Math.abs(s.x-HOUSE.door)>30||Math.abs(s.y-(s.inside?HOUSE.lower:0))>15)return false;s.inside=!s.inside;s.x=HOUSE.door;s.y=s.inside?HOUSE.lower:0;s.vy=0;s.ground=true;s.climbing=false;if(s.inside)h.interiorUnlocked=true;return true}
-function update(s,dt,keys,h){let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),v=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);s.x=Math.max(HOUSE.left+8,Math.min(HOUSE.right-8,s.x+dir*125*dt));if(dir)s.face=dir;s.didJump=false;s.wet=false;s.swimsuit=false;
+const BED={left:496,right:573,wakeX:580};
+function toggleSleep(s,h){if(s.sleeping){s.sleeping=false;s.x=BED.wakeX;s.y=HOUSE.upper;s.vy=0;s.ground=true;s.climbing=false;return true}if(!s.inside||!h.furniture?.bed||!s.ground||s.climbing||Math.abs(s.y-HOUSE.upper)>2||s.x<BED.left-8||s.x>BED.right+21)return false;s.sleeping=true;s.sleepStarted=s.time;s.x=535;s.y=HOUSE.upper;s.vy=0;s.climbing=false;return true}
+function update(s,dt,keys,h){if(s.sleeping){s.x=535;s.y=HOUSE.upper;s.vy=0;s.ground=true;s.climbing=false;s.didJump=false;s.wet=false;s.swimsuit=false;return}let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),v=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);s.x=Math.max(HOUSE.left+8,Math.min(HOUSE.right-8,s.x+dir*125*dt));if(dir)s.face=dir;s.didJump=false;s.wet=false;s.swimsuit=false;
 if(h.furniture?.ladder&&Math.abs(s.x-HOUSE.ladder)<15&&(v||s.climbing)){s.climbing=true;s.y=Math.max(HOUSE.upper,Math.min(HOUSE.lower,s.y+v*70*dt));s.vy=v*70;s.ground=s.y===HOUSE.lower||s.y===HOUSE.upper;if(s.ground&&!v)s.climbing=false}else{let floor=s.y<=HOUSE.upper+.01?HOUSE.upper:HOUSE.lower;s.climbing=false;s.vy+=800*dt;s.y=Math.min(floor,s.y+s.vy*dt);s.ground=s.y===floor;if(s.ground)s.vy=0}}
 function smoke(c,x,y,t,winter=false){let count=winter?7:4;for(let i=0;i<count;i++){let a=(t*.11+i/count)%1,opacity=Math.sin(a*Math.PI)*(winter?.24:.13),spread=2+Math.floor(a*8);c.save();c.globalAlpha=opacity;c.fillStyle='#d0d1b8';c.fillRect(Math.round(x+Math.sin(a*5+i)*6-a*9-spread/2),Math.round(y-a*51),12+spread,5);c.fillRect(Math.round(x+3-a*9),Math.round(y-a*51-3),8+spread,4);c.restore()}}
-function draw(c,g,s,h){if(!s.inside)return;let winter=s.season===3,autumn=s.season===2,t=s.time;const r=(x,y,w,hh,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(g+y),w,hh)};
+function draw(c,g,s,h){if(!s.inside)return;if(h.furniture?.bed)root.CavePlayerSleep?.load?.();let winter=s.season===3,autumn=s.season===2,t=s.time;const r=(x,y,w,hh,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(g+y),w,hh)};
 // Warm timber back wall and two real visual floors, left intentionally unfurnished.
 r(476,-148,218,138,'#4d4536');for(let x=478;x<694;x+=13){r(x,-146,11,135,'#68543b');r(x+1,-145,1,130,'#84704b')}
 // Tall lower-floor panorama: outdoor seasonal landscape remains visible through the glass.
@@ -14,8 +16,14 @@ for(let i=0;i<3;i++){c.fillStyle=['#688e84','#4c796d','#3f6b59'][i];c.beginPath(
 for(let i=0;i<6;i++){let x=523+i*25,y=-30+(i%2)*5;r(x,y-30,2,45,'#655d45');for(let k=0;k<4;k++){let width=4+k*3;r(x-width,y-35+k*9,width*2+2,6,winter?'#d3dfd3':autumn?(i%2?'#b9874d':'#a45f3e'):s.season===0?'#729463':'#4f7953');if(winter)r(x-width,y-35+k*9,width*2,2,'#e4e8d6')}}
 if(winter)for(let i=0;i<15;i++)r(514+(i*29+t*6)%137,-77+(i*13+t*10)%65,1,1,'#f0f2df');if(autumn)for(let i=0;i<5;i++)r(514+(i*37+t*8)%137,-75+(i*19+t*12)%60,2,1,'#e0af6d');c.restore();
 for(let x of[512,556,602,650])r(x,-79,4,70,'#4c3f30');r(512,-48,142,3,'#8d7651');r(511,-81,144,4,'#a18a5c');r(511,-13,144,4,'#a18a5c');
-// Upper-storey back panels and small transom view, without prebuilt furniture.
-r(532,-138,104,44,winter?'#8ba9ad':'#718e79');for(let x of[531,565,600,635])r(x,-140,3,48,'#4c3f30');r(531,-119,108,3,'#a08960');
+// Four warm paper shoji panels: fine kumiko lattice, recessed tracks and ivory paper.
+r(530,-142,110,51,'#423b2f');r(532,-140,106,47,'#aa8c5b');
+for(let panel=0;panel<4;panel++){let x=534+panel*26;r(x,-138,24,43,'#efe7ce');r(x+1,-137,22,3,'#faf2df');r(x+1,-101,22,5,'#e1d6b5');for(let col=1;col<3;col++)r(x+col*8,-138,1,43,'#b09a6d');for(let y=-131;y<-96;y+=7)r(x,y,24,1,'#baa77e');r(x-1,-139,2,45,'#72583c');r(x,-138,1,43,'#c3aa75');r(x+22,-119,1,3,'#8a734e')}
+r(530,-142,110,2,'#c9b384');r(530,-95,110,3,'#785d3e');r(532,-94,106,1,'#d2b984');
+if(h.furniture?.mirror){
+// One wall-mounted copper-framed mirror on the right upstairs, not an inventory object.
+r(642,-141,25,46,'#413c32');r(641,-142,25,45,'#9e6c48');r(642,-142,23,2,'#e1ad79');r(642,-140,2,40,'#cc9569');r(663,-140,2,40,'#7f553d');r(645,-138,17,36,'#8ca8a0');r(647,-137,14,34,'#b4c7b7');r(647,-137,3,34,'#d4ded0');for(let k=0;k<5;k++){r(651+k,-135+k*3,3,3,'#e4e9d8');r(650+k,-117+k*2,2,2,'#d9e0cc')}r(642,-101,23,3,'#d49e6c');r(643,-99,22,2,'#70513b')}
+
 for(let floor of[-10,-84]){r(474,floor,222,6,'#3d382b');for(let x=477;x<693;x+=14){r(x,floor,12,4,'#a18759');r(x+2,floor+1,7,1,'#c0a36e')}}
 // Original masonry fireplace is present from the first entry, but no sofa/table/decor is prefilled.
 r(482,-43,26,32,'#8c8870');r(480,-46,30,5,'#b0a589');r(488,-36,14,25,'#27342c');r(485,-70,7,24,'#827b62');r(485,-17,18,4,'#6f4f34');if(autumn||winter){let f=Math.floor(t*9)%4;r(490,-26,10,13,'#b86c3a');r(492,-32+(f%2)*2,6,17,'#e9ad59');r(494,-33+(f%3),2,16,'#f4d38a');c.save();c.globalAlpha=.12;r(480,-48,37,39,'#f2bb6a');c.restore()}
@@ -39,5 +47,9 @@ if(h.furniture?.cabinet){
 // Side posts remain opaque, making the cutaway distinct from an empty missing house.
 r(474,-149,5,145,'#514631');r(691,-149,5,145,'#514631');
 }
-const api={HOUSE,interact,update,draw,smoke};if(typeof module!=='undefined')module.exports=api;root.CaveInterior=api;
+function drawSleep(c,g,s){if(!s.sleeping||!s.inside)return;const t=s.time-(s.sleepStarted||0),rise=Math.sin(t*1.8)>.35?1:0,r=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(g+y),w,h)};root.CavePlayerSleep?.draw(c,501,g-130-rise,t,s.detailArt===false);
+// Blanket overlaps the sleeper's torso and gently rises, leaving the face and ears visible.
+r(523,-110-rise,43,14+rise,'#527a69');r(526,-112-rise,35,3,'#89a38b');r(523,-109-rise,3,12,'#b2bd9c');r(527,-99,37,2,'#3c6052');r(535,-107-rise,1,7,'#769582');
+for(let i=0;i<3;i++){let a=(t*.27+i/3)%1;c.save();c.globalAlpha=Math.sin(a*Math.PI)*.7;c.fillStyle='#d9e1be';c.font='8px monospace';c.fillText(i===1?'Z':'z',Math.round(513+i*5+a*12),Math.round(g-129-a*23));c.restore()}}
+const api={BED,toggleSleep,drawSleep,HOUSE,interact,update,draw,smoke};if(typeof module!=='undefined')module.exports=api;root.CaveInterior=api;
 })(globalThis);

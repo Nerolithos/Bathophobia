@@ -85,8 +85,8 @@ if(p>=6&&home.exterior?.windchime){
 const sway=Math.round(Math.sin(t*1.7)*2+Math.sin(t*.63)),cx=716+sway,by=g-69;rect(716,g-75,1,6,'#70583c');rect(cx-4,by+3,9,7,'#b47b4d');rect(cx-3,by+1,7,3,'#c8955c');rect(cx-2,by+3,2,5,'#ebbc7c');rect(cx-5,by+10,11,2,'#785638');rect(cx,by+12,1,5,'#927443');rect(cx+Math.round(sway*.5)-2,by+17,5,9,'#d8bf80');rect(cx+Math.round(sway*.5)-1,by+18,1,6,'#f0d79a')}
 for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
-s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
+s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);if(!s.sleeping)hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Interior.drawSleep(c,g,s);Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
 c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);
 }
-const api={PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
+const api={interactBed:Interior.toggleSleep,PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
 })(globalThis);
