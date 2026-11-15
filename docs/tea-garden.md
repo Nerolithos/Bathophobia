@@ -1,6 +1,6 @@
 # 茶庭 / Tea garden
 
-Walk past the left edge of the homestead to enter; walk past the garden’s right edge to return. Seasons, nighttime and surface storage are shared. Enter the completed tea house with E near its recessed door; the room starts empty. Tea-service furniture and harvesting are deferred.
+Walk past the left edge of the homestead to enter; walk past the garden’s right edge to return. Seasons, nighttime and surface storage are shared. The completed tea pavilion is permanently open: tatami, a low tea table, an iron kettle, two bowls, two cushions and a tokonoma are visible from outside. E at the entrance moves the character between the room and garden without closing the facade. Harvesting remains deferred.
 
 The tea house, terraces and paths occupy 68% of their original design footprint and cluster on the left. The player keeps the normal surface sprite size. Door interaction and the interior walking range follow the compact footprint. The right side remains open for future structures. The construction group is rendered to a source pixel canvas and downscaled once with nearest-neighbour filtering; physics does not use the art canvas.
 
@@ -35,3 +35,7 @@ Materials and stage order are retained. Updated quantities: cement foundation ×
 Save fields: `teaVisited`, `teaProgress` (0–6), `teaField`. Old saves default to an undiscovered, unbuilt garden. The full-build admin registry includes both the tea house and terraces; its garden button is isolated from normal saves.
 
 Validation: `verify-tea.cjs` exercises recipe quantities, thermal gates, construction order and atomic costs, region crossings, no accidental cave entry, season/night preservation, compact door/room bounds and save migration. The UI regression verifies completed tea-house recipes remain readable without reconstruction controls.
+
+## Open tea pavilion
+
+The finished pavilion has a permanently open central bay (about 48% of the facade), a reduced plaster wing with a sparse round window, and shoji stacked at the right. The room remains visible both outside and inside; E changes character placement, not facade visibility. Rear shoji and a scroll/flower tokonoma sit behind tatami, a low tea table, a black iron kettle, two bowls and two cushions. Front posts and the projecting engawa frame the room. The existing 68% group scale, garden hedges, footprint, construction stages and costs remain unchanged. Winter snow and rain are clipped from the roofed room independently of the character’s inside/outside state.
