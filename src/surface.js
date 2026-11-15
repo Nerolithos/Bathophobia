@@ -5,9 +5,12 @@ const Interior=typeof module!=='undefined'?require('./interior'):root.CaveInteri
 const Spring=typeof module!=='undefined'?require('./spring'):root.CaveSpring;
 const {POOL,RESERVED}=Spring,poolFloor=Spring.floor;
 const species=[['rabbit','swallow'],['frog','frog'],['squirrel','squirrel'],['sheep','penguin']];
+// A shallow walkable engawa, independent of the spring basin and house interior floors.
+const PORCH={left:704,right:762,top:-6};
+function porchFloor(x,home={}){if((home.progress||0)<3||x<PORCH.left-6||x>PORCH.right+8)return 0;if(x<PORCH.left)return -3;if(x>PORCH.right)return -3;return PORCH.top}
 function create(season=2){return {season,time:0,x:310,y:0,vy:0,face:1,ground:true,jump:false,animals:Array.from({length:5},(_,i)=>({id:i,variant:Math.floor(i/2)%3,kind:species[season][i%2],x:310+i*110,homeX:310+i*110,y:0,dir:i%2?1:-1,phase:i*1.7}))}}
 function update(s,dt,keys,height,home={}){let oldX=s.x,wasWet=!!s.wet;s.didJump=false;s.time+=dt;let tripping=!!s.tripStart&&s.time-s.tripStart<2.05;let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vertical=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0),wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
-if(tripping){const age=s.time-s.tripStart,slide=Math.max(0,1-age/.45)*(s.tripFace||s.face||1)*95*dt,next=s.x+slide;if(!s.inside&&!s.wet&&next>290&&next<800&&Math.abs(poolFloor(next-6)-poolFloor(next+6))<3)s.x=next;dir=0;vertical=0;keys={};}if(s.inside){Interior.update(s,dt,keys,home)}else{s.x=Math.max(20,Math.min(930,s.x+dir*(wet?105:150)*dt));if(dir)s.face=dir;let floor=Math.min(poolFloor(s.x-6),poolFloor(s.x+6));if(wet){s.vy=vertical*95;if(!vertical)s.vy=Math.max(-28,Math.min(28,(POOL.waterline+30-s.y)*4));s.y+=s.vy*dt;s.y=Math.min(floor,Math.max(-8,s.y));s.ground=false}else{if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}else s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
+if(tripping){const age=s.time-s.tripStart,slide=Math.max(0,1-age/.45)*(s.tripFace||s.face||1)*95*dt,next=s.x+slide;if(!s.inside&&!s.wet&&next>290&&next<800&&Math.abs(poolFloor(next-6)-poolFloor(next+6))<3)s.x=next;dir=0;vertical=0;keys={};}if(s.inside){Interior.update(s,dt,keys,home)}else{s.x=Math.max(20,Math.min(930,s.x+dir*(wet?105:150)*dt));if(dir)s.face=dir;let floor=Math.min(poolFloor(s.x-6),poolFloor(s.x+6),porchFloor(s.x,home)<0?porchFloor(s.x,home):Infinity);if(wet){s.vy=vertical*95;if(!vertical)s.vy=Math.max(-28,Math.min(28,(POOL.waterline+30-s.y)*4));s.y+=s.vy*dt;s.y=Math.min(floor,Math.max(-8,s.y));s.ground=false}else{if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}else s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
 }
 s.splashes=(s.splashes||[]).filter(q=>(q.life-=dt)>0);for(let q of s.splashes){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=170*dt}if(s.wet&&!wasWet&&s.time-(s.lastSplash||-1)>.45){s.lastSplash=s.time;for(let i=0;i<12;i++)s.splashes.push({x:s.x+(i%3-1)*3,y:POOL.waterline,vx:(i-5.5)*10,vy:-35-(i*17%55),life:.45+(i%3)*.08})}
 for(let a of s.animals){a.shorn=a.kind==='sheep'&&home.shearedWinter===(home.descents||0)&&(home.shearedSheep||[]).includes(a.id);Animals.update(a,dt,s.time);if(a.kind!=='swallow'&&a.x<RESERVED.right+20){a.x=RESERVED.right+20;a.dir=1;a.homeX=Math.max(a.homeX||0,RESERVED.right+60)}}// Only sustained dry outdoor walking can trip: one low-probability check per second,
@@ -42,18 +45,40 @@ let x=480,y=g-116,w=204,p=home.progress;
 if(p>=1){rect(x-9,g-10,w+18,10,'#7f8a78');for(let xx=x-5;xx<x+w;xx+=23)rect(xx,g-8,21,6,'#a5ab93')}
 if(p>=2){for(let xx of [x+3,x+w/2,x+w-7]){rect(xx,y,5,106,'#8d9b91');rect(xx+1,y,1,106,'#bec5b3')}rect(x+3,y,w-7,5,'#a8b3a1')}
 c.save();if(s.inside)c.globalAlpha=.06;
-if(p>=3){rect(x+7,y+5,w-14,101,'#a8b09a');for(let yy=y+60;yy<g-10;yy+=9)for(let xx=x+8+(yy%2)*8;xx<x+w-9;xx+=19){rect(xx,yy,17,7,'#6f8171');rect(xx+2,yy,12,1,'#9ca992')}rect(x+9,y+6,5,99,'#735e45');rect(x+w-17,y+6,5,99,'#735e45');rect(x+10,y+51,w-23,5,'#735e45');poly([[x+83,g],[x+83,g-50],[x+88,g-59],[x+106,g-61],[x+117,g-52],[x+117,g]],'#4e4438');poly([[x+86,g],[x+86,g-50],[x+92,g-57],[x+105,g-57],[x+113,g-50],[x+113,g]],'#876647');for(let xx=x+89;xx<x+113;xx+=6)rect(xx,g-48,1,46,'#a18356');rect(x+106,g-29,3,3,'#d8bc76')}
+if(p>=3){
+// Cream upper plaster and warm timber lower walls, with masonry restricted to the plinth.
+rect(x+7,y+5,w-14,101,'#dbc8a5');rect(x+8,y+8,w-16,4,'#c6ad86');rect(x+8,y+60,w-16,28,'#a38054');for(let yy=y+62;yy<g-26;yy+=6){rect(x+9,yy,w-19,1,'#765b40');rect(x+10,yy+1,w-22,1,'#b79665')}
+for(let yy=g-26;yy<g-10;yy+=8)for(let xx=x+8+(Math.floor(yy/8)%2)*9;xx<x+w-9;xx+=20){rect(xx,yy,18,7,'#858b78');rect(xx+1,yy,15,1,'#a4a68b')}
+for(let xx of[x+9,x+78,x+w-17]){rect(xx,y+6,5,99,'#694e36');rect(xx+1,y+8,1,95,'#a38355')}rect(x+10,y+51,w-23,5,'#7c5d3e');rect(x+11,y+52,w-25,1,'#b09565');
+// Familiar entry stays at the exact previous door position and clearance.
+poly([[x+83,g],[x+83,g-50],[x+88,g-59],[x+106,g-61],[x+117,g-52],[x+117,g]],'#4e4438');poly([[x+86,g],[x+86,g-50],[x+92,g-57],[x+105,g-57],[x+113,g-50],[x+113,g]],'#876647');for(let xx=x+89;xx<x+113;xx+=6)rect(xx,g-48,1,46,'#a18356');rect(x+106,g-29,3,3,'#d8bc76')}
+
 c.restore();
 // Stage four is interior wallboard: deliberately no exterior overlay.
-if(p>=5){poly([[x-19,y+7],[x+w/2,y-68],[x+w+19,y+7]],'#563e38');poly([[x-14,y+3],[x+w/2,y-61],[x+w+12,y+3]],'#8b5344');for(let row=0;row<7;row++){let yy=y-55+row*9,half=(row+1)*15;for(let xx=x+w/2-half;xx<x+w/2+half;xx+=13){rect(xx,yy,12,7,(row+Math.floor(xx/13))%2?'#a3694f':'#915640');rect(xx,yy,10,1,'#bb8160')}}rect(x-17,y+4,w+34,5,'#b09065');rect(x+34,y-50,17,37,'#6e7568');rect(x+31,y-54,23,5,'#989c82')}
-if(p>=6&&!s.inside)for(let xx of [x+25,x+140]){rect(xx-3,y+23,38,43,'#65533e');rect(xx,y+26,32,36,'#6d9995');rect(xx+2,y+28,12,14,'#a1c4b8');rect(xx+15,y+26,2,36,'#d2c9a3');rect(xx,y+43,32,2,'#d2c9a3');rect(xx-4,y+64,40,4,'#b4a17c')}
-if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+w/2,y-67);c.lineTo(x+w+18,y);c.stroke();c.restore()}else if(winter)rect(x-8,y,220,4,'#d7e0d3');
+if(p>=5){
+// Off-centre ridge, longer right slope and broad, thick timber eaves.
+poly([[x-28,y+10],[x+86,y-46],[x+w+33,y+10]],'#553d33');poly([[x-22,y+5],[x+86,y-41],[x+w+27,y+5]],'#885340');
+for(let row=0;row<6;row++){let yy=y-38+row*8,left=x+86-(row+1)*18,right=x+86+(row+1)*25;for(let xx=left;xx<right;xx+=13){rect(xx,yy,12,6,(row+Math.floor(xx/13))%2?'#a16b4e':'#8b533f');rect(xx+1,yy,10,1,'#be8a63');rect(xx+10,yy+1,2,5,'#6d4738')}}
+rect(x-27,y+8,w+61,6,'#5f4834');rect(x-26,y+8,w+58,2,'#b08c5d');rect(x-22,y+14,w+51,2,'#8b6c46');
+rect(x+34,y-39,17,34,'#6e7568');rect(x+31,y-43,23,5,'#989c82');rect(x+36,y-35,2,26,'#a0a18b');if(winter){rect(x-17,y+4,55,3,'#d7e0d3');rect(x+141,y+4,72,3,'#d7e0d3')}}
+if(p>=6&&!s.inside){
+// One large panorama window and a smaller offset side window replace the symmetric pair.
+for(let [xx,ww,yy,hh]of [[x+21,51,y+24,43],[x+145,26,y+29,32]]){rect(xx-3,yy-3,ww+6,hh+6,'#69513a');rect(xx,yy,ww,hh,'#6f9690');rect(xx+2,yy+2,ww-5,12,'#a7c1ac');rect(xx+Math.floor(ww*.4),yy,2,hh,'#c8b88e');rect(xx,yy+Math.floor(hh*.6),ww,2,'#c8b88e');rect(xx-4,yy+hh+2,ww+8,4,'#ab8c5e');rect(xx-3,yy-4,ww+6,1,'#ceb48a')}
+rect(x+24,y+72,39,5,'#79573b');for(let i=0;i<3;i++){rect(x+27+i*12,y+68,7,5,'#a17450');rect(x+28+i*12,y+65,5,4,autumn?'#b68b51':'#7d9e66')}}
+
+if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+86,y-46);c.lineTo(x+w+33,y+10);c.stroke();c.restore()}
 c.restore();
-if(p>=6&&(autumn||winter))Interior.smoke(c,512,g-201,t,winter);Interior.draw(c,g,s,home);
-for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g,t);
+if(p>=6&&(autumn||winter))Interior.smoke(c,512,g-184,t,winter);Interior.draw(c,g,s,home);
+// Side veranda is rendered in world coordinates so its deck matches porchFloor exactly.
+if(p>=3){rect(701,g-3,65,3,'#283c2d');rect(702,g-6,62,4,'#7c5b3c');for(let xx=704;xx<762;xx+=6){rect(xx,g-6,5,3,'#bb9663');rect(xx,g-6,4,1,'#dbc08a')}for(let xx of[706,735,759])rect(xx,g-2,3,3,'#6d553a');rect(696,g-3,8,3,'#a78c60');rect(764,g-3,6,3,'#a78c60')}
+if(p>=5){poly([[699,g-94],[749,g-84],[769,g-72],[701,g-75]],'#5b4033');for(let row=0;row<3;row++)for(let col=0;col<8;col++){rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),7,4,row%2?'#956046':'#aa7853');rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),6,1,'#c2946b')}rect(701,g-75,68,4,'#775738');rect(758,g-72,4,66,'#795838');rect(759,g-71,1,64,'#b18b59')}
+if(p>=6){
+// Restrained living details: a hanging lamp, low tea tray and one seasonal pot.
+rect(745,g-72,1,8,'#66513a');rect(742,g-64,7,2,'#80603e');rect(742,g-62,7,9,autumn||winter?'#e6b764':'#c9b37e');rect(744,g-61,2,7,autumn||winter?'#f9d68e':'#e3cf9e');rect(727,g-13,15,3,'#674c34');rect(729,g-10,2,4,'#8c6a43');rect(738,g-10,2,4,'#8c6a43');rect(731,g-16,4,3,'#9aa594');rect(737,g-16,3,2,'#c9c5a0');rect(708,g-14,9,8,'#a17c51');rect(710,g-19,5,6,winter?'#a5bda0':autumn?'#b48a4e':'#7f9e63');rect(706,g-18,5,3,winter?'#b7c8ab':'#8aab6c')}
+for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
 s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
 c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);
 }
-const api={nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
+const api={PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
 })(globalThis);
