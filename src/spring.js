@@ -8,7 +8,7 @@ function tools(c,g){const r=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.
 function stage(home){return home.onsen?4:home.onsenStage||0}
 // Independent scenic terrace. Background-only geometry never changes swimming or navigation.
 const bambooStems=[{x:278,h:112,lean:-.08},{x:290,h:139,lean:.045},{x:433,h:130,lean:-.035},{x:448,h:151,lean:.09},{x:463,h:111,lean:-.07},{x:473,h:138,lean:.035}];
-function backdrop(c,g,t,home,season){if(stage(home)<3)return;const {r}=tools(c,g),winter=season===3;c.save();
+function backdrop(c,g,t,home,season){if(stage(home)<3)return;const {r}=tools(c,g),winter=season===3;c.save();c.translate(-145,0);
 // Six culms in two asymmetric groups, with only a few drooping sprays at selected nodes.
 for(let i=0;i<bambooStems.length;i++){let {x,h,lean}=bambooStems[i];for(let y=-h;y<-4;y+=4){const xx=x+(y+4)*lean;r(xx,y,3,4,i%2?'#527b59':'#668c54');r(xx+1,y,1,4,'#8ca563');if((y+h)%24===0)r(xx-1,y,5,2,'#9bab72')}
  for(let k=0;k<2;k++){const y=-h+25+k*39,xx=x+(y+4)*lean,side=i<2?-1:1;for(let j=0;j<4;j++){const bx=xx+side*(4+j*4),by=y+j*2;r(bx,by,5,1,'#496f4d');r(bx+side*2,by-3,2,6,'#6d955c');r(bx+side*4,by,2,5,'#86a769')}}}
