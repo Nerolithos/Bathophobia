@@ -29,6 +29,7 @@ for(let floor of[-10,-84]){r(474,floor,222,6,'#3d382b');for(let x=477;x<693;x+=1
 r(482,-43,26,32,'#8c8870');r(480,-46,30,5,'#b0a589');r(488,-36,14,25,'#27342c');r(485,-70,7,24,'#827b62');r(485,-17,18,4,'#6f4f34');if(autumn||winter||s.night){let f=Math.floor(t*9)%4;r(490,-26,10,13,'#b86c3a');r(492,-32+(f%2)*2,6,17,'#e9ad59');r(494,-33+(f%3),2,16,'#f4d38a');c.save();c.globalAlpha=.12;r(480,-48,37,39,'#f2bb6a');c.restore()}
 if(h.furniture?.ladder){for(let x of[666,681])r(x,-88,3,78,'#ab8856');for(let y=-80;y<-10;y+=10)r(666,y,18,3,'#d0b178')}
 if(h.furniture?.table){r(541,-31,44,5,'#4a3b2e');r(539,-33,48,4,'#a2875c');r(542,-33,42,1,'#c2a575');for(let x of[545,578]){r(x,-27,4,17,'#70563b');r(x,-27,1,16,'#a18155')}r(542,-27,42,3,'#715639');for(let x of[550,566,581])r(x,-32,1,2,'#7f6646')}
+if(h.furniture?.ceramic){if(!h.furniture.table){r(550,-33,30,4,'#9c7c50');r(553,-29,3,19,'#715438');r(574,-29,3,19,'#715438')}c.save();c.translate(553,g-61);c.scale(.5,.5);root.CaveArt?.porcelain?.(c);c.restore()}
 if(h.furniture?.chair){
 // Slight three-quarter timber chair: two back slats, a shaded seat and four separate legs.
 for(let x of[518,532]){r(x,-44,3,31,'#43382e');r(x+1,-43,1,29,'#94704b')}r(517,-42,20,7,'#57402f');r(519,-41,16,4,'#bc9461');r(519,-40,13,1,'#dcba82');r(520,-37,14,1,'#87633e');
