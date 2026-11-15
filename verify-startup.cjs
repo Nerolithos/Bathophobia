@@ -10,7 +10,7 @@ const context={location:{pathname:'/'},CaveEngine:E,CavePlayerAnimation:require(
 vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'src/game.js'),'utf8'),context);assert.equal(workers.length,1);assert.equal(workers[0].url,'https://example.test/assets/release/generator.js');vm.runInContext('renderIndex();renderSpecimens();',context);workers[0].onerror();assert.equal(node('#start').disabled,false);vm.runInContext('begin()',context);assert.equal(workers.length,2,'retry starts a fresh worker');
 // Locked cards expose no identity or color; collecting unlocks that card.
 const paint=[];
-const gallery={innerHTML:'',querySelectorAll(){return context.CaveArt.catalog.map((_,i)=>({getContext(){return {drawImage(){paint.push(['sprite',i])},fillRect(){paint.push(['silhouette',i])}}}}))}};
+const gallery={innerHTML:'',querySelectorAll(){return context.CaveArt.catalog.map((_,i)=>({dataset:{i:String(i)},getContext(){return {drawImage(){paint.push(['sprite',i])},fillRect(){paint.push(['silhouette',i])}}}}))}};
 const originalQuery=context.document.querySelector;context.document.querySelector=s=>s==='#specimens'?gallery:originalQuery(s);
 vm.runInContext('specimensDirty=true;renderSpecimens()',context);assert(!gallery.innerHTML.includes('<h3>0</h3>'));assert.equal(paint.filter(p=>p[0]==='silhouette').length,6);
 vm.runInContext('found.add(0);specimensDirty=true;renderSpecimens()',context);assert(gallery.innerHTML.includes('<h3>0</h3>'));context.document.querySelector=originalQuery;
