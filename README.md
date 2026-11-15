@@ -1,9 +1,10 @@
 <div align="center">
 
-# BATHOPHOBIA · 深绿之下
-
+# BATHOPHOBIA · 恐渊症
 
 **Collect minerals while trying to outrun collapsing cave and dwelling shadows ... to build a home.**
+
+*Inspired by Prof. ZOU Jing and Prof. Costas Courcoubetis and their courses from CUHKSZ*
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-F7DF1E?logo=javascript&logoColor=111)
 ![Canvas](https://img.shields.io/badge/Canvas-2D-E34F26?logo=html5&logoColor=white)
@@ -16,7 +17,7 @@
 
 </div>
 
-![秋季山居 / Autumn homestead](docs/screenshots/base.png)
+![Summer Night at Home](docs/screenshots/home.png)
 
 | 营地休整 · Cave camp | 火山探索 · Volcanic caves |
 | :---: | :---: |
