@@ -38,3 +38,5 @@ Reviewed 2026-11-14. Formulas describe ideal endmembers unless a series or mixtu
 - **39** [Handbook of Mineralogy](https://www.handbookofmineralogy.org/pdfs/natron.pdf)
 - **40** [Handbook of Mineralogy](https://www.handbookofmineralogy.org/pdfs/beryl.pdf); [GIA: morganite](https://www.gia.edu/morganite-description)
 - **41** [Handbook of Mineralogy](https://www.handbookofmineralogy.org/pdfs/andradite.pdf); [GIA: metamorphic gems](https://www.gia.edu/gems-gemology/summer-2023-colored-stones-unearthed)
+
+- **44 Chalcopyrite / 黄铜矿**: [Handbook of Mineralogy](https://www.handbookofmineralogy.org/pdfs/chalcopyrite.pdf). CuFeS₂, tetragonal, Mohs 3.5–4; metallic brass-yellow, sometimes iridescently tarnished. Game smelting is an abstract recipe, not an actual metallurgical procedure.

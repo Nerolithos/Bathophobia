@@ -80,6 +80,9 @@ if(p>=6){
 // Existing tea tray and lamp, plus one small woven cushion on the unchanged deck.
 rect(716,g-9,9,3,'#4f685a');rect(717,g-10,7,3,'#8fa28a');rect(718,g-10,5,1,'#b9bea0');rect(717,g-8,7,1,'#677d68');
 rect(745,g-72,1,8,'#66513a');rect(742,g-64,7,2,'#80603e');rect(742,g-62,7,9,autumn||winter?'#e6b764':'#c9b37e');rect(744,g-61,2,7,autumn||winter?'#f9d68e':'#e3cf9e');rect(727,g-13,15,3,'#674c34');rect(729,g-10,2,4,'#8c6a43');rect(738,g-10,2,4,'#8c6a43');rect(731,g-16,4,3,'#9aa594');rect(737,g-16,3,2,'#c9c5a0');rect(708,g-14,9,8,'#a17c51');rect(710,g-19,5,6,winter?'#a5bda0':autumn?'#b48a4e':'#7f9e63');rect(706,g-18,5,3,winter?'#b7c8ab':'#8aab6c')}
+if(p>=6&&home.exterior?.windchime){
+// Wind is cosmetic only: integer pixel offsets preserve the crisp bell and paper strip.
+const sway=Math.round(Math.sin(t*1.7)*2+Math.sin(t*.63)),cx=716+sway,by=g-69;rect(716,g-75,1,6,'#70583c');rect(cx-4,by+3,9,7,'#b47b4d');rect(cx-3,by+1,7,3,'#c8955c');rect(cx-2,by+3,2,5,'#ebbc7c');rect(cx-5,by+10,11,2,'#785638');rect(cx,by+12,1,5,'#927443');rect(cx+Math.round(sway*.5)-2,by+17,5,9,'#d8bf80');rect(cx+Math.round(sway*.5)-1,by+18,1,6,'#f0d79a')}
 for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
 s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
