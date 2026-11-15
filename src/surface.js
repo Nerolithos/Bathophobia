@@ -62,13 +62,13 @@ for(let row=0;row<6;row++){let yy=y-38+row*8,left=x+86-(row+1)*18,right=x+86+(ro
 rect(x-27,y+8,w+61,6,'#5f4834');rect(x-26,y+8,w+58,2,'#b08c5d');rect(x-22,y+14,w+51,2,'#8b6c46');
 rect(x+34,y-39,17,34,'#6e7568');rect(x+31,y-43,23,5,'#989c82');rect(x+36,y-35,2,26,'#a0a18b');if(winter){rect(x-17,y+4,55,3,'#d7e0d3');rect(x+141,y+4,72,3,'#d7e0d3')}}
 if(p>=6&&!s.inside){
-// Matching timber sliding windows: left opening is 18% narrower, with a horizontal aspect.
+// Ground-floor sliding windows share their top and 32px height; left glazing is exactly twice as wide.
 // Glass stays distinct from the ryokan's paper shoji, with warm interior notes behind fine lattice.
-for(let [xx,ww,yy,hh]of [[x+25,42,y+36,30],[x+145,24,y+38,26]]){
+for(let [xx,ww,yy,hh]of [[x+22,48,y+55,32],[x+145,24,y+55,32]]){
 rect(xx-3,yy-3,ww+6,hh+6,'#523f30');rect(xx-2,yy-2,ww+4,hh+4,'#78543d');rect(xx,yy,ww,hh,'#aebbae');rect(xx+1,yy+1,ww-2,hh-2,'#bdc5b2');rect(xx+1,yy+1,ww-2,4,'#d8d5ba');rect(xx+2,yy+hh-8,ww-4,6,'#cbbc91');
 let mid=Math.floor(ww/2);for(let panel=0;panel<2;panel++){let left=xx+panel*mid;rect(left+2,yy+2,Math.max(3,mid-5),1,'#e0dbc1');rect(left+3,yy+hh-7,Math.max(3,mid-7),4,'#d5bf8b');for(let dx=6;dx<mid-1;dx+=6)rect(left+dx,yy+1,1,hh-2,'#8c7450');for(let dy=7;dy<hh-2;dy+=7)rect(left+1,yy+dy,mid-1,1,'#9b835b')}
 rect(xx+mid-1,yy,2,hh,'#654a35');rect(xx+mid,yy+1,1,hh-2,'#a3865c');rect(xx-2,yy-2,ww+4,1,'#b3976b');rect(xx-2,yy+hh+1,ww+4,2,'#654b33');rect(xx-4,yy+hh+3,ww+8,3,'#ad8b5b');rect(xx-3,yy+hh+3,ww+6,1,'#cfb486');rect(xx+mid-3,yy+hh/2,1,3,'#5c4934')}
-rect(x+24,y+72,39,5,'#79573b');for(let i=0;i<3;i++){rect(x+27+i*12,y+68,7,5,'#a17450');rect(x+28+i*12,y+65,5,4,autumn?'#b68b51':'#7d9e66')}}
+rect(x+24,y+94,39,5,'#79573b');for(let i=0;i<3;i++){rect(x+27+i*12,y+90,7,5,'#a17450');rect(x+28+i*12,y+87,5,4,autumn?'#b68b51':'#7d9e66')}}
 
 if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+86,y-46);c.lineTo(x+w+33,y+10);c.stroke();c.restore()}
 c.restore();
