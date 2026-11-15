@@ -1,5 +1,6 @@
 /* Shared seasonal animal motion; all scenery uses the game's canvas pixel palette. */
 (function(root){'use strict';
+const Night=typeof module!=='undefined'?require('./night'):root.CaveNight;
 const Animals=typeof module!=='undefined'?require('./animals'):root.CaveAnimals;
 const Interior=typeof module!=='undefined'?require('./interior'):root.CaveInterior;
 const Spring=typeof module!=='undefined'?require('./spring'):root.CaveSpring;
@@ -8,12 +9,12 @@ const species=[['rabbit','swallow'],['frog','frog'],['squirrel','squirrel'],['sh
 // A shallow walkable engawa, independent of the spring basin and house interior floors.
 const PORCH={left:704,right:762,top:-6};
 function porchFloor(x,home={}){if((home.progress||0)<3||x<PORCH.left-6||x>PORCH.right+8)return 0;if(x<PORCH.left)return -3;if(x>PORCH.right)return -3;return PORCH.top}
-function create(season=2){return {season,time:0,x:310,y:0,vy:0,face:1,ground:true,jump:false,animals:Array.from({length:5},(_,i)=>({id:i,variant:Math.floor(i/2)%3,kind:species[season][i%2],x:310+i*110,homeX:310+i*110,y:0,dir:i%2?1:-1,phase:i*1.7}))}}
-function update(s,dt,keys,height,home={}){let oldX=s.x,wasWet=!!s.wet;s.didJump=false;s.time+=dt;let tripping=!!s.tripStart&&s.time-s.tripStart<2.05;let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vertical=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0),wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
+function create(season=2,night=false){return {season,night,time:0,x:310,y:0,vy:0,face:1,ground:true,jump:false,animals:Array.from({length:5},(_,i)=>({id:i,variant:Math.floor(i/2)%3,kind:species[season][i%2],x:310+i*110,homeX:310+i*110,y:0,dir:i%2?1:-1,phase:i*1.7}))}}
+function update(s,dt,keys,height,home={}){let oldX=s.x,wasWet=!!s.wet;s.didJump=false;s.time+=dt;if(Night.advance(s,home,dt))s.nightChanged=true;let tripping=!!s.tripStart&&s.time-s.tripStart<2.05;let dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vertical=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0),wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
 if(tripping){const age=s.time-s.tripStart,slide=Math.max(0,1-age/.45)*(s.tripFace||s.face||1)*95*dt,next=s.x+slide;if(!s.inside&&!s.wet&&next>290&&next<800&&Math.abs(poolFloor(next-6)-poolFloor(next+6))<3)s.x=next;dir=0;vertical=0;keys={};}if(s.inside){Interior.update(s,dt,keys,home)}else{s.x=Math.max(20,Math.min(930,s.x+dir*(wet?105:150)*dt));if(dir)s.face=dir;let floor=Math.min(poolFloor(s.x-6),poolFloor(s.x+6),porchFloor(s.x,home)<0?porchFloor(s.x,home):Infinity);if(wet){s.vy=vertical*95;if(!vertical)s.vy=Math.max(-28,Math.min(28,(POOL.waterline+30-s.y)*4));s.y+=s.vy*dt;s.y=Math.min(floor,Math.max(-8,s.y));s.ground=false}else{if((keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}else s.ground=false}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.wet=s.x>POOL.left&&s.x<POOL.right&&s.y>POOL.waterline;
 }
 s.splashes=(s.splashes||[]).filter(q=>(q.life-=dt)>0);for(let q of s.splashes){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=170*dt}if(s.wet&&!wasWet&&s.time-(s.lastSplash||-1)>.45){s.lastSplash=s.time;for(let i=0;i<12;i++)s.splashes.push({x:s.x+(i%3-1)*3,y:POOL.waterline,vx:(i-5.5)*10,vy:-35-(i*17%55),life:.45+(i%3)*.08})}
-for(let a of s.animals){a.shorn=a.kind==='sheep'&&home.shearedWinter===(home.descents||0)&&(home.shearedSheep||[]).includes(a.id);Animals.update(a,dt,s.time);if(a.kind!=='swallow'&&a.x<RESERVED.right+20){a.x=RESERVED.right+20;a.dir=1;a.homeX=Math.max(a.homeX||0,RESERVED.right+60)}}// Only sustained dry outdoor walking can trip: one low-probability check per second,
+for(let a of s.animals){a.shorn=a.kind==='sheep'&&home.shearedWinter===(home.descents||0)&&(home.shearedSheep||[]).includes(a.id);a.sleeping=!!s.night;if(a.sleeping){a.y=0;a.vy=0;a.action="sleep"}else Animals.update(a,dt,s.time);if(a.kind!=='swallow'&&a.x<RESERVED.right+20){a.x=RESERVED.right+20;a.dir=1;a.homeX=Math.max(a.homeX||0,RESERVED.right+60)}}// Only sustained dry outdoor walking can trip: one low-probability check per second,
 // after three seconds, with a long cooldown. Never near the pool, door or mine.
 const safeWalk=!s.inside&&s.season<2&&!s.wet&&s.ground&&Math.abs(s.x-oldX)>0.1&&s.x>290&&s.x<800&&!tripping;
 s.walkTime=safeWalk?(s.walkTime||0)+dt:0;
@@ -25,7 +26,7 @@ function tripRoll(s,tick){let x=(Math.imul((s.motionSeed??(s.season+1)*0x45d9f3b
 function nearestSheep(s){if(s.inside||s.season!==3||!s.ground)return null;return s.animals.filter(a=>a.kind==='sheep'&&Math.abs(a.x-s.x)<44).sort((a,b)=>Math.abs(a.x-s.x)-Math.abs(b.x-s.x))[0]||null}
 function draw(c,s,height,home,hero){let g=Math.floor(height*.73/20)*20,t=s.time,season=s.season,autumn=season===2,winter=season===3;
 const rect=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h)},poly=(points,color)=>{c.fillStyle=color;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill()};
-let sky=c.createLinearGradient(0,0,0,g);sky.addColorStop(0,winter?'#354d5c':autumn?'#36575d':'#244e4c');sky.addColorStop(1,winter?'#a2b9b6':autumn?'#9ea890':'#7eaa8e');c.fillStyle=sky;c.fillRect(0,0,960,height);rect(730,g*.18,24,24,'#e7d8a5');for(let i=0;i<4;i++){let xx=(i*287+t*1.5)%1100-90,yy=g*.23+(i%2)*27;rect(xx,yy,78,3,'#b8c4ad33');rect(xx+21,yy-3,39,3,'#c4ccb633')}
+let sky=c.createLinearGradient(0,0,0,g);sky.addColorStop(0,s.night?['#111b36','#101a30','#20182f','#121d39'][season]:winter?'#354d5c':autumn?'#36575d':'#244e4c');sky.addColorStop(1,s.night?['#374d63','#294556','#494359','#425b75'][season]:winter?'#a2b9b6':autumn?'#9ea890':'#7eaa8e');c.fillStyle=sky;c.fillRect(0,0,960,height);if(s.night){rect(730,g*.18,22,22,'#ccd9e6');rect(727,g*.18-2,8,8,sky);rect(741,g*.18+7,4,3,'#a2b5d1');for(let i=0;i<27;i++)rect(i*127%960,18+i*29%Math.max(20,g*.4),1,1,'#b9c6df')}else rect(730,g*.18,24,24,'#e7d8a5');for(let i=0;i<4;i++){let xx=(i*287+t*1.5)%1100-90,yy=g*.23+(i%2)*27;rect(xx,yy,78,3,'#b8c4ad33');rect(xx+21,yy-3,39,3,'#c4ccb633')}
 for(let layer=0;layer<3;layer++){let base=g*(.5+layer*.13);let pts=[[0,g]];for(let x=0;x<=980;x+=20)pts.push([x,base-Math.sin(x*.007+layer*3)*45-Math.sin(x*.019+layer)*15]);pts.push([960,g]);poly(pts,['#405e5b','#36584f','#2d4e40'][layer])}
 Spring.backdrop(c,g,t,home,season);
 // Trees have one trunk / canopy algorithm, season-specific colors.
@@ -72,7 +73,7 @@ rect(x+24,y+94,39,5,'#79573b');for(let i=0;i<3;i++){rect(x+27+i*12,y+90,7,5,'#a1
 
 if(p<6){c.save();c.strokeStyle='#c6d8b18c';c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(x,y,w,116);c.beginPath();c.moveTo(x-18,y);c.lineTo(x+86,y-46);c.lineTo(x+w+33,y+10);c.stroke();c.restore()}
 c.restore();
-if(p>=6&&(autumn||winter))Interior.smoke(c,512,g-184,t,winter);Interior.draw(c,g,s,home);
+if(p>=6&&(autumn||winter||s.night))Interior.smoke(c,512,g-184,t,winter);Interior.draw(c,g,s,home);
 // Side veranda is rendered in world coordinates so its deck matches porchFloor exactly.
 if(p>=3){rect(701,g-3,65,3,'#283c2d');rect(702,g-6,62,4,'#7c5b3c');rect(702,g-2,62,2,'#60462f');rect(703,g-2,60,1,'#a27a4d');for(let xx=704;xx<762;xx+=6){rect(xx,g-6,5,3,'#bb9663');rect(xx,g-6,4,1,'#dbc08a')}for(let xx of[706,735,759])rect(xx,g-2,3,3,'#6d553a');rect(696,g-3,8,3,'#a78c60');rect(764,g-3,6,3,'#a78c60')}
 if(p>=5){poly([[699,g-94],[749,g-84],[769,g-72],[701,g-75]],'#5b4033');for(let row=0;row<3;row++)for(let col=0;col<8;col++){rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),7,4,row%2?'#956046':'#aa7853');rect(702+col*8+row*2,g-88+row*5+Math.floor(col*.7),6,1,'#c2946b')}rect(701,g-75,68,4,'#775738');rect(758,g-72,4,66,'#795838');rect(759,g-71,1,64,'#b18b59')}
@@ -86,7 +87,7 @@ const sway=Math.round(Math.sin(t*1.7)*2+Math.sin(t*.63)),cx=716+sway,by=g-69;rec
 for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
 if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
 s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);if(!s.sleeping)hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Interior.drawSleep(c,g,s);Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
-c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);
+c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);Night.paint(c,s,g,height,home);
 }
-const api={interactBed:Interior.toggleSleep,PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
+const api={Night,interactBed:Interior.toggleSleep,PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
 })(globalThis);

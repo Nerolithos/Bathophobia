@@ -33,7 +33,7 @@ for(let x of[327,395]){r(x,-89,1,7,'#5f4b35');c.save();c.globalAlpha=.12;r(x-7,-
 for(let x of[431,440,449])r(x,-19,2,16,'#7c8e5a');r(431,-15,20,2,'#9a9f69');r(431,-7,20,2,'#7d8b5b');
 if(winter){r(317,-110,23,2,'#cbd4bf');r(389,-102,30,2,'#cbd4bf')}
 c.restore()}
-function draw(c,g,t,home,season){let {r,stone}=tools(c,g),p=stage(home),cold=season===2||season===3;
+function draw(c,g,t,home,season){let {r,stone}=tools(c,g),p=stage(home),cold=season===2||season===3||home.night;
 // Interlocking outcrop silhouette: deliberately unequal ledges, deep clefts and leaning strata.
 const ledges=[[-146,48,37],[-140,35,61],[-124,28,69],[-102,22,77],[-78,32,67],[-55,36,66],[-31,46,52],[-12,62,39]];
 for(let [y,x,w]of ledges){r(x,y,w,26,'#455e53');r(x+4,y+2,w-10,3,'#8b9981');r(x+8,y+5,w-15,15,'#687e6c');r(x+w-10,y+6,8,19,'#354f47');r(x+7,y+22,w-19,3,'#293f38')}
