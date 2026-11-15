@@ -6,5 +6,5 @@ assert.equal(new Set(first).size,6,'every species has an independent silhouette,
 for(let season=0;season<4;season++){let s=Surface.create(season);for(let n=0;n<600;n++)Surface.update(s,1/60,{},640);assert(s.animals.every(a=>A.profiles[a.kind]));}
 // Exercise real lazy atlas upload, mirror orientation and feet anchoring.
 let uploads=0,draws=[],scales=[],doc={createElement(){return{getContext(){return{createImageData(w,h){return{data:new Uint8ClampedArray(w*h*4)}},putImageData(){uploads++}}}}}},ctx={canvas:{ownerDocument:doc},save(){},restore(){},translate(){},scale(x){scales.push(x)},drawImage(...args){draws.push(args)}};
-for(let kind of names){let a={kind,x:100,y:0,dir:1,phase:0,action:'move'};A.draw(ctx,a,300,0);A.draw(ctx,a,300,0)}assert.equal(uploads,6);assert.equal(draws.length,12);assert.equal(scales.length,2,'left-facing sheep artwork mirrors to face its travel direction');
+for(let kind of names){let a={kind,x:100,y:0,dir:1,phase:0,action:'move'};A.draw(ctx,a,300,0);A.draw(ctx,a,300,0)}assert.equal(uploads,6);assert.equal(draws.length,12);assert.equal(scales.length,4,'left-facing rabbit and sheep artwork mirrors to face its travel direction');
 console.log('PASS: six independent pixel painters/palettes/silhouettes; species animation frames; deterministic shared AI, gravity and bounds; cached upload, facing and ground alignment.');
