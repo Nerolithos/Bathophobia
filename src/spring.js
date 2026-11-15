@@ -6,6 +6,20 @@ function floor(x){if(x<=94||x>=270)return 0;for(let i=1;i<bed.length;i++)if(x<=b
 const stoneShapes=[['  xxxx  ',' xhhhxx ','xhhmmmxx','xmmmmddx',' xxdddxx','  xxxx  '],['   xxxx   ',' xxhhhxxx ','xhhhmmmmxx','xmmmmmmddx',' xxdddddxx','   xxxxx  '],['  xxx  ',' xhhxx ','xhhmmxx','xmmmddx',' xxddx ','  xxx  ']];
 function tools(c,g){const r=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),g+Math.round(y),w,h)};return{r,stone(x,y,type=0,scale=2,moss=false){let rows=stoneShapes[type%3],pal={x:'#4d6258',h:'#a1aa8b',m:'#7e8f79',d:'#627560'};rows.forEach((row,j)=>[...row].forEach((p,i)=>{if(p!==' ')r(x+i*scale,y+j*scale,scale,scale,pal[p])}));if(moss){r(x+scale*2,y+scale,scale*3,scale,'#78905c');r(x+scale,y+scale*2,scale*2,scale,'#637b51')}}}}
 function stage(home){return home.onsen?4:home.onsenStage||0}
+// Distant bathhouse and bamboo are painted before ground, spring rocks and actors.
+// Reduced scale, desaturated colors and atmospheric opacity separate this layer.
+function backdrop(c,g,t,home,season){if(stage(home)<3)return;const {r}=tools(c,g),winter=season===3;c.save();c.globalAlpha=.64;
+// Two irregular groves: leaning stems, staggered heights, segmented joints and leaf fans.
+for(let i=0;i<18;i++){const base=63+i*15+(i%3)*4,height=70+(i*29%65),lean=[-.22,.13,-.08,.26,-.17,.05][i%6],step=5,xAt=y=>base+(height+y)*lean+Math.sin(y*.045+i)*2;for(let y=-height;y<-24;y+=step){const x=xAt(y);r(x,y,3,step+1,i%3?'#497363':'#547f6b');r(x+1,y,1,step,'#6f9580');if((y+height)%20===0){r(x-1,y,5,2,'#90aa8b');for(let side of[-1,1]){for(let k=0;k<4;k++){const xx=x+side*(4+k*3),yy=y-3-k%2*3;r(xx,yy,5,2,'#567e68');r(xx+side*2,yy-2,3,2,'#6e9479')}}}}}
+// Compact frontal Japanese bathhouse, intentionally well behind the pool bank.
+r(153,-96,101,54,'#617367');r(156,-94,95,49,'#b4b49a');r(151,-47,105,4,'#6b7564');r(160,-43,88,3,'#82917a');
+for(let x of[156,186,218,248])r(x,-96,3,50,'#6a705c');r(156,-75,95,3,'#747760');r(194,-75,23,29,'#4d6d62');r(197,-72,17,26,'#7e9c85');r(205,-72,2,26,'#596f5d');
+for(let x of[162,224]){r(x,-71,20,21,'#77998a');for(let dx=3;dx<20;dx+=5)r(x+dx,-71,1,21,'#b0b59a');for(let y=-67;y<-50;y+=5)r(x,y,20,1,'#b0b59a')}
+// Stepped gable and extended teal tiled eaves; no smooth vector outlines.
+for(let row=0;row<12;row++){const half=5+row*5;r(204-half,-130+row*3,half*2,4,'#556e62');if(row<10)r(204-half+3,-128+row*3,half*2-6,2,'#b7b49a')}
+for(let row=0;row<5;row++){const left=155-row*4,width=98+row*8;r(left,-108+row*3,width,4,'#416f65');for(let x=left+2;x<left+width-2;x+=8){r(x,-108+row*3,5,1,winter?'#afc0b0':'#739689');r(x+5,-107+row*3,1,2,'#365e58')}}r(138,-94,133,3,'#6b7d68');r(201,-131,7,2,'#819984');r(201,-120,5,15,'#777c65');r(196,-108,16,2,'#85866d');
+if(winter){r(170,-116,27,2,'#b6c3b2');r(217,-110,28,2,'#b6c3b2')}
+c.restore()}
 function draw(c,g,t,home,season){let {r,stone}=tools(c,g),p=stage(home),cold=season===2||season===3;
 // Interlocking outcrop silhouette: deliberately unequal ledges, deep clefts and leaning strata.
 const ledges=[[-146,48,37],[-140,35,61],[-124,28,69],[-102,22,77],[-78,32,67],[-55,36,66],[-31,46,52],[-12,62,39]];
@@ -44,5 +58,5 @@ if(p===4&&cold){let f=Math.floor(t*8)%4;r(41,-11,10,9,'#b65f36');r(43,-15-(f%2)*
 if(p===4){for(let i=0;i<(season===3?10:cold?7:4);i++){let a=(t*.115+i*.153)%1,alpha=Math.sin(a*Math.PI)*(season===3?.4:cold?.3:.16),x=123+i*19+Math.sin(a*4+i)*8,y=3-a*(season===3?68:52),spread=Math.floor(a*5)*2;c.save();c.globalAlpha=alpha;for(let [dx,dy,w,h]of [[-7,2,18,4],[-3,-2,16,4],[2,-5,8,3]])r(x+dx-spread/2,y+dy,w+spread,h,'#c7d5bf');c.restore()}}
 }
 function foreground(c,g,t,s){if(!s.wet)return;let {r}=tools(c,g),left=Math.max(POOL.left,Math.floor(s.x-11)),right=Math.min(POOL.right,Math.ceil(s.x+12));c.save();c.globalAlpha=.28;for(let x=left;x<right;x+=2){let bottom=Math.min(s.y,floor(x));if(bottom>6)r(x,6,2,bottom-6,'#649e92')}c.restore();r(s.x-10,7,7,1,'#c1d9bd');r(s.x+5,8,8,1,'#a2c4b0')}
-const api={POOL,RESERVED,bed,floor,draw,foreground,stage};if(typeof module!=='undefined')module.exports=api;root.CaveSpring=api;
+const api={backdrop,POOL,RESERVED,bed,floor,draw,foreground,stage};if(typeof module!=='undefined')module.exports=api;root.CaveSpring=api;
 })(globalThis);
