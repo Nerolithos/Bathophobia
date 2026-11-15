@@ -20,7 +20,17 @@ for(let floor of[-10,-84]){r(474,floor,222,6,'#3d382b');for(let x=477;x<693;x+=1
 // Original masonry fireplace is present from the first entry, but no sofa/table/decor is prefilled.
 r(482,-43,26,32,'#8c8870');r(480,-46,30,5,'#b0a589');r(488,-36,14,25,'#27342c');r(485,-70,7,24,'#827b62');r(485,-17,18,4,'#6f4f34');if(autumn||winter){let f=Math.floor(t*9)%4;r(490,-26,10,13,'#b86c3a');r(492,-32+(f%2)*2,6,17,'#e9ad59');r(494,-33+(f%3),2,16,'#f4d38a');c.save();c.globalAlpha=.12;r(480,-48,37,39,'#f2bb6a');c.restore()}
 if(h.furniture?.ladder){for(let x of[666,681])r(x,-88,3,78,'#ab8856');for(let y=-80;y<-10;y+=10)r(666,y,18,3,'#d0b178')}
-if(h.furniture?.cabinet){r(618,-59,34,48,'#544b36');r(621,-56,28,41,'#71968777');for(let y of[-57,-39,-19])r(619,y,32,3,'#b29462');r(634,-56,2,41,'#cab47c');r(623,-54,2,13,'#c6d7ba');r(639,-50,1,18,'#c6d7ba')}
+if(h.furniture?.table){r(541,-31,44,5,'#4a3b2e');r(539,-33,48,4,'#a2875c');r(542,-33,42,1,'#c2a575');for(let x of[545,578]){r(x,-27,4,17,'#70563b');r(x,-27,1,16,'#a18155')}r(542,-27,42,3,'#715639');for(let x of[550,566,581])r(x,-32,1,2,'#7f6646')}
+if(h.furniture?.chair){r(519,-39,4,29,'#765b3c');r(521,-39,15,3,'#ad8b58');r(521,-34,13,4,'#967449');r(522,-27,12,3,'#a6895b');r(518,-23,20,4,'#b39666');for(let x of[520,533])r(x,-19,3,9,'#70543a')}
+if(h.furniture?.bed){r(499,-96,72,12,'#5e4833');r(496,-115,5,31,'#8e7049');r(569,-105,4,21,'#8e7049');r(498,-114,4,2,'#bd9e69');r(501,-101,68,8,'#d1c5a7');r(502,-105,17,7,'#e1d8c1');r(505,-105,11,1,'#f0e7d1');r(521,-105,47,13,'#527a69');r(523,-105,44,2,'#8eaa8d');r(525,-102,3,10,'#a7b89a');r(525,-93,43,1,'#385c4e');for(let x of[502,565])r(x,-88,4,4,'#6a4c34')}
+if(h.furniture?.cabinet){
+ // Front-facing two-door arched cabinet. Stepped arches, broad cornice and inset panes.
+ r(610,-74,48,4,'#3c342d');r(607,-70,54,4,'#806246');r(610,-66,48,51,'#493b30');r(609,-16,50,4,'#896e48');for(let x of[612,652])r(x,-12,4,2,'#503d2c');
+ for(let x of[611,634]){r(x,-65,22,48,'#806647');r(x+2,-63,18,44,'#362f29');r(x+4,-60,14,39,'#29473f');r(x+6,-62,10,2,'#29473f');r(x+4,-59,1,35,'#a98b5e');r(x+18,-59,1,35,'#a98b5e');r(x+5,-41,13,2,'#b09466');r(x+5,-22,13,2,'#a58a5b');}
+ const art=root.CaveArt;for(let i=0;i<4;i++){let id=h.displayMinerals?.[i];if(id!==null&&id!==undefined&&art?.sprites[id]){c.imageSmoothingEnabled=false;c.drawImage(art.mineralSprite(id,t),i%2?637:614,g+(i<2?-58:-39),17,15)}}
+ // Discrete glass reflections leave the four real specimens readable.
+ for(let x of[615,638]){r(x,-57,1,8,'#9eb7a0');r(x+2,-55,1,5,'#668f7e');r(x+9,-34,1,8,'#779b89')}r(631,-45,2,3,'#d0ad68');r(635,-45,2,3,'#d0ad68');r(613,-68,42,1,'#b08b5a');
+}
 // Side posts remain opaque, making the cutaway distinct from an empty missing house.
 r(474,-149,5,145,'#514631');r(691,-149,5,145,'#514631');
 }
