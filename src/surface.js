@@ -61,7 +61,7 @@ if(p>=5){
 poly([[x-28,y+10],[x+86,y-46],[x+w+33,y+10]],'#553d33');poly([[x-22,y+5],[x+86,y-41],[x+w+27,y+5]],'#885340');
 for(let row=0;row<6;row++){let yy=y-38+row*8,left=x+86-(row+1)*18,right=x+86+(row+1)*25;for(let xx=left;xx<right;xx+=13){rect(xx,yy,12,6,(row+Math.floor(xx/13))%2?'#a16b4e':'#8b533f');rect(xx+1,yy,10,1,'#be8a63');rect(xx+10,yy+1,2,5,'#6d4738')}}
 rect(x-27,y+8,w+61,6,'#5f4834');rect(x-26,y+8,w+58,2,'#b08c5d');rect(x-22,y+14,w+51,2,'#8b6c46');
-rect(x+34,y-39,17,34,'#6e7568');rect(x+31,y-43,23,5,'#989c82');rect(x+36,y-35,2,26,'#a0a18b');if(winter){rect(x-17,y+4,55,3,'#d7e0d3');rect(x+141,y+4,72,3,'#d7e0d3')}}
+rect(x+34,y-39,17,34,'#6e7568');rect(x+31,y-43,23,5,'#989c82');rect(x+36,y-35,2,26,'#a0a18b');if(winter&&!s.inside){rect(x-17,y+4,55,3,'#d7e0d3');rect(x+141,y+4,72,3,'#d7e0d3')}}
 if(p>=6&&!s.inside){
 // Ground-floor sliding windows share their top and 32px height; left glazing is exactly twice as wide.
 // Glass stays distinct from the ryokan's paper shoji, with warm interior notes behind fine lattice.
@@ -85,7 +85,7 @@ if(p>=6&&home.exterior?.windchime){
 // Wind is cosmetic only: integer pixel offsets preserve the crisp bell and paper strip.
 const sway=Math.round(Math.sin(t*1.7)*2+Math.sin(t*.63)),cx=716+sway,by=g-69;rect(716,g-75,1,6,'#70583c');rect(cx-4,by+3,9,7,'#b47b4d');rect(cx-3,by+1,7,3,'#c8955c');rect(cx-2,by+3,2,5,'#ebbc7c');rect(cx-5,by+10,11,2,'#785638');rect(cx,by+12,1,5,'#927443');rect(cx+Math.round(sway*.5)-2,by+17,5,9,'#d8bf80');rect(cx+Math.round(sway*.5)-1,by+18,1,6,'#f0d79a')}
 for(let a of s.animals)if(!s.inside||a.x<470||a.x>700)Animals.draw(c,a,g+(a.kind==='swallow'?0:porchFloor(a.x,home)),t);
-if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter)for(let i=0;i<30;i++)rect((i*71+t*8)%960,(i*31+t*12)%height,2,2,'#c8d8ce');
+if(autumn)for(let i=0;i<16;i++)rect((i*73+t*(9+i%3))%960,g-180+(i*19+t*13)%170,3,2,i%2?'#bd8952':'#a3633d');if(winter&&!s.night)Night.snow(c,s,g,height);
 s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);if(!s.sleeping)hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Interior.drawSleep(c,g,s);Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
 c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);Night.paint(c,s,g,height,home);
 }
