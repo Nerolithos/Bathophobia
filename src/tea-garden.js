@@ -1,5 +1,6 @@
 /* Adjacent surface region. Construction changes scenery, never the walkable foreground. */
 (function(root){'use strict';
+const Spring=typeof module!=='undefined'?require('./spring'):root.CaveSpring;
 const Night=typeof module!=='undefined'?require('./night'):root.CaveNight;
 const SCALE=.68,ANCHOR=40,toWorldX=x=>Math.round(ANCHOR+(x-ANCHOR)*SCALE);
 const HOUSE={left:toWorldX(396),right:toWorldX(744),door:toWorldX(614),floor:-6};let clusterCanvas=null;
@@ -17,9 +18,9 @@ for(let layer=0;layer<3;layer++){let pts=[[0,g]];for(let x=0;x<=980;x+=8)pts.pus
 if(s.night){r(791,79,19,19,'#d6dfde');r(786,76,10,14,'#233448');for(let i=0;i<25;i++)r(rnd(i,2)*960,12+rnd(i,3)*g*.4,1,1,'#bacbcd')}else r(791,79,22,22,'#e4d4a0');
 }
 // Sparse bamboo grows beside the building, leaving the roofline open.
-for(let i=0;i<7;i++){let x=i<3?37+i*22:778+(i-3)*30,hh=95+rnd(i,17)*80,lean=(rnd(i,23)-.5)*24;for(let y=0;y<hh;y+=4){let xx=x+lean*y/hh;r(xx,g-y-4,3,5,'#708a53');r(xx+1,g-y-4,1,4,'#a0ad6b');if(y%20===0){r(xx-1,g-y,5,2,'#a5b27b');for(let side of[-1,1]){let ey=g-y-7;poly([[xx,ey+4],[xx+side*19,ey-5],[xx+side*29,ey-4],[xx+side*14,ey+1]],'#5c7e4d')}}}}
-// Seasonal blossom / maple tree anchors the left edge of the new garden.
-for(let [x,hh,k]of [[81,156,0],[863,163,1]]){r(x,g-hh,7,hh,'#66533e');poly([[x+3,g-70],[x-27,g-112],[x-35,g-146],[x-31,g-145],[x-23,g-116],[x+7,g-79]],'#756147');poly([[x+2,g-96],[x+31,g-128],[x+39,g-157],[x+43,g-158],[x+36,g-123],[x+6,g-86]],'#756147');if(!winter)for(let i=0;i<52;i++){let xx=x+(rnd(i+k*100,31)-.5)*107,yy=g-hh+(rnd(i+k*100,37)-.5)*58,col=s.season===0?['#e5c8ba','#d5b8aa','#efe0c7']:s.season===2?['#b9824d','#ce9c58','#946342']:['#73905c','#8ea66b','#5e8054'];r(xx,yy,7+rnd(i,41)*8,4+rnd(i,43)*6,col[i%3])}else for(let i=0;i<10;i++)r(x-23+i*6,g-hh+15+i%3*9,7,2,'#c8d8d0')}
+Spring.bamboo(c,g,[{x:37,h:143,lean:-.06},{x:63,h:172,lean:.04},{x:87,h:126,lean:-.03},{x:782,h:158,lean:.06},{x:811,h:132,lean:-.05},{x:847,h:177,lean:.025},{x:880,h:145,lean:-.045}]);
+// Shared seasonal tree geometry on both sides of the garden.
+for(let [x,hh]of [[81,156],[863,163]])Spring.tree(c,x,hh,g,s.season);
 // Ground and an unobstructed foreground lane run continuously to the homestead.
 r(0,g,960,height-g,winter?'#879e91':'#526748');r(0,g+6,960,height-g,'#334a39');for(let x=0;x<960;x+=8)r(x,g-3+(Math.sin(x*12.7)>0?0:2),7,4,winter?'#d5dfd1':s.season===2?'#9b8952':'#83a66b');for(let i=0;i<125;i++){let x=rnd(i,53)*960,y=g+6+rnd(i,59)*Math.max(12,height-g-20);r(x,y,4+rnd(i,61)*7,2,i%3?'#3a5140':'#53624a')}
 for(let i=0;i<23;i++){let x=326+i*22;r(x,g-2,19,3,i%2?'#9a9c82':'#7f8976');r(x+3,g-1,11,1,'#c0b89a')}
