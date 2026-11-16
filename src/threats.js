@@ -39,12 +39,12 @@ let distance=Math.abs(a.x-goal.x)+Math.abs(a.y-goal.y)*1.15,progress=Math.hypot(
 if(cost<bestScore){bestScore=cost;best=commands.slice(0,12)}}return best||[[0,0,0]];
 }
 function update(threats,p,world,cam,dt=E.DT,viewH=640){const events=[];p.hazardCooldown=Math.max(0,(p.hazardCooldown||0)-dt);const stats=E.traits(p);
-for(let e of threats.shadows||[]){if(e.phase==='gone')continue;if(e.phase==='poisoned'){e.corpseVelocity=Math.min(400,(e.corpseVelocity||0)+900*dt);let ny=e.y+e.corpseVelocity*dt;if(world.solid(Math.floor((e.x+12)/T),Math.floor((ny+8)/T))){e.y=Math.floor((ny+8)/T)*T-8;e.corpseVelocity=0}else e.y=ny;continue}if(world.biome?.(Math.floor((p.y+PH)/T))==='lava'||world.biome?.(Math.floor((e.y+34)/T))==='lava'){e.phase='gone';continue}const visible=e.y+e.h>=cam&&e.y<=cam+viewH&&e.x+e.w>=0&&e.x<=E.W*T;if(visible)e.seen=true;else if(e.seen){e.phase='gone';events.push({type:'vanish',x:e.x+9,y:e.y+16});continue}else continue;
+for(let e of threats.shadows||[]){if(e.phase==='gone')continue;if(e.phase==='poisoned'){e.corpseVelocity=Math.min(400,(e.corpseVelocity||0)+900*dt);let ny=e.y+e.corpseVelocity*dt;if(world.solid(Math.floor((e.x+12)/T),Math.floor((ny+8)/T))){e.y=Math.floor((ny+8)/T)*T-8;e.corpseVelocity=0}else e.y=ny;continue}if(world.biome?.(Math.floor((p.y+PH)/T))==='lava'||world.biome?.(Math.floor((e.y+34)/T))==='lava'){e.phase='gone';continue}const visible=e.y+e.h>=cam&&e.y<=cam+viewH&&e.x+e.w>=0&&e.x<=E.W*T;if(visible)e.seen=true;else if(e.seen){e.phase='gone';events.push({type:'vanish',id:e.id,reason:'offscreen',x:e.x+9,y:e.y+16});continue}else continue;
 if(!e.actor){e.actor=E.spawn(e.x+2,e.y+6);e.actor.isEnemy=true;e.actor.moveSpeed=135;e.plan=[];}
 let a=e.actor,dx=p.x+PW/2-(a.x+PW/2),dy=p.y+PH/2-(a.y+PH/2),distance=Math.hypot(dx,dy);a.moveSpeed=Math.min(195,135*(stats.enemySpeed??1));
 if(e.phase==='idle'&&distance<=7*T){e.phase='chasing';events.push({type:'awaken',x:e.x+9,y:e.y+12})}
 if(e.phase==='chasing'&&!e.plan.length)e.plan=planEnemy(a,p,world);let control=e.phase==='chasing'?e.plan.shift()||[0,0,0]:[0,0,0];E.step(a,control[0],!!control[1],world,control[2]);e.x=a.x-2;e.y=a.y-6;
-if(a.dead){e.phase='gone';events.push({type:'vanish',x:e.x+9,y:e.y+16});continue}
+if(a.dead){e.phase='gone';events.push({type:'vanish',id:e.id,reason:'fall',x:e.x+9,y:e.y+16});continue}
 if(e.phase==='chasing'&&p.x+PW>a.x&&p.x<a.x+PW&&p.y+PH>a.y&&p.y<a.y+PH)hurt(p,'黑暗',events);
 }
 for(let s of threats.stones||[]){if(s.phase==='gone')continue;if(s.phase==='hanging'){if(underStone(p,s)){s.phase='warning';s.timer=.32;events.push({type:'rattle',x:s.x,y:s.y+s.length})}continue}if(s.phase==='warning'){s.timer-=dt;if(s.timer<=0)s.phase='falling';continue}
