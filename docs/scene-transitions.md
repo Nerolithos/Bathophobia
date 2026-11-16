@@ -29,3 +29,11 @@ Inn glow is composited after the night tint using the inn transform. Window glow
 Inn lighting is now drawn within the same background pass as the inn, before all foreground rocks, trees and bamboo. This deliberately supersedes the earlier post-tint emission pass: nearby scenery must fully occlude both lantern cores and window glow. The common night tint still applies consistently. A draw-order regression enforces this relationship.
 
 ![Inn lights correctly behind scenery](screenshots/inn-light-occlusion.png)
+
+## Confirmed departures and Demo
+
+A confirmed kit is copied into an immutable departure snapshot before closing the native dialog. The `depart` close result and pending transaction distinguish confirmation from Cancel/Escape, so the asynchronous close event cannot erase selected items or the Demo flag during fade-out. The snapshot is consumed once at the black midpoint; inventory is validated/debited by the existing expedition start routine. Duplicate clicks are ignored.
+
+A normal restart opens kit selection only after the return fade has finished. The cave Demo button restarts directly into an automatic route replay, without an intermediate kit dialog. Regression tests exercise synchronous and delayed close events, two identical HF vials, mixed pickaxe/HF kits, exact-once costs, late close events, cancellation and direct Demo startup.
+
+![Automatic Demo descent after transition fix](screenshots/demo-transition-fixed.png)
