@@ -18,3 +18,10 @@ Both regions now use the same seasonal night-tint function and opacity. Summer-n
 
 ![Unified night boundary](screenshots/unified-surface-night.png)
 ![Summer-night rain and splashes on both sides](screenshots/tea-garden-rain.png)
+
+Ground snow accumulation now spans both regions, with a wavy world-anchored surface, thicker at night and excluded from the spring basin. Rain impacts use 180 independently phased emitters; each new event selects a fresh hashed position, duration and splash height rather than a uniform grid. Falling rain ends at ground level.
+
+Inn glow is composited after the night tint using the inn transform. Window glow is restricted to the actual 19×22 and 20×22 inner paper panels, without point-light cores or window halos. The stone lantern and furnace light anchors match their physical flames. Animals are drawn once after the lighting passes; the tea-room and house windows no longer contain invented central lights.
+
+![Window glow and foreground animals](screenshots/window-glow-fixed.png)
+![Continuous winter accumulation](screenshots/surface-snow-accumulation.png)
