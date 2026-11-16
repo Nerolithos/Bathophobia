@@ -3,7 +3,7 @@
 const S=typeof module!=='undefined'?require('./systems'):root.CaveSystems;
 const KEY='bathophobia-homestead-v1',seasons=['春','夏','秋','冬'];
 const plans=[{name:'水泥地基',cost:{31:10}},{name:'合金承重框架',cost:{28:8}},{name:'墙体与楼板',cost:{31:30,38:20}},{name:'石膏墙板',cost:{36:30}},{name:'木屋顶',cost:{38:24,28:2,32:5,4:5}},{name:'玻璃窗与竣工',cost:{21:8}}];
-const teaPlans=[{name:'茶屋地基',cost:{31:10,28:6}},{name:'茶屋木框架',cost:{16:20}},{name:'茶屋水泥墙',cost:{31:30}},{name:'茶屋石膏内墙',cost:{36:30}},{name:'茶屋木屋顶',cost:{37:12}},{name:'茶屋瓦片顶',cost:{54:30}}];
+const teaPlans=[{name:'茶屋地基',cost:{31:10,28:6}},{name:'茶屋木框架',cost:{16:20}},{name:'茶屋水泥墙',cost:{31:30}},{name:'茶屋石膏内墙',cost:{36:30}},{name:'茶屋木屋顶',cost:{37:12}},{name:'茶屋瓦片顶',cost:{54:30}},{name:'茶具',cost:{48:4,32:2,25:3,30:2,35:4}},{name:'茶桌椅',cost:{37:6,43:4}}];
 function counts(a){return Array.from({length:S.IDs.COUNT},(_,i)=>Number.isSafeInteger(a?.[i])&&a[i]>=0&&i!==S.IDs.WIND_CHIME?a[i]:0)}
 function fresh(){return {version:2,vault:counts(),escrow:counts(),activeRun:false,lastLoadout:[],descents:0,teaProgress:0,teaField:false,teaVisited:false,night:false,season:2,progress:0,station:{furnaceTier:1},onsen:false,onsenStage:0,interiorUnlocked:false,exterior:{windchime:false},furniture:{ladder:false,cabinet:false,table:false,chair:false,bed:false,mirror:false,ceramic:false},displayMinerals:[null,null,null,null],shearedWinter:-1,shearedSheep:[],lastGather:-1}}
 function settle(h){if(!h.activeRun)return false;h.escrow.forEach((n,i)=>h.vault[i]+=n);h.escrow=counts();h.activeRun=false;return true}

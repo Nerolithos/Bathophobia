@@ -3,9 +3,11 @@
 const Night=typeof module!=='undefined'?require('./night'):root.CaveNight;
 const SCALE=.68,ANCHOR=40,toWorldX=x=>Math.round(ANCHOR+(x-ANCHOR)*SCALE);
 const HOUSE={left:toWorldX(396),right:toWorldX(744),door:toWorldX(614),floor:-6};let clusterCanvas=null;
-function enter(s,h){Object.assign(s,{area:'tea',x:932,y:0,vy:0,ground:true,wet:false,inside:false,teaInside:false,swimsuit:false,hero:null});h.teaVisited=true;s.homeChanged=true}
-function interact(s,h){if(s.area!=='tea'||!s.ground||h.teaProgress<6||Math.abs(s.x-HOUSE.door)>30)return false;s.teaInside=!s.teaInside;s.y=s.teaInside?HOUSE.floor:0;s.vy=0;return true}
-function update(s,dt,keys,h){s.time+=dt;let old=s.x,dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);s.x=Math.max(s.teaInside?HOUSE.left+10:0,Math.min(s.teaInside?HOUSE.right-10:960,s.x+dir*150*dt));if(dir)s.face=dir;s.didJump=false;let floor=s.teaInside?HOUSE.floor:0;if(!s.teaInside&&(keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}s.wet=false;s.swimsuit=false;s.climbing=false;
+function enter(s,h){Object.assign(s,{area:'tea',x:932,y:0,vy:0,ground:true,wet:false,inside:false,teaInside:false,teaSeated:false,swimsuit:false,hero:null});h.teaVisited=true;s.homeChanged=true}
+function teaDelay(random=Math.random){return 7+random()*3}
+function interact(s,h){if(s.area!=='tea'||!s.ground)return false;if(s.teaInside){Object.assign(s,{teaInside:false,teaSeated:false,x:HOUSE.door,y:0,vy:0,hero:null});return true}if(h.teaProgress<8||Math.abs(s.x-HOUSE.door)>35)return false;Object.assign(s,{teaInside:true,teaSeated:true,x:toWorldX(542),y:HOUSE.floor,vy:0,teaClock:0,teaNext:teaDelay(),teaSip:-1,teaSips:0});return true}
+function updateTeaSeat(s,dt,random=Math.random){s.teaClock=(s.teaClock||0)+dt;if(s.teaSip>=0){s.teaSip+=dt;if(s.teaSip>=2.8)s.teaSip=-1}if(s.teaClock>=s.teaNext){s.teaClock=0;s.teaSip=0;s.teaSips=(s.teaSips||0)+1;s.teaNext=teaDelay(random)}}
+function update(s,dt,keys,h){s.time+=dt;if(s.teaSeated){updateTeaSeat(s,dt);s.vy=0;s.ground=true;s.didJump=false;return false}let old=s.x,dir=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);s.x=Math.max(s.teaInside?HOUSE.left+10:0,Math.min(s.teaInside?HOUSE.right-10:960,s.x+dir*150*dt));if(dir)s.face=dir;s.didJump=false;let floor=s.teaInside?HOUSE.floor:0;if(!s.teaInside&&(keys.Space||keys.KeyW||keys.ArrowUp)&&!s.jump&&s.ground){s.vy=-290;s.ground=false;s.didJump=true}s.jump=!!(keys.Space||keys.KeyW||keys.ArrowUp);s.vy+=800*dt;s.y+=s.vy*dt;if(s.y>=floor){s.y=floor;s.vy=0;s.ground=true}s.wet=false;s.swimsuit=false;s.climbing=false;
 if(!s.teaInside&&s.x>=959&&dir>0){Object.assign(s,{area:'home',x:22,y:0,vy:0,ground:true,hero:null});return false}
 s.hero??={x:old,y:s.y,ground:s.ground};Object.assign(s.hero,{surface:true,x:s.x,y:s.y,vy:s.vy,ground:s.ground,face:s.face,didJump:s.didJump,time:s.time,wet:false,swimsuit:false,detailArt:s.detailArt!==false,climbing:false,tripAge:null});let animator=typeof module!=='undefined'?require('./player-animation'):root.CavePlayerAnimation;animator.update(s.hero,dt);return false}
 function draw(c,s,height,h,hero){let g=Math.floor(height*.73/20)*20,t=s.time,winter=s.season===3,p=h.teaProgress||0;
@@ -65,13 +67,17 @@ poly([[bayL+13,g-57],[bayL+12,g-65],[bayL+22,g-65],[bayL+20,g-57]],'#716e4d');r(
 // MIDDLE: tatami extends back into the room; joints converge towards the rear wall.
 poly([[bayL-2,g-48],[bayR+3,g-48],[bayR+13,g-20],[bayL-9,g-20]],'#c0ad7a');poly([[bayL+1,g-46],[bayR,g-46],[bayR+8,g-23],[bayL-5,g-23]],s.night?'#d6bd82':'#c8b887');
 for(let yy=g-43;yy<g-23;yy+=3)r(bayL+1,yy,bayR-bayL,1,'#ab9e6d');poly([[bayL+56,g-47],[bayL+54,g-21],[bayL+56,g-21],[bayL+58,g-47]],'#777950');r(bayL-2,g-34,bayR-bayL+6,2,'#858454');
+if(p>=8){
 // Two floor cushions sit either side of a low tea table, behind the front posts.
 for(let [xx,col,light]of [[bayL+13,'#7c7167','#ac9b85'],[bayL+132,'#6c795e','#9da883']]){poly([[xx,g-30],[xx+22,g-30],[xx+26,g-24],[xx+2,g-23]],'#4d513c');r(xx+2,g-30,20,5,col);r(xx+4,g-29,16,1,light);r(xx+7,g-26,11,1,light)}
 const tx=bayL+54;r(tx+3,g-36,4,13,'#57402d');r(tx+55,g-36,4,13,'#57402d');r(tx,g-43,63,6,'#4d3727');r(tx+1,g-45,61,4,'#8b6840');r(tx+4,g-45,55,1,'#c19b60');r(tx+6,g-38,51,2,'#6b4b30');
+}
+const tx=bayL+54;if(p>=7){
 // Black iron kettle: lid, spout and arched handle, plus exactly two small bowls.
 let kx=tx+25;poly([[kx,g-47],[kx+1,g-54],[kx+5,g-58],[kx+13,g-58],[kx+17,g-53],[kx+17,g-47]],'#303833');r(kx+3,g-49,12,4,'#404940');r(kx+5,g-59,9,2,'#697166');r(kx+8,g-61,3,2,'#3d453b');poly([[kx+16,g-53],[kx+22,g-57],[kx+21,g-52],[kx+16,g-49]],'#3a4339');
 for(let [xx,yy,ww,hh]of [[kx+2,g-66,2,12],[kx+4,g-68,11,2],[kx+14,g-66,2,11]])r(xx,yy,ww,hh,'#515a4d');r(kx+6,g-55,2,4,'#879080');
 for(let xx of[tx+9,tx+50]){poly([[xx,g-48],[xx+8,g-48],[xx+6,g-44],[xx+2,g-44]],'#87917a');r(xx,g-49,8,2,'#c7c6a3');r(xx+2,g-49,4,1,'#6e7558')}
+}
 // Solid left wing retains a smaller circular window with a sparse lattice.
 let cx=left+64,cy=g-83;for(let yy=-30;yy<=30;yy++){let ww=Math.floor(Math.sqrt(900-yy*yy));r(cx-ww,cy+yy,ww*2,1,'#594a35');if(Math.abs(yy)<27){let inner=Math.floor(Math.sqrt(729-yy*yy));r(cx-inner,cy+yy,inner*2,1,s.night?'#b6a072':'#8e9b80')}}for(let dx of[-13,13]){let hh=Math.floor(Math.sqrt(26*26-dx*dx));r(cx+dx,cy-hh,2,hh*2,'#83724e')}r(cx-26,cy+6,52,2,'#8b7851');
 poly([[cx-3,cy+20],[cx-5,cy+11],[cx+5,cy+11],[cx+3,cy+20]],'#606a4d');r(cx,cy-8,1,19,'#5e6b4c');r(cx-3,cy-11,6,3,'#d0c09b');
@@ -88,7 +94,7 @@ poly([[582,g-5],[641,g-6],[647,g-1],[580,g]],'#7d8772');r(583,g-5,55,2,'#b7b69b'
 r(right-24,g-121,20,27,'#7d6970');r(right-22,g-99,16,1,'#b7a18d');c.font='12px serif';c.fillStyle='#e4d1aa';c.fillText('茶',right-21,g-105);
 r(777,g-105,1,12,'#695238');r(772,g-94,11,17,'#a77f48');r(774,g-92,7,12,s.night?'#f4ce83':'#d7ba7c');r(777,g-90,1,8,'#ffe5a9');
 }
-if(p<6){c.save();c.strokeStyle='#bad0a37f';c.setLineDash([5,5]);c.strokeRect(left,g-138,right-left,126);c.restore();c.font='11px monospace';c.fillStyle='#bbccaa';c.fillText('山间茶屋 '+p+' / 6',520,g-154)}
+if(p<6){c.save();c.strokeStyle='#bad0a37f';c.setLineDash([5,5]);c.strokeRect(left,g-138,right-left,126);c.restore();c.font='11px monospace';c.fillStyle='#bbccaa';c.fillText('山间茶屋 '+p+' / 8',520,g-154)}
 if(p>=6){for(let i=0;i<10;i++){let xx=372+i*24,yy=g-3-Math.sin(i*.5)*2;poly([[xx,yy-2],[xx+14,yy-4],[xx+20,yy],[xx+16,yy+2],[xx+1,yy+2]],i%2?'#92957c':'#7d8974')}r(753,g-28,57,4,'#806543');for(let xx of[757,802]){r(xx,g-24,3,15,'#725c3c');r(xx,g-24,1,14,'#b59660')}for(let xx of[767,793]){poly([[xx-11,g-30],[xx-7,g-34],[xx+8,g-34],[xx+12,g-30],[xx+7,g-27],[xx-7,g-27]],'#c0a36d');r(xx-8,g-32,16,3,'#8b8253');for(let k=0;k<5;k++)r(xx-6+k*3,g-32,1,3,'#c3b17c')}for(let i=0;i<8;i++){let xx=403+rnd(i,173)*326;poly([[xx,g-8],[xx+4,g-12],[xx+11,g-10],[xx+13,g-4],[xx+3,g-3]],'#6e7b63');r(xx+2,g-10,5,2,'#87935f')}}
 // Low planting and stepping stones soften the base; they never block the foreground lane.
 for(let i=0;i<36;i++){let x=372+rnd(i,89)*440;if(x>575&&x<649)continue;let y=g-3;for(let k=0;k<3;k++)r(x+k*2,y-2-rnd(i+k,97)*7,2,6,winter?'#a9bea0':i%3?'#7b9251':'#a0ac6c')}
@@ -96,7 +102,7 @@ if(layer){c=screen;c.save();c.imageSmoothingEnabled=false;let sourceTop=Math.max
 if(s.night){r(0,0,960,height,s.season===3?'#18264d55':s.season===2?'#251f3d55':'#17294355');if(p>=6)for(let rawX of[461,610,777]){let x=toWorldX(rawX);for(let ring=4;ring>0;ring--){c.globalAlpha=.025;r(x-ring*10,g-86*SCALE-ring*6,ring*16,ring*12,'#ffd58b')}c.globalAlpha=1;r(x-1,g-89*SCALE,3,5,'#f5d491')}}
 if(s.night&&p>=6){c.save();c.globalCompositeOperation='screen';c.globalAlpha=.15;r(toWorldX(left+125),g-112*SCALE,Math.round(160*SCALE),Math.round(96*SCALE),'#c99b55');c.restore()}
 if(winter)Night.snow(c,{...s,inside:false,snowInterior:p>=5?{left:HOUSE.left,right:HOUSE.right,top:g-140*SCALE,bottom:g-12*SCALE}:null},g,height);if(s.night&&s.season===1)for(let i=0;i<110;i++){let x=((rnd(i,109)*1040-t*(110+rnd(i,113)*50))%1040+1040)%1040,y=(rnd(i,127)*height+t*(200+rnd(i,131)*80))%height;if(p>=5&&x>HOUSE.left&&x<HOUSE.right&&y>g-140&&y<g)continue;for(let k=0;k<3;k++)r(x-k*2,y+k*3,1,3,'#a3c1d455')}
-c.save();c.translate(0,g-28);hero(c,s.hero||{x:s.x,y:s.y,face:s.face,ground:true,time:t},0,t,[],s.detailArt===false?48:64);c.restore();c.font='11px monospace';c.fillStyle='#c9d7bc';c.fillText('山居 →',879,g+22)
+if(s.teaSeated){root.CavePlayerTea?.draw(c,s.x,g-23*SCALE,s.teaSip,t)}else{c.save();c.translate(0,g-28);hero(c,s.hero||{x:s.x,y:s.y,face:s.face,ground:true,time:t},0,t,[],s.detailArt===false?48:64);c.restore();}c.font='11px monospace';c.fillStyle='#c9d7bc';c.fillText('山居 →',879,g+22)
 }
-const api={SCALE,ANCHOR,HOUSE,enter,interact,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveTeaGarden=api;
+const api={SCALE,ANCHOR,HOUSE,teaDelay,updateTeaSeat,enter,interact,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveTeaGarden=api;
 })(globalThis);
