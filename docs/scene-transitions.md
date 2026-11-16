@@ -11,3 +11,10 @@ Reference: Phaser camera follow/lerp and scroll factors: https://docs.phaser.io/
 Validation: full `npm test`, `npm run build`, browser cave departure/return, and walking through the surface boundary. Regression tests check camera bounds, continuous coordinates, unclipped single actor draw, 0.82× backdrop translation and one-time masked scene switching.
 
 ![Surface boundary after clipping fix](screenshots/surface-seam-fixed.png)
+
+## Shared environment effects
+
+Both regions now use the same seasonal night-tint function and opacity. Summer-night rain and ground splashes, winter snowfall and autumn falling leaves are drawn in the panorama instead of per-region weather passes. Tea-garden ground uses the same autumn leaf litter. The onsen inn's window and lantern lighting is attached to the same 0.82× transform as the inn; pool-edge lighting remains attached to the foreground.
+
+![Unified night boundary](screenshots/unified-surface-night.png)
+![Summer-night rain and splashes on both sides](screenshots/tea-garden-rain.png)

@@ -23,7 +23,7 @@ Spring.bamboo(c,g,[{x:37,h:143,lean:-.06},{x:63,h:172,lean:.04},{x:87,h:126,lean
 for(let [x,hh]of [[81,156],[863,163]])Spring.tree(c,x,hh,g,s.season);
 // Ground and an unobstructed foreground lane run continuously to the homestead.
 r(0,g,960,height-g,winter?'#879e91':'#526748');r(0,g+6,960,height-g,'#334a39');for(let x=0;x<960;x+=8)r(x,g-3+(Math.sin(x*12.7)>0?0:2),7,4,winter?'#d5dfd1':s.season===2?'#9b8952':'#83a66b');for(let i=0;i<125;i++){let x=rnd(i,53)*960,y=g+6+rnd(i,59)*Math.max(12,height-g-20);r(x,y,4+rnd(i,61)*7,2,i%3?'#3a5140':'#53624a')}
-for(let i=0;i<23;i++){let x=326+i*22;r(x,g-2,19,3,i%2?'#9a9c82':'#7f8976');r(x+3,g-1,11,1,'#c0b89a')}
+Spring.leafLitter(c,g,s.season);for(let i=0;i<23;i++){let x=326+i*22;r(x,g-2,19,3,i%2?'#9a9c82':'#7f8976');r(x+3,g-1,11,1,'#c0b89a')}
 // Render the complete construction group on a source pixel canvas, then scale once with nearest-neighbour filtering.
 // Characters and the open foreground lane keep their original size and movement speed.
 let screen=c,doc=screen.canvas?.ownerDocument||root.document,layer=null;
@@ -101,9 +101,9 @@ if(p>=6){for(let i=0;i<10;i++){let xx=372+i*24,yy=g-3-Math.sin(i*.5)*2;poly([[xx
 // Low planting and stepping stones soften the base; they never block the foreground lane.
 for(let i=0;i<36;i++){let x=372+rnd(i,89)*440;if(x>575&&x<649)continue;let y=g-3;for(let k=0;k<3;k++)r(x+k*2,y-2-rnd(i+k,97)*7,2,6,winter?'#a9bea0':i%3?'#7b9251':'#a0ac6c')}
 if(layer){c=screen;c.save();c.imageSmoothingEnabled=false;let sourceTop=Math.max(0,g-250),sourceHeight=Math.min(height-sourceTop,275);c.drawImage(layer,0,sourceTop,960,sourceHeight,toWorldX(0),Math.round(g+(sourceTop-g)*SCALE),Math.round(960*SCALE),Math.round(sourceHeight*SCALE));c.restore()}else c.restore();
-if(s.night){r(0,0,960,height,s.season===3?'#18264d55':s.season===2?'#251f3d55':'#17294355');if(p>=6)for(let rawX of[461,610,777]){let x=toWorldX(rawX);for(let ring=4;ring>0;ring--){c.globalAlpha=.025;r(x-ring*10,g-86*SCALE-ring*6,ring*16,ring*12,'#ffd58b')}c.globalAlpha=1;r(x-1,g-89*SCALE,3,5,'#f5d491')}}
+if(s.night){Night.tint(c,s,height);if(p>=6)for(let rawX of[461,610,777]){let x=toWorldX(rawX);for(let ring=4;ring>0;ring--){c.globalAlpha=.025;r(x-ring*10,g-86*SCALE-ring*6,ring*16,ring*12,'#ffd58b')}c.globalAlpha=1;r(x-1,g-89*SCALE,3,5,'#f5d491')}}
 if(s.night&&p>=6){c.save();c.globalCompositeOperation='screen';c.globalAlpha=.15;r(toWorldX(left+125),g-112*SCALE,Math.round(160*SCALE),Math.round(96*SCALE),'#c99b55');c.restore()}
-if(winter)Night.snow(c,{...s,inside:false,snowInterior:p>=5?{left:HOUSE.left,right:HOUSE.right,top:g-140*SCALE,bottom:g-12*SCALE}:null},g,height);if(s.night&&s.season===1)for(let i=0;i<110;i++){let x=((rnd(i,109)*1040-t*(110+rnd(i,113)*50))%1040+1040)%1040,y=(rnd(i,127)*height+t*(200+rnd(i,131)*80))%height;if(p>=5&&x>HOUSE.left&&x<HOUSE.right&&y>g-140&&y<g)continue;for(let k=0;k<3;k++)r(x-k*2,y+k*3,1,3,'#a3c1d455')}
+if(winter&&!options.sharedBackground)Night.snow(c,{...s,inside:false,snowInterior:p>=5?{left:HOUSE.left,right:HOUSE.right,top:g-140*SCALE,bottom:g-12*SCALE}:null},g,height);if(!options.sharedBackground&&s.night&&s.season===1)for(let i=0;i<110;i++){let x=((rnd(i,109)*1040-t*(110+rnd(i,113)*50))%1040+1040)%1040,y=(rnd(i,127)*height+t*(200+rnd(i,131)*80))%height;if(p>=5&&x>HOUSE.left&&x<HOUSE.right&&y>g-140&&y<g)continue;for(let k=0;k<3;k++)r(x-k*2,y+k*3,1,3,'#a3c1d455')}
 if(!options.hidePlayer){if(s.teaSeated){root.CavePlayerTea?.draw(c,s.x,g-23*SCALE,s.teaSip,t)}else{c.save();c.translate(0,g-28);hero(c,s.hero||{x:s.x,y:s.y,face:s.face,ground:true,time:t},0,t,[],s.detailArt===false?48:64);c.restore();}}c.font='11px monospace';c.fillStyle='#c9d7bc';/* Navigation is conveyed by scenery, not ground text. */
 }
 const api={SCALE,ANCHOR,HOUSE,teaDelay,updateTeaSeat,enter,interact,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveTeaGarden=api;
