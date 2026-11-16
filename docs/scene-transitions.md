@@ -25,3 +25,7 @@ Inn glow is composited after the night tint using the inn transform. Window glow
 
 ![Window glow and foreground animals](screenshots/window-glow-fixed.png)
 ![Continuous winter accumulation](screenshots/surface-snow-accumulation.png)
+
+Inn lighting is now drawn within the same background pass as the inn, before all foreground rocks, trees and bamboo. This deliberately supersedes the earlier post-tint emission pass: nearby scenery must fully occlude both lantern cores and window glow. The common night tint still applies consistently. A draw-order regression enforces this relationship.
+
+![Inn lights correctly behind scenery](screenshots/inn-light-occlusion.png)
