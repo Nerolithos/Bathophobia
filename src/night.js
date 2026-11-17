@@ -18,7 +18,7 @@ if(depth<.36)c.fillRect(x,y,1,1);else if(depth<.78)c.fillRect(x,y,2,2);else{let 
 }c.globalAlpha=1;
 }
 const tintColors=['#101d496e','#14193680','#23183e75','#17234880'];
-function tint(c,s,height){if(!s.night)return;c.save();c.fillStyle=tintColors[s.season]||tintColors[0];c.fillRect(0,0,960,height);c.restore()}
+function tint(c,s,height){if(!s.night)return;c.save();if(s.isolatedLayer)c.globalCompositeOperation='source-atop';c.fillStyle=tintColors[s.season]||tintColors[0];c.fillRect(0,0,960,height);c.restore()}
 function lightTools(c){const r=(x,y,w,hh,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,hh)};function lamp(x,y,scale=1){c.save();for(let i=4;i>0;i--){c.globalAlpha=.025+(4-i)*.012;r(x-i*9*scale,y-i*7*scale,i*18*scale,i*14*scale,'#ffd18a')}c.globalAlpha=.9;r(x-1,y-2,3,5,'#ffe3a0');c.restore()}
 function window(x,y,w,hh){c.save();c.globalCompositeOperation='screen';c.globalAlpha=.18;r(x,y,w,hh,'#f1c77a');c.restore()}
 return{lamp,window}}

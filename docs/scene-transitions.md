@@ -37,3 +37,12 @@ A confirmed kit is copied into an immutable departure snapshot before closing th
 A normal restart opens kit selection only after the return fade has finished. The cave Demo button restarts directly into an automatic route replay, without an intermediate kit dialog. Regression tests exercise synchronous and delayed close events, two identical HF vials, mixed pickaxe/HF kits, exact-once costs, late close events, cancellation and direct Demo startup.
 
 ![Automatic Demo descent after transition fix](screenshots/demo-transition-fixed.png)
+
+## Window emission without bleed-through
+
+Background scenery is shaded once, then inn emission is applied in its 0.82× background transform. Each foreground region is rendered on a reusable transparent canvas; its night tint uses `source-atop`, so transparent sky openings cannot repaint/dim the already shaded inn. Foreground rocks, trunks and bamboo are then composited normally over the inn and its light. No emission is drawn on top of foreground occluders.
+
+The tea room adds weak warm glazing only to its round-window pixels and back-wall shoji panes after its own tint. The lattice, front posts, table and ikebana stay dark; the former broad rectangular room-glow overlay is removed. No fake point lights are added. Tests enforce alpha-preserving tint and inn-before-foreground ordering; actual night views were inspected at multiple camera positions.
+
+![Tea room glazing](screenshots/tea-window-glaze.png)
+![Inn emission stays behind the spring cliff](screenshots/inn-window-glaze-occluded.png)
