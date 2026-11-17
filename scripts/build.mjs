@@ -32,12 +32,12 @@ await cp(achievementFolder,path.join(assets,'achievements'),{recursive:true});
 await cp(detailFolder,path.join(assets,'characters/player-detail'),{recursive:true});
 await Promise.all(files.map(([name, content]) => writeFile(path.join(assets, name), content)));
 await writeFile(path.join(assets, 'style.css'), css);
-const appNames=['i18n.js','engine.js','player-art.js','player-detail.js','player-home.js','player-sleep.js','player-tea.js','player-animation.js','visuals.js','threats.js','systems.js','homestead.js','animals.js','spring.js','night.js','interior.js','tea-garden.js','surface.js','achievements.js','achievement-ui.js','game.js'];
+const appNames=['i18n.js','engine.js','player-art.js','player-detail.js','player-home.js','player-sleep.js','player-tea.js','player-animation.js','visuals.js','threats.js','systems.js','commissions.js','homestead.js','animals.js','spring.js','night.js','interior.js','tea-garden.js','surface.js','achievements.js','achievement-ui.js','game.js'];
 await writeFile(path.join(assets,'app.js'),appNames.map(name=>files.find(([n])=>n===name)[1].toString()).join('\n;\n'));
 const workerBundle=['engine.js','threats.js','generator.js'].map(name=>{let source=files.find(([n])=>n===name)[1].toString();return name==='generator.js'?source.replace(/^importScripts\([^;]+\);\s*/,''):source}).join('\n;\n');
 await writeFile(path.join(assets,'generator.js'),workerBundle);
 const html = originalHTML
-  .replace(/<script src="\.\/src\/(?:i18n|engine|player-art|player-detail|player-home|player-sleep|player-tea|player-animation|visuals|threats|systems|homestead|animals|spring|night|interior|tea-garden|surface|achievements|achievement-ui|game)\.js"><\/script>/g,'')
+  .replace(/<script src="\.\/src\/(?:i18n|engine|player-art|player-detail|player-home|player-sleep|player-tea|player-animation|visuals|threats|systems|commissions|homestead|animals|spring|night|interior|tea-garden|surface|achievements|achievement-ui|game)\.js"><\/script>/g,'')
   .replace(/href="(?:\.\/)?style\.css"/,`href="${prefix}style.css"`)
   .replace('</body>',`<script type="application/json" id="boot-maps">${bootJSON}</script><script src="${prefix}app.js"></script></body>`)
   .replace('</head>', `<meta name="app-build" content="${buildId}"></head>`);

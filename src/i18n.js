@@ -9,6 +9,7 @@ Object.assign(messages,{"黄铜矿": "Chalcopyrite", "铜管道": "Copper pipe",
 Object.assign(messages,{"铜框镜": "Copper-framed mirror", "睡觉中 · E 起床": "Sleeping · E to wake up", "起床了": "Awake", "门口 E 出门 · 梯子 W/S · 床边 E 睡觉 · B 内饰": "E at door to exit · W/S ladder · E by bed to sleep · B furnishings"});
 let language='zh';try{language=localStorage.getItem('bathophobia-language')==='en'?'en':'zh'}catch{}
 let entries=[],pattern=null;
+Object.assign(messages,{"信箱验收":"Mail test","日式信箱":"Japanese mailbox","基地竣工后解锁信箱":"Complete the homestead to unlock the mailbox","信箱已经建成":"Mailbox already built","信箱建成":"Mailbox built","尚未收到这封委托":"This commission has not arrived","委托已经完成":"Commission already completed","仓库材料不足":"Not enough materials in storage","茶道已解锁":"Tea ceremony unlocked","终极收藏 · 水硅钒钙石":"Ultimate collection · Cavansite","茶道 · ":"Tea ceremony · "," · 茶道：":" · Tea ceremony: ","来信委托":"Letters","暂未收到来信":"No letters yet"});
 function rebuild(){entries=Object.keys(messages).sort((a,b)=>b.length-a.length);pattern=new RegExp(entries.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g')}
 function register(zh,en){if(zh&&en)messages[zh]=en}
 function t(value){const s=String(value??'');return language==='en'?s.replace(pattern,k=>messages[k]):s}

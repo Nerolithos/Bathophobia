@@ -1,5 +1,6 @@
 /* Shared seasonal animal motion; all scenery uses the game's canvas pixel palette. */
 (function(root){'use strict';
+const Mail=typeof module!=='undefined'?require('./commissions'):root.CaveCommissions;
 const Night=typeof module!=='undefined'?require('./night'):root.CaveNight;
 const Tea=typeof module!=='undefined'?require('./tea-garden'):root.CaveTeaGarden;
 const Animals=typeof module!=='undefined'?require('./animals'):root.CaveAnimals;
@@ -86,7 +87,7 @@ rect(745,g-72,1,8,'#66513a');rect(742,g-64,7,2,'#80603e');rect(742,g-62,7,9,autu
 if(p>=6&&home.exterior?.windchime){
 // Wind is cosmetic only: integer pixel offsets preserve the crisp bell and paper strip.
 const sway=Math.round(Math.sin(t*1.7)*2+Math.sin(t*.63)),cx=716+sway,by=g-69;rect(716,g-75,1,6,'#70583c');rect(cx-4,by+3,9,7,'#b47b4d');rect(cx-3,by+1,7,3,'#c8955c');rect(cx-2,by+3,2,5,'#ebbc7c');rect(cx-5,by+10,11,2,'#785638');rect(cx,by+12,1,5,'#927443');rect(cx+Math.round(sway*.5)-2,by+17,5,9,'#d8bf80');rect(cx+Math.round(sway*.5)-1,by+18,1,6,'#f0d79a')}
-if(!options.sharedBackground)drawAnimals(c,s,g,home);
+Mail.mailbox(c,g,home);if(!options.sharedBackground)drawAnimals(c,s,g,home);
 if(winter&&!s.night&&!options.sharedBackground)Night.snow(c,s,g,height);
 s.hero??={x:s.x,y:s.y,ground:s.ground,face:s.face,time:t};c.save();c.translate(0,g-28);if(!s.sleeping)hero(c,s.hero,0,t,[],s.detailArt===false?48:64);c.restore();Interior.drawSleep(c,g,s);Spring.foreground(c,g,t,s);for(let q of s.splashes||[]){c.globalAlpha=Math.min(1,q.life*3);rect(q.x,g+q.y,2,2,'#cee3d0')}c.globalAlpha=1;
 c.font='12px monospace';c.fillStyle='#dce3c8';c.fillText('矿洞 ↓',858,g+24);Night.paint(c,s,g,height,home);
@@ -104,6 +105,6 @@ c.save();c.beginPath();c.rect(Math.max(0,offset),0,Math.min(960,offset+960)-Math
 // Inn emissions belong to the background and must be occluded by foreground rocks and trees.
 if(s.season===3)Night.accumulatedSnow(c,s,g,camera);c.save();c.translate(-camera,0);drawAnimals(c,s,g,home);c.restore();
 // Draw the actor once, after both region clips are restored. Ears/tail can cross the seam.
-c.save();c.translate((s.area==='tea'?-960:0)-camera,0);if(s.teaSeated)root.CavePlayerTea?.draw(c,s.x,g-23*Tea.SCALE,s.teaSip,s.time);else if(!s.sleeping){c.save();c.translate(0,g-28);hero(c,s.hero||{x:s.x,y:s.y,face:s.face,ground:s.ground,time:s.time},0,s.time,[],s.detailArt===false?48:64);c.restore();if(s.area!=='tea')Spring.foreground(c,g,s.time,s)}c.restore();Spring.petals(c,s,g,camera);Night.rain(c,s,g,height,camera);if(s.season===3)Night.snow(c,{...s,inside:false,snowInterior:s.inside&&s.area!=='tea'?{left:455-camera,right:713-camera,top:g-190,bottom:g}:null},g,height)}
+c.save();c.translate((s.area==='tea'?-960:0)-camera,0);if(s.teaSeated)root.CavePlayerTea?.draw(c,s.x,g-23*Tea.SCALE,s.teaSip,s.time);else if(!s.sleeping){c.save();c.translate(0,g-28);hero(c,s.hero||{x:s.x,y:s.y,face:s.face,ground:s.ground,time:s.time},0,s.time,[],s.detailArt===false?48:64);c.restore();if(s.area!=='tea')Spring.foreground(c,g,s.time,s)}if(s.effectNotice)root.CaveArt?.effectNotice(c,s.x,g+(s.teaSeated?-23*Tea.SCALE:s.y)-70,s.effectNotice,s.time);c.restore();Spring.petals(c,s,g,camera);Night.rain(c,s,g,height,camera);if(s.season===3)Night.snow(c,{...s,inside:false,snowInterior:s.inside&&s.area!=='tea'?{left:455-camera,right:713-camera,top:g-190,bottom:g}:null},g,height)}
 const api={cameraTarget,updateCamera,drawPanorama,Tea,Night,interactBed:Interior.toggleSleep,PORCH,porchFloor,nearestSheep,tripRoll,interactHouse:Interior.interact,POOL,RESERVED,poolFloor,species,create,update,draw};if(typeof module!=='undefined')module.exports=api;root.CaveSurface=api;
 })(globalThis);
